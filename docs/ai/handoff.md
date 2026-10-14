@@ -1,6 +1,6 @@
 # Agent Handoff — MVP-1 완료(6단계 결과 작성) → Issue #7 리뷰어 Bash 쓰기 차단
 
-- 상태: #7 PR #8 ready(2026-10-14). 리뷰 지적 수용분 반영 Red `94fd23c` → Green `e44cd3b`(70/70), CI run 38531794124 PASS. 사용자 병합 대기. 전역 advisor 설정 적용 완료 → 재시작 필요
+- 상태: #7 PR #8 ready, 사용자 병합 대기. 후속 Issue #9·#10. 전역 advisor 설정 적용·동작 확인 PASS(재시작 없이 목록에 나타남). 다음 #5(Light)
 - task_id: CHORE-AGENT-GUARD-01 (Issue #7, R-ID 해당 없음)
 - 작성: 2026-10-14 KST · Claude Code (Opus 5.5)
 - 규칙: 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` §8 자율 진행 규칙을 따른다(8-2만 승인). "조언 확인해" = `plans/advisor-notes.md` 맨 위 항목
@@ -47,17 +47,19 @@
 
 - 16:30~ PR #8 리뷰(pr-reviewer): 높음 3건(따옴표 우회, `ls-remote --upload-pack`, 테스트 공백) 재현 → 같은 PR에서 수정. 분류 코멘트 6163704335. 별도 Issue 2건 생성(사용자 "둘 다 해"): Issue #9 `.env` 등 읽기 구멍, Issue #10 훅 테스트 CI 편입
 
+- advisor 첫 호출(조언 16:10 3번): 결과 돌아옴, transcript `model` = `claude-opus-5-5`, 도구는 Read·Grep·Glob·WebFetch·WebSearch만, 저장소 무변경(HEAD `0aaec1f`, status clean). 재시작 불필요였음. advisor 추천: #5를 #9보다 먼저, PR #8 병합을 기다리지 않고 main 기준 `fix/5-...`로 시작 가능(파일 겹침 없음). #9는 시작 시 방식 승인 필요(보안 정책 변경)
+
 ## 수정했지만 커밋하지 않은 파일
 
 - 없음
 
 ## 다음 행동 1개
 
-재시작 후: `advisor` 서브에이전트를 한 번 호출해 결과가 돌아오는지, 아무것도 바꾸지 않는지, transcript `model`이 Opus인지 확인(조언 16:10 3번) → 런북 8-3·플레이북 4장 재독 → (사용자가 PR #8 병합하면) #5(Light).
+런북 8-3·플레이북 4장("승인 요청 전 advisor 먼저") 재독 → main 기준 `fix/5-<slug>` 브랜치로 #5(OSIV, Light 모드) 시작. 걸린 시간과 사용량 기록.
 
 ## 사람이 결정하거나 승인할 사항
 
-- 전역 설정 2건 적용 완료(사용자 승인 "1번으로 해", 16:23 KST): `~/.claude/agents/advisor.md`(원본과 cmp 동일), `~/.claude/settings.json` `permissions.additionalDirectories` = `/Users/dongwon/Dev/AI_개발_가이드`. 백업 `~/.claude/settings.json.bak-20261014-advisor`. **Claude Code 재시작 필요**(사용자)
+- 전역 설정 2건 적용 완료(사용자 승인 "1번으로 해", 16:23 KST): `~/.claude/agents/advisor.md`(원본과 cmp 동일), `~/.claude/settings.json` `permissions.additionalDirectories` = `/Users/dongwon/Dev/AI_개발_가이드`. 백업 `~/.claude/settings.json.bak-20261014-advisor`. 재시작 없이 반영됨
 - 시험 후 auto mode 복귀(사용자)
 - #7 PR #8 병합(ready)
 - #5는 #7 다음, Spec Kit 없이 Light 모드로(사용자 지시). 걸린 시간과 사용량 기록
