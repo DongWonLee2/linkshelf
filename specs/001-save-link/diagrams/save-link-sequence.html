@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>링크 저장 시퀀스</title>
+  <!--
+    Source: specs/001-save-link/plan.md, research.md R2–R5 (base 8c26558, 2026-10-14).
+    Status: APPROVED 2026-10-14 — API contract and table structure approved by user (constitution I).
+    Budget cuts: Bean Validation folded into LinkController (self-call), UrlNormalizer/TagNormalizer
+    folded into LinkService (self-call); 400 and pre-check 409 shown as numbered notes.
+    System fonts only — no Google Fonts (runbook step 1).
+  -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+      --font-serif:    'Iowan Old Style', Georgia, 'AppleMyungjo', serif;
+      --font-mono:     ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+    .frame { max-width: 1200px; width: 100%; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .diagram-container svg { display: block; min-width: 1200px; width: 100%; height: auto; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .source {
+      margin-top: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-muted);
+      line-height: 1.6;
+    }
+    .t-name  { font-family: var(--font-sans); font-size: 13px; font-weight: 600; fill: #2d3142; }
+    .t-sub   { font-family: var(--font-mono); font-size: 9px; fill: #4f5d75; }
+    .t-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; fill: #4f5d75; }
+    .t-label-accent { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; fill: #eb6c36; font-weight: 600; }
+    .t-guard { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.04em; fill: #4f5d75; }
+    .t-note  { font-family: var(--font-serif); font-style: italic; font-size: 13px; fill: #2d3142; }
+    .t-note-num { font-family: var(--font-mono); font-size: 10px; font-weight: 600; fill: #4f5d75; }
+    .t-legend { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; fill: #4f5d75; }
+  </style>
+</head>
+<body>
+<div class="frame">
+  <p class="eyebrow">001-save-link · sequence · 승인됨 2026-10-14</p>
+  <h1>링크 저장 요청 시퀀스 — POST /api/links</h1>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-labelledby="save-link-sequence-title save-link-sequence-desc">
+      <title id="save-link-sequence-title">링크 저장 요청 시퀀스</title>
+      <desc id="save-link-sequence-desc">클라이언트의 링크 저장 요청이 검증, 정규화, 중복 사전 확인, INSERT를 거쳐 201로 끝나거나, 동시 요청으로 DB 고유 제약 uk_link_normalized_url이 위반되면 409로 바뀌는 흐름.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+      </defs>
+
+      <rect width="1200" height="800" fill="#f5f5f5"/>
+
+      <!-- ===== Lifelines (x = 100, 292, 484, 676, 868) ===== -->
+      <g stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="3,3">
+        <line x1="100" y1="88" x2="100" y2="712"/>
+        <line x1="292" y1="88" x2="292" y2="712"/>
+        <line x1="484" y1="88" x2="484" y2="712"/>
+        <line x1="676" y1="88" x2="676" y2="712"/>
+        <line x1="868" y1="88" x2="868" y2="712"/>
+      </g>
+
+      <!-- ===== ALT fragment (drawn under messages) ===== -->
+      <rect x="76" y="432" width="816" height="256" rx="4" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+      <rect x="76" y="432" width="40" height="16" rx="2" fill="#f5f5f5" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+      <text x="96" y="444" class="t-guard" text-anchor="middle" letter-spacing="0.12em">ALT</text>
+      <text x="128" y="444" class="t-guard">[INSERT 성공]</text>
+      <line x1="84" y1="520" x2="884" y2="520" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+      <rect x="84" y="530" width="196" height="14" fill="#f5f5f5"/>
+      <text x="88" y="540" class="t-guard">[23505 + UK 제약 · 동시 요청]</text>
+
+      <!-- ===== Activation bars ===== -->
+      <g fill="rgba(45,49,66,0.06)" stroke="#4f5d75" stroke-width="0.8">
+        <rect x="288" y="128" width="8" height="540"/>
+        <rect x="480" y="212" width="8" height="428"/>
+        <rect x="672" y="296" width="8" height="16"/>
+        <rect x="672" y="372" width="8" height="240"/>
+        <rect x="864" y="404" width="8" height="180"/>
+      </g>
+
+      <!-- ===== Messages (arrows first, then label masks + text) ===== -->
+      <!-- m1 POST -->
+      <line x1="100" y1="128" x2="286" y2="128" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- m2 VALIDATE (self) -->
+      <path d="M 296 164 H 324 Q 332 164 332 172 V 176 Q 332 184 324 184 H 298" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- m3 SAVE -->
+      <line x1="296" y1="212" x2="478" y2="212" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- m4 NORMALIZE (self) -->
+      <path d="M 488 248 H 516 Q 524 248 524 256 V 260 Q 524 268 516 268 H 490" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- m5 EXISTS? -->
+      <line x1="488" y1="296" x2="670" y2="296" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- m6 SAVEANDFLUSH -->
+      <line x1="488" y1="372" x2="670" y2="372" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- m7 INSERT -->
+      <line x1="680" y1="404" x2="862" y2="404" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- m8 201 CREATED (return) -->
+      <line x1="288" y1="488" x2="102" y2="488" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <!-- m9 23505 (accent, return) -->
+      <line x1="864" y1="576" x2="682" y2="576" stroke="#eb6c36" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrow-accent)"/>
+      <!-- m10 DATA INTEGRITY (return) -->
+      <line x1="672" y1="608" x2="490" y2="608" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <!-- m11 DUPLICATE (return) -->
+      <line x1="480" y1="636" x2="298" y2="636" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <!-- m12 409 CONFLICT (accent, return) -->
+      <line x1="288" y1="664" x2="102" y2="664" stroke="#eb6c36" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrow-accent)"/>
+
+      <!-- Label masks (opaque) + labels: centered on segment, 8px above stroke -->
+      <rect x="164" y="106" width="60" height="14" fill="#f5f5f5"/>
+      <text x="194" y="117" class="t-label" text-anchor="middle">POST</text>
+
+      <rect x="340" y="167" width="92" height="14" fill="#f5f5f5"/>
+      <text x="344" y="178" class="t-label">VALIDATE [1]</text>
+
+      <rect x="344" y="190" width="96" height="14" fill="#f5f5f5"/>
+      <text x="388" y="201" class="t-label" text-anchor="middle">SAVE(REQUEST)</text>
+
+      <rect x="532" y="251" width="72" height="14" fill="#f5f5f5"/>
+      <text x="536" y="262" class="t-label">NORMALIZE</text>
+
+      <rect x="536" y="274" width="96" height="14" fill="#f5f5f5"/>
+      <text x="580" y="285" class="t-label" text-anchor="middle">EXISTS? [2]</text>
+
+      <rect x="532" y="350" width="96" height="14" fill="#f5f5f5"/>
+      <text x="580" y="361" class="t-label" text-anchor="middle">SAVEANDFLUSH</text>
+
+      <rect x="740" y="382" width="64" height="14" fill="#f5f5f5"/>
+      <text x="772" y="393" class="t-label" text-anchor="middle">INSERT</text>
+
+      <rect x="152" y="466" width="88" height="14" fill="#f5f5f5"/>
+      <text x="196" y="477" class="t-label" text-anchor="middle">201 CREATED</text>
+
+      <rect x="740" y="554" width="64" height="14" fill="#f5f5f5"/>
+      <text x="772" y="565" class="t-label-accent" text-anchor="middle">23505</text>
+
+      <rect x="528" y="586" width="104" height="14" fill="#f5f5f5"/>
+      <text x="580" y="597" class="t-label" text-anchor="middle">DATA INTEGRITY</text>
+
+      <rect x="344" y="614" width="88" height="14" fill="#f5f5f5"/>
+      <text x="388" y="625" class="t-label" text-anchor="middle">DUPLICATE</text>
+
+      <rect x="148" y="642" width="96" height="14" fill="#f5f5f5"/>
+      <text x="196" y="653" class="t-label-accent" text-anchor="middle">409 CONFLICT</text>
+
+      <!-- ===== Actor boxes (drawn last so lifelines sit behind) ===== -->
+      <!-- Client (input) -->
+      <rect x="32" y="40" width="136" height="48" rx="6" fill="rgba(79,93,117,0.10)" stroke="#8a93a6" stroke-width="1"/>
+      <text x="100" y="62" class="t-name" text-anchor="middle">Client</text>
+      <text x="100" y="77" class="t-sub" text-anchor="middle">HTTP · JSON</text>
+      <!-- LinkController (backend) -->
+      <rect x="224" y="40" width="136" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="292" y="62" class="t-name" text-anchor="middle">LinkController</text>
+      <text x="292" y="77" class="t-sub" text-anchor="middle">@Valid · advice</text>
+      <!-- LinkService (backend) -->
+      <rect x="416" y="40" width="136" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="484" y="62" class="t-name" text-anchor="middle">LinkService</text>
+      <text x="484" y="77" class="t-sub" text-anchor="middle">@Transactional</text>
+      <!-- LinkRepository (backend) -->
+      <rect x="608" y="40" width="136" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="676" y="62" class="t-name" text-anchor="middle">LinkRepository</text>
+      <text x="676" y="77" class="t-sub" text-anchor="middle">Spring Data JPA</text>
+      <!-- H2 (store) -->
+      <rect x="796" y="40" width="144" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+      <text x="868" y="62" class="t-name" text-anchor="middle">H2</text>
+      <text x="868" y="77" class="t-sub" text-anchor="middle">uk_link_normalized_url</text>
+
+      <!-- ===== Notes (right column, no leaders; numbers match labels) ===== -->
+      <text x="924" y="172" class="t-note-num">[1]</text>
+      <text x="952" y="172" class="t-note">검증 실패 → 400</text>
+      <text x="952" y="190" class="t-note">problem+json, errors[]에</text>
+      <text x="952" y="208" class="t-note">틀린 항목을 모두 담는다.</text>
+      <text x="952" y="226" class="t-note">서비스는 호출되지 않는다.</text>
+
+      <text x="924" y="300" class="t-note-num">[2]</text>
+      <text x="952" y="300" class="t-note">이미 있으면 → 409 (사전 확인).</text>
+      <text x="952" y="318" class="t-note">동시 요청 둘이 함께 false를</text>
+      <text x="952" y="336" class="t-note">보면 INSERT에서 고유 제약이</text>
+      <text x="952" y="354" class="t-note">막는다 → 아래 ALT 두 번째 칸.</text>
+
+      <!-- ===== Legend strip ===== -->
+      <line x1="32" y1="736" x2="1168" y2="736" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <line x1="32" y1="764" x2="64" y2="764" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="72" y="767" class="t-legend">호출</text>
+      <line x1="136" y1="764" x2="168" y2="764" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <text x="176" y="767" class="t-legend">반환 · 예외</text>
+      <line x1="272" y1="764" x2="304" y2="764" stroke="#eb6c36" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arrow-accent)"/>
+      <text x="312" y="767" class="t-legend">경쟁 상황 경로 (DB 제약 → 409)</text>
+      <rect x="512" y="756" width="24" height="16" rx="2" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+      <text x="544" y="767" class="t-legend">ALT 분기</text>
+      <rect x="616" y="756" width="8" height="16" fill="rgba(45,49,66,0.06)" stroke="#4f5d75" stroke-width="0.8"/>
+      <text x="632" y="767" class="t-legend">처리 중(activation)</text>
+    </svg>
+  </div>
+
+  <p class="source">
+    근거: specs/001-save-link/plan.md · research.md R2–R5 · 기준 SHA 8c26558 · 2026-10-14<br>
+    상태: 승인됨 2026-10-14 — API 계약(contracts/save-link.md)과 테이블 구조(data-model.md)<br>
+    생략: Bean Validation 제약 3개(LinkUrl·MaxCodePoints·LinkTags)는 VALIDATE에, UrlNormalizer·TagNormalizer는 NORMALIZE에 합침
+  </p>
+</div>
+</body>
+</html>

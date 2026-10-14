@@ -1,62 +1,60 @@
-# Agent Handoff — MVP-1 4단계 완료 → 5단계 대기
+# Agent Handoff — MVP-1 5단계: PR #4 리뷰 반영 → 사용자 병합 대기
 
-- 상태: paused (사용자가 bootstrap PR 병합 후 세션 재시작 예정)
-- 작성: 2026-10-14 11:35 KST · Claude Code (Opus 5.5)
-- Task: MVP-1 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` 0~4단계
-- 작업 브랜치: `chore/bootstrap` → GitHub PR #1 (OPEN, CI PASS, 사용자 병합 대기)
-- Base SHA (`main`): `ba05ea0` / Head SHA: 이 handoff 커밋 (직전 `e6fe6ca`)
-- Spec/ADR: constitution v1.0.0, PRD Approved, ADR-0001~0003 Accepted
-- 환경 기록: `~/Dev/AI_개발_가이드/plans/mvp0-inventory.md`
+- 상태: paused (독립 리뷰 반영 push. OSIV 별도 Issue 승인 대기, 병합은 사람)
+- 작성: 2026-10-14 KST · Claude Code (Opus 5.5)
+- Task: MVP-1 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` 5단계, `specs/001-save-link/tasks.md` T001~T050
+- 작업 브랜치: `feat/3-save-link` · Issue #3 · PR #4 (OPEN, CI PASS, merge CLEAN)
+- Base SHA (`main`): `8c26558` / PR head: 이 handoff 커밋(리뷰 반영 `29e5937` 다음)
+- Spec: `specs/001-save-link/` — spec(Q1~Q5, A1), plan·contract·data-model 승인됨(2026-10-14), contract `type` 개정 승인됨
+- 환경 기록: `~/Dev/AI_개발_가이드/plans/mvp0-inventory.md` §12 (재시작 후 확인)
 
-## 지금까지 완료한 것
+## 지금까지 완료한 것 (5단계)
 
-| 단계 | 결과 | 증거 |
+| 런북 | 결과 | 증거 |
 |---|---|---|
-| 0 환경 점검 | PASS | inventory §1~6 |
-| 1 도구 | PASS | uv 0.13.0, specify-cli 1.2.0. diagram-design은 기존 스킬 유지(플러그인 설치 안 함) |
-| 2 저장소 | PASS | `DongWonLee2/linkshelf` public, `.claude/settings.json` 권한. `.env` 차단은 guardrails mod와 함께만 확인 |
-| 3 기초 문서 | PASS | constitution, AGENTS.md, PRD, ADR 3개, `docs/diagrams/architecture.html`/`.svg` |
-| 4 골격·CI | PASS | 로컬 `./gradlew test` 2 tests PASS. PR #1 CI `backend-test` PASS (run 38499278914) |
-| 4 main 보호 (A7) | PASS | 필수 검사 이름(backend-test)이 실제 CI 검사 이름과 일치, 실패 PR이 BLOCKED. draft 영향은 분리 못 함 |
-| 4 검증기 검증 (A1 일부) | PASS | draft PR #2 CI FAIL (run 38500830240), 닫고 원격·로컬 `tmp/ci-should-fail` 삭제(사용자 승인) |
-| 전역: Orca 제거 | PASS | `~/.claude/settings.json`에서 Orca 훅 13개 이벤트, 빈 `hooks`, `statusLine` 삭제. 백업 `~/ai-platform-backups/2026-10-14/settings.json.before-orca-removal` |
+| 5-1 main pull | PASS | `8c26558`, `./gradlew test --rerun` 2 tests PASS, `/hooks` "33 events 0 with hooks"(사용자 확인) |
+| 5-2 specify | PASS | R-LINK-01~08, 사용자 결정 Q1 메모 500 / Q2 표준 동치 정규화 / Q3 태그 10·30 / Q4 코드 포인트 / Q5 대소문자 무시 합침 / A1 한글 도메인 거부 |
+| 5-3 plan·tasks·다이어그램 | PASS | API·테이블 승인(A2·A3), `diagrams/save-link-sequence.html`/`.svg` |
+| 5-4 Issue | PASS | #3 하나(사용자 "하나로 만들어"), Task-ID 재검색 결과 `[3]` (A5) |
+| 5-5/5-6 TDD 구현 | PASS | US1/US2/US3 각각 Red → Green, 로컬 52 tests PASS |
+| 5-7 converge | PASS | 부분 누락 3건 → T048~T050으로 해결. `type` 필드 계약 개정(사용자 승인) |
+| 5-8 오류 주입 (A4) | PASS | 409→400 FAIL 확인 → 원복 PASS, 커밋 안 함 |
+| T045 quickstart 수동 | PASS | bootRun + curl 4건, 한글·이모지 메모 UTF-8 바이트 동일, 서버 종료 후 8080 비어 있음, `backend/data/` git 무시 |
+| 5-9 PR #2 | PASS | GitHub PR #4 https://github.com/DongWonLee2/linkshelf/pull/4, CI `backend-test` PASS (run 38511125917 @ `05d3807`) |
+| 5-10 리뷰 반영 | 진행 중 | 수용: R_LINK_03 DB 왕복 테스트(`R_LINK_03_round_trips_max_memo_and_max_tags_through_db`, 새 트랜잭션에서 다시 읽기, 태그 순서 비교), PR 본문 문구 수정. 별도 Issue: OSIV 끄기(미리보기 승인 대기). 로컬 `./gradlew test --rerun` 53 PASS @ `29e5937` |
 
 ## 실제 GitHub 번호 ↔ 런북 이름
 
 | 런북 이름 | GitHub |
 |---|---|
-| PR #1 (bootstrap) | #1 |
-| CI 실패 감지 시험 | #2 (closed, 병합 안 함) |
-| PR #2 (링크 저장 API) | 아직 없음 → 다음 번호(#3 이상) |
+| PR #1 (bootstrap) | #1 (merged) |
+| CI 실패 감지 시험 | #2 (closed) |
+| 5단계 Issue | #3 |
+| PR #2 (링크 저장 API) | #4 |
 
-## 현재 막힌 지점
+## 마지막 실행 명령과 결과
 
-없음. 사용자 작업 대기: PR #1 병합, 세션 재시작.
+- 로컬 `cd backend && ./gradlew test --rerun` → PASS, 53 tests @ `29e5937`
+- push 후 CI는 PR #4 checks에서 확인
 
-## 수정된 파일과 미커밋 상태
+## 수정했지만 커밋하지 않은 파일
 
-- 저장소: 이 파일 커밋 후 깨끗한 상태
-- 저장소 밖: `~/.claude/settings.json`(Orca 제거, 승인됨), inventory 파일
+- 없음
 
-## 다음 첫 행동
+## 다음 행동 1개
 
-`git switch main && git pull` 후 기준 SHA를 기록하고 5단계 `/speckit-specify` 실행.
+CI PASS 확인 → OSIV Issue 미리보기 승인 시 생성 → PR #4에 리뷰 처리 코멘트(전체 지적 목록 필요) → 사용자 병합 → 6단계(`mvp1-result.md`).
 
-## 5단계에서 지킬 사용자 지시
+## 결과 보고용 교훈 (6단계 `mvp1-result.md`에 옮길 것)
 
-- 각 FR에 출처 PRD 번호(PRD-01)를 함께 적는다.
-- 결정 필요 항목(메모 최대 길이, URL 정규화 범위, 태그 개수 제한)은 사용자에게 묻고 spec에 기록한다.
-- 실제 GitHub PR 번호는 결과 보고에 런북 이름과 따로 적는다.
+- Red 상태의 테스트를 커밋하지 않아서 나중에 바꾼 내용을 추적할 수 없었다. 다음부터 Red 상태도 커밋한다. (사용자, PR #4 리뷰 후 2026-10-14)
 
 ## 사람이 결정하거나 승인할 사항
 
-- PR #1 병합
-- 재시작 후 `/hooks`에서 Orca 훅이 사라졌는지 확인
-- 할 일: Codex `~/.codex/hooks.json`의 Orca 훅 정리(cmux 훅은 유지, config.toml 신뢰 기록 포함)
-- 런북 파일 4단계가 아직 이전 순서로 저장돼 있음(사용자 메시지 순서로 진행함) → 필요하면 런북 수정
+- OSIV(`spring.jpa.open-in-view`) 끄기 별도 Issue 생성 승인
+- PR 병합(사람)
+- 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 
-## 재개 조건
+## Codex로 이어받을 때
 
-- [ ] `main`에 PR #1 병합 확인, 기준 SHA 기록
-- [ ] `/hooks`에서 Orca 훅 없음 확인
-- [ ] `cd backend && ./gradlew test` 재실행 PASS
+`AGENTS.md` → 이 파일 → PR #4 본문(R-ID ↔ 테스트, 검증 표) 순서로 읽는다. tasks.md는 T001~T050 모두 완료.
