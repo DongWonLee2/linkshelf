@@ -1,10 +1,10 @@
-# Agent Handoff — spec 002 완료 (목록 조회·태그 필터·읽음 표시)
+# Agent Handoff — MVP-3 첫 화면 (조언 00:40)
 
-- 상태: spec 002 완료. PR #15(spec)·#16(US1)·#17(US2)·#18(US3) 병합, Issue #12~#14 닫힘. main `4c016ee` 120 tests PASS. 마무리 문서 PR(T046·T047) 진행
-- task_id: spec 002 T001~T047 (R-LINK-09~18)
+- 상태: spec 002 완료(PR #19까지 병합). MVP-3 골격 PR #20(ADR-0005, `frontend/`, Feature Map) 리뷰 반영 중. 다음은 spec 003
+- task_id: MVP-3 골격(조언 00:40 2번) · 직전 spec 002 T001~T047 완료
 - 작성: 2026-10-14 KST · Claude Code (Opus 5.5)
 - 규칙: 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` §8(8-3a: 승인 요청 전 advisor 먼저). 플레이북 규칙 20(병합 후 정리), 21(기능 먼저)
-- 작업 브랜치: `chore/spec-002-wrapup` · 기준 SHA `4c016ee` (main, PR #18 병합)
+- 작업 브랜치: `chore/frontend-skeleton` · 기준 SHA `2c1f6d9` (main, PR #19 병합)
 - 진행 요약: `~/Dev/AI_개발_가이드/plans/mvp1-status.md`
 ## 지금까지 완료한 것
 
@@ -60,17 +60,21 @@
   - A `@ColumnDefault` 있음: 층1 `Started`, WARN·ERROR 없음(ALTER 문은 로그에 안 남음 → quickstart §4 층1 기준 미충족, 층2·3으로 대체). 층2 H2 Shell `IS_READ | BOOLEAN | FALSE | NO`, 행 `1 FALSE`, `2 FALSE`. 층3 `GET /api/links` → `2 [(2, '…/a/', False), (1, '…/a', False)]`
   - B 대조 `@ColumnDefault` 없음: 층1 `Started` + WARN `CommandAcceptanceException … alter table if exists link add column is_read boolean not null … NULL not allowed for column "IS_READ"`. 층2 컬럼 없음(0 rows). 층3 `GET` 500
 
+- 00:40 사용자: 조언 00:40 1번 승인 묶음(ADR-0005, 최소 npm 패키지·Playwright 브라우저, CI frontend-e2e job, implementer 설치) 사전 승인. Node 새 설치나 노트와 다를 때만 묻기
+- implementer 전역 설치(`~/.claude/agents/implementer.md`, cmp 동일). worktree 하네스 검증은 첫 병렬 작업 때(NOT_RUN)
+- PR #20: 패키지 8개 정확 고정(2주 이상 지난 버전), Playwright webServer(메모리 H2 + Vite), 연기 E2E PASS, 프록시 제거 시 FAIL. 리뷰 반영: `npm ci`(빈 폴더 복사본에서, `rm -rf node_modules`는 guardrails가 막아 우회하지 않음), Feature Map 보강(`data-field`, 오류·성공 testid, 데이터 격리 규칙), 연기 테스트가 빈 DB를 가정하지 않게
+
 ## 수정했지만 커밋하지 않은 파일
 
 - 없음
 
 ## 다음 행동 1개
 
-마무리 PR 병합 후 다음 기능을 정한다(PRD 5장의 PRD-01~04는 모두 구현됨. 남은 것은 MVP-3 프론트엔드 등 로드맵). "조언 확인해"로 다음 지시를 받는다.
+PR #20 병합 후 spec 003(`003-first-screen`: 목록, 저장 폼, 태그 필터, 읽음 토글) specify → clarify → plan 승인 → tasks → Issue 승인. 그다음 화면(`frontend/src/`)과 E2E·CI(`frontend/e2e/`, `.github/workflows/`)를 implementer 2개로 병렬.
 
 ## 사람이 결정하거나 승인할 사항
 
-- 마무리 문서 PR 병합
+- PR #20 병합
 - 로컬 DB 백업 `~/Dev/linkshelf-db-backup/20261014-235640/`는 되돌리기용으로 남김. 지워도 되면 사용자가 직접 지운다
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 

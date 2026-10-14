@@ -44,21 +44,22 @@ PRD-01~04 백엔드 API(spec 001·002)가 끝났다. Feature Map, E2E, Visual QA
   | typescript | 7.0.2 | 타입 검사 |
   | @types/react, @types/react-dom | 19.3.0 | React 타입 |
   | @playwright/test | 1.63.0 | E2E·스크린샷 비교 |
+  - 위 8개는 직접 의존성이다. 전이 의존성(약 45개, 빌드 도구의 플랫폼별 바이너리 포함)은 `frontend/package-lock.json`을 기준으로 한다. 모두 registry.npmjs.org에서 받는다.
   - 조언 노트의 최소 목록(react, vite, typescript, @playwright/test)에 React를 Vite로 쓰는 데 필요한 짝(react-dom, @vitejs/plugin-react, 타입 2개)을 더했다. 상태 관리·라우터·CSS 프레임워크·테스트 러너(Vitest 등)는 넣지 않는다.
 - Playwright 브라우저는 Chromium만 받는다(`npx playwright install chromium`).
-- E2E는 Playwright `webServer`로 백엔드(메모리 H2, `SPRING_DATASOURCE_URL`)와 Vite 개발 서버를 함께 띄운다. 로컬 파일 DB를 건드리지 않는다.
+- E2E는 Playwright `webServer`로 백엔드(메모리 H2, `SPRING_DATASOURCE_URL`)와 Vite 개발 서버를 함께 띄운다. 로컬 파일 DB를 건드리지 않는다. 지금 이를 지키는 장치는 환경 변수와 `reuseExistingServer: false`(이미 떠 있는 서버를 쓰지 않음)뿐이고, 명시적 가드는 spec 003에서 검토한다.
 - 화면과 E2E 사이의 계약은 `docs/feature-map.md`의 `data-testid` 목록이다.
-- CI에 `frontend-e2e` job을 더한다(spec 003 구현 때). 필수 검사로 넣는 일(보호 규칙 변경)은 첫 PASS 뒤 따로 묻는다.
+- CI에 `frontend-e2e` job을 더한다. 시점은 spec 003 구현 단계(E2E와 CI를 맡는 PR)이고, ADR-0002의 재검토 트리거("프론트 추가 시 경로별 CI 분리")도 그때 함께 본다. Node 버전(Vite 8 요구 `^20.19.0 || >=22.12.0`)도 그 job에서 정한다. 필수 검사로 넣는 일(보호 규칙 변경)은 첫 PASS 뒤 따로 묻는다.
 
 ## 포기하는 것·운영 영향
 
-- Node가 필요하다. 로컬 v25(현재 버전), CI는 LTS를 쓴다. 버전 차이로 생기는 문제는 CI 결과를 기준으로 본다.
+- Node가 필요하다. 로컬 v25. CI 버전은 `frontend-e2e` job을 더할 때 정한다(Vite 요구 범위 안의 LTS). 버전 차이로 생기는 문제는 CI 결과를 기준으로 본다.
 - 운영 배포·정적 파일 서빙은 범위 밖(PRD 제외: 배포).
 - 단위 테스트 러너 없이 E2E로 화면을 검증한다. 화면 로직이 복잡해지면 다시 검토한다.
 - 되돌리기: `frontend/`와 이 ADR을 지우는 PR.
 
 ## 결정 검증
 
-- `npm ci && npm run typecheck && npm run build` 성공
+- `npm ci && npm run typecheck && npm run build` 성공(`npm ci`는 package 파일만 복사한 빈 폴더에서 확인)
 - `npx playwright test` 연기 테스트(앱 껍데기가 뜨고, 프록시로 `/api/links`가 200) PASS
 - 재검토 트리거: 화면이 여러 페이지로 늘어날 때(라우터), 서버 렌더링이나 배포가 필요해질 때

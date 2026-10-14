@@ -4,7 +4,7 @@
 
 ## 저장소 지도
 - `docs/prd.md` 제품 요구사항, `docs/decisions/ADR-*.md` 기술 결정, `docs/diagrams/` 다이어그램
-- `specs/<feature>/` Spec Kit 명세(spec·plan·tasks), `backend/` Spring Boot 앱
+- `specs/<feature>/` Spec Kit 명세(spec·plan·tasks), `backend/` Spring Boot 앱, `frontend/` React+Vite 화면(ADR-0005), `docs/feature-map.md` 화면↔E2E testid 계약
 - `docs/ai/handoff.md` 세션 인계 기록
 
 ## 작업 시작
