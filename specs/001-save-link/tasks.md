@@ -223,11 +223,12 @@ GitHub Issue 하나 = 독립적으로 검증 가능한 묶음 하나. 번호는 
   - 커밋하지 않는다. 로그는 PR 본문에 남긴다
 - [x] T045 [P] quickstart §2 수동 확인 4건을 실행할지 사용자에게 묻는다. 실행하지 않으면 PR 검증 표에 NOT_RUN과 이유를 적는다. specs/001-save-link/quickstart.md
   - 결과(2026-10-14, 사용자 지시로 실행): PASS. bootRun → curl 4건: #1 한글·이모지(👍🏽 포함) 메모 201 + 요청·응답 메모 UTF-8 바이트 동일, 태그 `["Java","스프링"]` / #2 `HTTPS://Example.COM:443/a` 409 problem+json / #3 `/a/` 201 / #4 `ftp://` 400 errors[url]. 서버 종료 후 8080 비어 있음, `backend/data/`는 `.gitignore:23`으로 무시(git status 깨끗)
-- [ ] T046 PR #2 준비(`feat/<issue>-save-link` → `main`):
+- [x] T046 PR #2 준비(`feat/<issue>-save-link` → `main`):
   - 본문: `Closes #N`, R-ID ↔ 테스트 이름 표, 검증 표(PASS/FAIL/SKIP/NOT_RUN), 기준 SHA `8c26558`, 남은 위험, 계측 1줄(런북 §5)
   - 남은 위험: IDN 거부, `ß`/`SS` 미접기, 태그 대소문자 중복은 DB가 아니라 앱에서만 막음
   - **사용자 확인 후** push와 `gh pr create`를 실행한다
-- [ ] T047 docs/ai/handoff.md를 갱신한다: 단계, 브랜치, 기준 SHA, 마지막 명령·결과, 다음 행동 1개.
+  - 결과(2026-10-14): PR #4 https://github.com/DongWonLee2/linkshelf/pull/4 (head `05d3807`), CI `backend-test` PASS run 38511125917
+- [x] T047 docs/ai/handoff.md를 갱신한다: 단계, 브랜치, 기준 SHA, 마지막 명령·결과, 다음 행동 1개.
 
 ---
 
