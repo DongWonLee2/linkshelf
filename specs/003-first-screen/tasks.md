@@ -14,9 +14,9 @@
 
 | Issue | 제목 | 포함 task | 담당 | 독립 검증 |
 |---|---|---|---|---|
-| (생성 후) | ci: frontend-e2e job과 Playwright 설정 보강 | T001~T007 | 오케스트레이터(작아서 직접) | 기존 smoke가 CI `frontend-e2e`에서 PASS |
-| (생성 후) | feat: 첫 화면 구현(목록·저장·필터·읽음) | T008~T019 | implementer A(worktree) | B2의 기능 E2E가 로컬에서 PASS, `typecheck`·`build` PASS |
-| (생성 후) | test: 첫 화면 E2E와 Visual QA | T020~T031 | implementer B2(worktree) | Red 커밋 → A 병합 후 rebase → CI PASS(visual은 기준 이미지 절차) |
+| [#21](https://github.com/DongWonLee2/linkshelf/issues/21) | ci: frontend-e2e job과 Playwright 설정 보강 | T001~T007 | 오케스트레이터(작아서 직접) | 기존 smoke가 CI `frontend-e2e`에서 PASS |
+| [#22](https://github.com/DongWonLee2/linkshelf/issues/22) | feat: 첫 화면 구현(목록·저장·필터·읽음) | T008~T019 | implementer A(worktree) | B2의 기능 E2E가 로컬에서 PASS, `typecheck`·`build` PASS |
+| [#23](https://github.com/DongWonLee2/linkshelf/issues/23) | test: 첫 화면 E2E와 Visual QA | T020~T031 | implementer B2(worktree) | Red 커밋 → A 병합 후 rebase → CI PASS(visual은 기준 이미지 절차) |
 
 - 순서: B1 병합 → A ∥ B2 동시 시작 → A PR 병합 → B2 rebase 후 PR → 기준 이미지 커밋 → 병합.
 - 공유 파일(`docs/ai/handoff.md`, 가이드 `plans/*`, `docs/feature-map.md`)은 오케스트레이터만 고친다. testid를 바꿔야 하면 implementer는 멈추고 보고한다.
