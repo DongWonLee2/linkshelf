@@ -15,7 +15,7 @@ import jakarta.validation.Payload;
  */
 @Documented
 @Constraint(validatedBy = MaxCodePointsValidator.class)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MaxCodePoints {
 

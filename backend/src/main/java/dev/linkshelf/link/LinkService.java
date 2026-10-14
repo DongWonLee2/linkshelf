@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.Locale;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +45,10 @@ public class LinkService {
 
 	/** Builds responses inside the transaction because open-in-view is off (#5). */
 	@Transactional(readOnly = true)
-	public LinkPageResponse list(int page, int size) {
-		return LinkPageResponse.from(linkRepository.findNewestFirst(page, size).map(LinkResponse::from));
+	public LinkPageResponse list(int page, int size, String tag) {
+		Page<Link> links = tag == null ? linkRepository.findNewestFirst(page, size)
+				: linkRepository.findNewestFirstByTag(tag.strip().toLowerCase(Locale.ROOT), page, size);
+		return LinkPageResponse.from(links.map(LinkResponse::from));
 	}
 
 	private static boolean isNormalizedUrlViolation(Throwable ex) {

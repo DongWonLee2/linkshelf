@@ -3,6 +3,9 @@ package dev.linkshelf.link;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+
+import dev.linkshelf.link.validation.MaxCodePoints;
+import dev.linkshelf.link.validation.NotBlankText;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +38,9 @@ public class LinkController {
 	public LinkPageResponse list(
 			@RequestParam(defaultValue = "0") @Min(value = 0, message = "0 이상이어야 합니다") int page,
 			@RequestParam(defaultValue = "20") @Min(value = 1, message = "1 이상 100 이하여야 합니다") @Max(value = 100,
-					message = "1 이상 100 이하여야 합니다") int size) {
-		return linkService.list(page, size);
+					message = "1 이상 100 이하여야 합니다") int size,
+			@RequestParam(required = false) @NotBlankText @MaxCodePoints(30) String tag) {
+		return linkService.list(page, size, tag);
 	}
 
 }
