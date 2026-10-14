@@ -47,7 +47,7 @@ class LinkControllerTest {
 	@BeforeEach
 	void stubService() {
 		given(linkService.save(any())).willReturn(new LinkResponse(1L, VALID_URL, "한글 메모 😀",
-				List.of("Java", "스프링"), Instant.parse("2026-10-14T03:00:00.123456Z")));
+				List.of("Java", "스프링"), Instant.parse("2026-10-14T03:00:00.123456Z"), false));
 	}
 
 	private ResultActions postLink(String json) throws Exception {
