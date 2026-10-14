@@ -51,9 +51,9 @@ GitHub Issue 하나 = 독립적으로 검증 가능한 묶음 하나. 번호는 
 
 **Purpose**: 길이 세는 규칙(R-LINK-08). URL·메모·태그 검증과 정규화가 모두 이것을 쓴다.
 
-- [ ] T004 [P] 테스트 작성: `TextsTest.R_LINK_08_counts_code_points` — `가`=1, `😀`=1, `👍🏽`=2. backend/src/test/java/dev/linkshelf/link/TextsTest.java
-- [ ] T005 Red 확인: `cd backend && ./gradlew test --tests 'dev.linkshelf.link.TextsTest'` FAIL(컴파일 실패 또는 assertion)을 기록한다.
-- [ ] T006 구현: `Texts.codePoints(String)`(`String.codePointCount`). 공백 제거용 `Texts.stripToNull(String)`(`strip()` 후 비면 null)도 둔다. backend/src/main/java/dev/linkshelf/link/Texts.java → T004 PASS.
+- [x] T004 [P] 테스트 작성: `TextsTest.R_LINK_08_counts_code_points` — `가`=1, `😀`=1, `👍🏽`=2. backend/src/test/java/dev/linkshelf/link/TextsTest.java
+- [x] T005 Red 확인: `cd backend && ./gradlew test --tests 'dev.linkshelf.link.TextsTest'` FAIL(컴파일 실패 또는 assertion)을 기록한다.
+- [x] T006 구현: `Texts.codePoints(String)`(`String.codePointCount`). 공백 제거용 `Texts.stripToNull(String)`(`strip()` 후 비면 null)도 둔다. backend/src/main/java/dev/linkshelf/link/Texts.java → T004 PASS.
 
 **Checkpoint**: 코드 포인트 계산 PASS.
 
@@ -67,53 +67,53 @@ GitHub Issue 하나 = 독립적으로 검증 가능한 묶음 하나. 번호는 
 
 ### Tests (먼저 작성) ⚠️
 
-- [ ] T007 [P] [US1] 테스트 작성(R-LINK-04 정규화): backend/src/test/java/dev/linkshelf/link/UrlNormalizerTest.java
+- [x] T007 [P] [US1] 테스트 작성(R-LINK-04 정규화): backend/src/test/java/dev/linkshelf/link/UrlNormalizerTest.java
   - `UrlNormalizerTest.R_LINK_04_lowercases_scheme_and_host` — `HTTPS://Example.COM/a` → `https://example.com/a`
   - `UrlNormalizerTest.R_LINK_04_removes_only_default_port` — http:80, https:443은 제거, http:443과 https:8443은 유지
   - `UrlNormalizerTest.R_LINK_04_keeps_path_query_fragment_and_trailing_slash` — `/A/`, `?b=1`, `#x`, `%20`, `/경로/😀`를 그대로 둔다. `%20`이 `%2520`이 되면 실패(research R2)
-- [ ] T008 [P] [US1] 테스트 작성(R-LINK-05): backend/src/test/java/dev/linkshelf/link/TagNormalizerTest.java
+- [x] T008 [P] [US1] 테스트 작성(R-LINK-05): backend/src/test/java/dev/linkshelf/link/TagNormalizerTest.java
   - `TagNormalizerTest.R_LINK_05_strips_and_merges_ignoring_case_keeping_first` — `["Java"," java ","JAVA","스프링"]` → `["Java","스프링"]`
   - `TagNormalizerTest.R_LINK_05_strips_fullwidth_space` — `"　태그　"` → `"태그"`
-- [ ] T009 [P] [US1] 테스트 작성(@DataJpaTest): backend/src/test/java/dev/linkshelf/link/LinkRepositoryTest.java
+- [x] T009 [P] [US1] 테스트 작성(@DataJpaTest): backend/src/test/java/dev/linkshelf/link/LinkRepositoryTest.java
   - `LinkRepositoryTest.R_LINK_07_round_trips_hangul_memo_and_tags` (R-LINK-07) — 한글 메모·태그를 저장 후 다시 조회해 일치하는지, 태그 순서가 유지되는지
   - `LinkRepositoryTest.R_LINK_08_columns_fit_max_code_points_of_astral_chars` (R-LINK-08) — memo `"😀"×500`(UTF-16 1000), 태그 `"😀"×30`(60), URL 2,048 코드 포인트(경로에 😀 포함)를 저장·재조회
-- [ ] T010 [P] [US1] 테스트 작성(@WebMvcTest, `LinkService`는 `@MockitoBean`): `LinkControllerTest.R_LINK_01_returns_201_with_saved_link` (R-LINK-01)
+- [x] T010 [P] [US1] 테스트 작성(@WebMvcTest, `LinkService`는 `@MockitoBean`): `LinkControllerTest.R_LINK_01_returns_201_with_saved_link` (R-LINK-01)
   - 응답 필드는 `id`, `url`, `memo`, `tags`, `createdAt`(ISO-8601 `Z`)
   - `Location` 헤더가 없는지 확인한다(contracts/save-link.md)
   - backend/src/test/java/dev/linkshelf/link/LinkControllerTest.java
-- [ ] T011 [P] [US1] 테스트 작성(@SpringBootTest + MockMvc): `SaveLinkIntegrationTest.R_LINK_01_saves_link_end_to_end` (R-LINK-01, 05, 07)
+- [x] T011 [P] [US1] 테스트 작성(@SpringBootTest + MockMvc): `SaveLinkIntegrationTest.R_LINK_01_saves_link_end_to_end` (R-LINK-01, 05, 07)
   - 한글·이모지 메모와 대소문자 중복 태그를 보내면 201, 정규화 URL, 합친 태그, `linkRepository.count()==1`
   - backend/src/test/java/dev/linkshelf/link/SaveLinkIntegrationTest.java
-- [ ] T012 [US1] Red 확인: `cd backend && ./gradlew test --tests 'dev.linkshelf.link.*'` → T007~T011이 FAIL인 것을 기록한다(T004는 PASS 유지).
+- [x] T012 [US1] Red 확인: `cd backend && ./gradlew test --tests 'dev.linkshelf.link.*'` → T007~T011이 FAIL인 것을 기록한다(T004는 PASS 유지).
 
 ### Implementation
 
-- [ ] T013 [P] [US1] `UrlNormalizer.normalize(String)`: backend/src/main/java/dev/linkshelf/link/UrlNormalizer.java
+- [x] T013 [P] [US1] `UrlNormalizer.normalize(String)`: backend/src/main/java/dev/linkshelf/link/UrlNormalizer.java
   - `strip()` → `new URI(..)`
   - 다음을 이어 붙인다: `scheme.toLowerCase(ROOT) + "://" + [rawUserInfo@] + host.toLowerCase(ROOT) + [":"+port, 기본 포트가 아닐 때] + rawPath + ["?"+rawQuery] + ["#"+rawFragment]`
   - 여러 인자 `URI` 생성자와 `URI.normalize()`는 쓰지 않는다(research R2)
   - 입력이 유효하다는 전제(검증은 US2)
   - → T007 PASS
-- [ ] T014 [P] [US1] `TagNormalizer.normalize(List<String>)`: backend/src/main/java/dev/linkshelf/link/TagNormalizer.java
+- [x] T014 [P] [US1] `TagNormalizer.normalize(List<String>)`: backend/src/main/java/dev/linkshelf/link/TagNormalizer.java
   - null 목록은 `[]`
   - 각 원소에 `strip()`
   - `toLowerCase(Locale.ROOT)` 키로 `LinkedHashMap.putIfAbsent`(첫 표기·순서 유지)
   - → T008 PASS
-- [ ] T015 [US1] `Link` 엔티티: backend/src/main/java/dev/linkshelf/link/Link.java
+- [x] T015 [US1] `Link` 엔티티: backend/src/main/java/dev/linkshelf/link/Link.java
   - 테이블 `link`: `id BIGINT PK IDENTITY`, `normalized_url VARCHAR(4096) NOT NULL`, `memo VARCHAR(1000) NULL`, `created_at TIMESTAMP(6) WITH TIME ZONE NOT NULL`(`Instant`)
   - 태그: `@ElementCollection` + `@CollectionTable(name="link_tag", joinColumns=link_id)` + `@OrderColumn(name="position")` + `@Column(name="name", length=60, nullable=false)` → "PK (link_id, position)"
   - **고유 제약 `uk_link_normalized_url`은 아직 넣지 않는다(T042에서 추가)**
-- [ ] T016 [US1] `LinkRepository extends JpaRepository<Link, Long>`: backend/src/main/java/dev/linkshelf/link/LinkRepository.java → T009 PASS
-- [ ] T017 [P] [US1] record DTO: backend/src/main/java/dev/linkshelf/link/SaveLinkRequest.java, backend/src/main/java/dev/linkshelf/link/LinkResponse.java
+- [x] T016 [US1] `LinkRepository extends JpaRepository<Link, Long>`: backend/src/main/java/dev/linkshelf/link/LinkRepository.java → T009 PASS
+- [x] T017 [P] [US1] record DTO: backend/src/main/java/dev/linkshelf/link/SaveLinkRequest.java, backend/src/main/java/dev/linkshelf/link/LinkResponse.java
   - `SaveLinkRequest(String url, String memo, List<String> tags)`
   - `LinkResponse(Long id, String url, String memo, List<String> tags, Instant createdAt)` + `from(Link)`
-- [ ] T018 [US1] `LinkService.save(SaveLinkRequest)`: backend/src/main/java/dev/linkshelf/link/LinkService.java
+- [x] T018 [US1] `LinkService.save(SaveLinkRequest)`: backend/src/main/java/dev/linkshelf/link/LinkService.java
   - `@Transactional`
   - URL 정규화, `Texts.stripToNull(memo)`, 태그 정규화, `createdAt = Instant.now()`
   - `linkRepository.saveAndFlush`
   - `LinkResponse`를 돌려준다
-- [ ] T019 [US1] `LinkController`: `POST /api/links` → `ResponseEntity.status(201).body(..)`(Location 없음). 이 단계에서는 `@Valid`를 붙이지 않는다(US2). backend/src/main/java/dev/linkshelf/link/LinkController.java → T010, T011 PASS
-- [ ] T020 [US1] Green 확인: `cd backend && ./gradlew test` 전체 PASS를 기록한다.
+- [x] T019 [US1] `LinkController`: `POST /api/links` → `ResponseEntity.status(201).body(..)`(Location 없음). 이 단계에서는 `@Valid`를 붙이지 않는다(US2). backend/src/main/java/dev/linkshelf/link/LinkController.java → T010, T011 PASS
+- [x] T020 [US1] Green 확인: `cd backend && ./gradlew test` 전체 PASS를 기록한다.
 
 **Checkpoint**: US1 단독 동작(201).
 
