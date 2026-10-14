@@ -127,11 +127,11 @@ GitHub Issue 하나 = 독립적으로 검증 가능한 묶음 하나. 번호는 
 
 ### Tests (먼저 작성) ⚠️
 
-- [ ] T021 [P] [US2] 테스트 작성(R-LINK-02, 08): backend/src/test/java/dev/linkshelf/link/LinkUrlValidatorTest.java
+- [x] T021 [P] [US2] 테스트 작성(R-LINK-02, 08): backend/src/test/java/dev/linkshelf/link/LinkUrlValidatorTest.java
   - `LinkUrlValidatorTest.R_LINK_02_rejects_invalid_urls` — 매개변수 테스트: null, `""`, `"  "`, `not a url`, `http://`, `ftp://example.com`, `mailto:a@b.c`, `https:///nohost`, `https://한국.kr/a`(A1)
   - `LinkUrlValidatorTest.R_LINK_02_url_length_boundary` — 2,048 코드 포인트는 통과, 2,049는 거부
   - `LinkUrlValidatorTest.R_LINK_02_accepts_punycode_host` — `https://xn--3e0b707e.kr/a`는 통과(A1)
-- [ ] T022 [P] [US2] 테스트 추가(@WebMvcTest): backend/src/test/java/dev/linkshelf/link/LinkControllerTest.java
+- [x] T022 [P] [US2] 테스트 추가(@WebMvcTest): backend/src/test/java/dev/linkshelf/link/LinkControllerTest.java
   - `R_LINK_02_rejects_invalid_url_with_400` (R-LINK-02, 06) — `errors[].field=="url"`, `application/problem+json`, `verify(linkService, never()).save(any())`
   - `R_LINK_03_accepts_500_code_point_memo_mixing_hangul_and_emoji` (R-LINK-03, 08) — `"가"×249 + "😀"×251`(500 코드 포인트, UTF-16 751)은 201
   - `R_LINK_03_rejects_501_code_point_memo_mixing_hangul_and_emoji` (R-LINK-03, 08) — 위 문자열 + `"가"`는 400, `field=="memo"`
@@ -141,34 +141,34 @@ GitHub Issue 하나 = 독립적으로 검증 가능한 묶음 하나. 번호는 
   - `R_LINK_05_rejects_blank_or_null_tag` (R-LINK-05) — `""`, `"   "`, `"　"`, `null` 원소는 400, `field=="tags"`
   - `R_LINK_06_reports_all_invalid_fields_at_once` (R-LINK-06) — url·memo·tags가 모두 틀리면 errors 3개
   - `R_LINK_06_returns_400_problem_on_malformed_json` (R-LINK-06) — 깨진 JSON은 400 ProblemDetail
-- [ ] T023 [P] [US2] 테스트 추가: `SaveLinkIntegrationTest.R_LINK_06_rejected_requests_store_nothing` (R-LINK-06) — 400 사례 뒤 `count()==0`. backend/src/test/java/dev/linkshelf/link/SaveLinkIntegrationTest.java
-- [ ] T024 [US2] Red 확인: `cd backend && ./gradlew test --tests 'dev.linkshelf.link.*'` → T021~T023 FAIL을 기록한다. 경계 테스트의 통과(201) 사례도 FAIL 또는 컴파일 실패여야 한다. 이미 PASS인 사례는 이유를 적는다.
+- [x] T023 [P] [US2] 테스트 추가: `SaveLinkIntegrationTest.R_LINK_06_rejected_requests_store_nothing` (R-LINK-06) — 400 사례 뒤 `count()==0`. backend/src/test/java/dev/linkshelf/link/SaveLinkIntegrationTest.java
+- [x] T024 [US2] Red 확인: `cd backend && ./gradlew test --tests 'dev.linkshelf.link.*'` → T021~T023 FAIL을 기록한다. 경계 테스트의 통과(201) 사례도 FAIL 또는 컴파일 실패여야 한다. 이미 PASS인 사례는 이유를 적는다.
 
 ### Implementation
 
-- [ ] T025 [P] [US2] `@MaxCodePoints(int value)` + `MaxCodePointsValidator`: backend/src/main/java/dev/linkshelf/link/validation/MaxCodePoints.java, backend/src/main/java/dev/linkshelf/link/validation/MaxCodePointsValidator.java
+- [x] T025 [P] [US2] `@MaxCodePoints(int value)` + `MaxCodePointsValidator`: backend/src/main/java/dev/linkshelf/link/validation/MaxCodePoints.java, backend/src/main/java/dev/linkshelf/link/validation/MaxCodePointsValidator.java
   - null·공백뿐이면 통과
   - `Texts.codePoints(strip()) <= value`
   - 메시지 "500자 이하여야 합니다" 형식(`{value}`)
-- [ ] T026 [P] [US2] `@LinkUrl` + `LinkUrlValidator`: backend/src/main/java/dev/linkshelf/link/validation/LinkUrl.java, backend/src/main/java/dev/linkshelf/link/validation/LinkUrlValidator.java
+- [x] T026 [P] [US2] `@LinkUrl` + `LinkUrlValidator`: backend/src/main/java/dev/linkshelf/link/validation/LinkUrl.java, backend/src/main/java/dev/linkshelf/link/validation/LinkUrlValidator.java
   - 필수, `strip()` 후 ≤ 2,048 코드 포인트
   - `new URI` 파싱 성공, 스킴 `http`/`https`(대소문자 무시), `getHost()!=null`
   - 한글 도메인은 host가 null이라 거부된다
   - → T021 PASS
-- [ ] T027 [P] [US2] `@LinkTags(maxCount=10, maxLength=30)` + `LinkTagsValidator`: backend/src/main/java/dev/linkshelf/link/validation/LinkTags.java, backend/src/main/java/dev/linkshelf/link/validation/LinkTagsValidator.java
+- [x] T027 [P] [US2] `@LinkTags(maxCount=10, maxLength=30)` + `LinkTagsValidator`: backend/src/main/java/dev/linkshelf/link/validation/LinkTags.java, backend/src/main/java/dev/linkshelf/link/validation/LinkTagsValidator.java
   - null 목록은 통과
   - 원소가 null이거나 `strip()` 후 비면 거부
   - 원소는 ≤ 30 코드 포인트
   - `TagNormalizer.normalize` 결과 개수 ≤ 10(합친 뒤 기준, research R4)
   - 오류 field는 `tags`
-- [ ] T028 [US2] `SaveLinkRequest`에 `@LinkUrl url`, `@MaxCodePoints(500) memo`, `@LinkTags(maxCount=10, maxLength=30) tags`를 붙인다. backend/src/main/java/dev/linkshelf/link/SaveLinkRequest.java
-- [ ] T029 [US2] `LinkController`에 `@Valid @RequestBody`를 붙인다. backend/src/main/java/dev/linkshelf/link/LinkController.java
-- [ ] T030 [US2] `ApiExceptionHandler extends ResponseEntityExceptionHandler`(`@RestControllerAdvice`): backend/src/main/java/dev/linkshelf/common/ApiExceptionHandler.java
+- [x] T028 [US2] `SaveLinkRequest`에 `@LinkUrl url`, `@MaxCodePoints(500) memo`, `@LinkTags(maxCount=10, maxLength=30) tags`를 붙인다. backend/src/main/java/dev/linkshelf/link/SaveLinkRequest.java
+- [x] T029 [US2] `LinkController`에 `@Valid @RequestBody`를 붙인다. backend/src/main/java/dev/linkshelf/link/LinkController.java
+- [x] T030 [US2] `ApiExceptionHandler extends ResponseEntityExceptionHandler`(`@RestControllerAdvice`): backend/src/main/java/dev/linkshelf/common/ApiExceptionHandler.java
   - `handleMethodArgumentNotValid`를 재정의한다
   - ProblemDetail 400에 `errors: [{field, message}]` 확장 필드를 붙인다(field 오류 전부)
   - 깨진 JSON은 상속 기본 동작으로 400 ProblemDetail이 되는지 확인한다(contracts/save-link.md 400 예시)
   - → T022, T023 PASS
-- [ ] T031 [US2] Green 확인: `cd backend && ./gradlew test` 전체 PASS를 기록한다.
+- [x] T031 [US2] Green 확인: `cd backend && ./gradlew test` 전체 PASS를 기록한다.
 
 **Checkpoint**: US1 + US2 완료(저장·입력 검증).
 

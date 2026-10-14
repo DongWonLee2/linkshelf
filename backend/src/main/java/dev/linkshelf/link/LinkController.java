@@ -1,5 +1,6 @@
 package dev.linkshelf.link;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class LinkController {
 	}
 
 	@PostMapping
-	public ResponseEntity<LinkResponse> save(@RequestBody SaveLinkRequest request) {
+	public ResponseEntity<LinkResponse> save(@Valid @RequestBody SaveLinkRequest request) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(linkService.save(request));
 	}
 

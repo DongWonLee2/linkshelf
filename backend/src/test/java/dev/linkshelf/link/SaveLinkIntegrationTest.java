@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -50,6 +52,23 @@ class SaveLinkIntegrationTest {
 			.andExpect(jsonPath("$.createdAt").isString());
 
 		assertThat(linkRepository.count()).isEqualTo(1);
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { """
+			{"url":"ftp://example.com/a"}
+			""", """
+			{"url":"not a url"}
+			""", """
+			{"memo":"URL 없음"}
+			""", """
+			{"url":"https://example.com/a","tags":["   "]}
+			""" })
+	@DisplayName("R-LINK-06: rejected requests store nothing")
+	void R_LINK_06_rejected_requests_store_nothing(String json) throws Exception {
+		postLink(json).andExpect(status().isBadRequest());
+
+		assertThat(linkRepository.count()).isZero();
 	}
 
 }
