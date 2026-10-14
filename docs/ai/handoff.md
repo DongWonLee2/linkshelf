@@ -1,6 +1,6 @@
 # Agent Handoff — MVP-1 완료(6단계 결과 작성) → Issue #7 리뷰어 Bash 쓰기 차단
 
-- 상태: #7 실제 호출 시험 완료(2026-10-14 16:15 KST, 권한 확인 모드). 훅 차단 PASS(B1·B2), 원래 쓰기 명령 5개는 서브에이전트가 시도 거부 → 훅 층 NOT_RUN. PR #8 본문 갱신. 다음: PR #8 리뷰(8-4) → 조언 16:10 항목(전역 설정 2건 승인 → 재시작)
+- 상태: #7 PR #8 ready(2026-10-14). 리뷰 지적 수용분 반영 Red `94fd23c` → Green `e44cd3b`(70/70), CI run 38531794124 PASS. 사용자 병합 대기. 전역 advisor 설정 적용 완료 → 재시작 필요
 - task_id: CHORE-AGENT-GUARD-01 (Issue #7, R-ID 해당 없음)
 - 작성: 2026-10-14 KST · Claude Code (Opus 5.5)
 - 규칙: 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` §8 자율 진행 규칙을 따른다(8-2만 승인). "조언 확인해" = `plans/advisor-notes.md` 맨 위 항목
@@ -45,19 +45,22 @@
   - 시험 폴더 빔, HEAD `63a1634`, `git status --porcelain --ignored` 해시 전후 동일
   - 발견: 과잉 차단(따옴표 안 `|`, `ls-files -o`). 이번엔 둠
 
+- 16:30~ PR #8 리뷰(pr-reviewer): 높음 3건(따옴표 우회, `ls-remote --upload-pack`, 테스트 공백) 재현 → 같은 PR에서 수정. 분류 코멘트 6163704335. 별도 Issue 후보 2건(#4 `git diff --no-index`로 `.env` 읽기, #9 훅 테스트 CI 편입) 승인 대기
+
 ## 수정했지만 커밋하지 않은 파일
 
 - 없음
 
 ## 다음 행동 1개
 
-재시작 후: `advisor` 서브에이전트를 한 번 호출해 결과가 돌아오는지, 아무것도 바꾸지 않는지, transcript `model`이 Opus인지 확인(조언 16:10 3번) → 런북 8-3·플레이북 4장 재독 → PR #8 리뷰 분류가 끝나지 않았다면 마저 → 사용자 병합 → #5(Light).
+재시작 후: `advisor` 서브에이전트를 한 번 호출해 결과가 돌아오는지, 아무것도 바꾸지 않는지, transcript `model`이 Opus인지 확인(조언 16:10 3번) → 런북 8-3·플레이북 4장 재독 → (사용자가 PR #8 병합하면) #5(Light).
 
 ## 사람이 결정하거나 승인할 사항
 
 - 전역 설정 2건 적용 완료(사용자 승인 "1번으로 해", 16:23 KST): `~/.claude/agents/advisor.md`(원본과 cmp 동일), `~/.claude/settings.json` `permissions.additionalDirectories` = `/Users/dongwon/Dev/AI_개발_가이드`. 백업 `~/.claude/settings.json.bak-20261014-advisor`. **Claude Code 재시작 필요**(사용자)
 - 시험 후 auto mode 복귀(사용자)
-- #7 PR 병합(검증 후)
+- #7 PR #8 병합(ready)
+- 별도 Issue 2건 생성 여부: `.env` 등 읽기 구멍(`git diff --no-index`, `git blame --contents`), 훅 테스트 CI 편입
 - #5는 #7 다음, Spec Kit 없이 Light 모드로(사용자 지시). 걸린 시간과 사용량 기록
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 
