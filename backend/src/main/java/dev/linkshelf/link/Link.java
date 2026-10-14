@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import org.hibernate.annotations.BatchSize;
 
 /**
  * A saved link (data-model.md, approved 2026-10-14). Column lengths are UTF-16 units sized at twice the code-point
@@ -41,6 +42,7 @@ public class Link {
 	@ElementCollection
 	@CollectionTable(name = "link_tag", joinColumns = @JoinColumn(name = "link_id"))
 	@OrderColumn(name = "position")
+	@BatchSize(size = 100)
 	@Column(name = "name", length = 60, nullable = false)
 	private List<String> tags = new ArrayList<>();
 
