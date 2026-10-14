@@ -124,6 +124,10 @@ class ListLinksIntegrationTest {
 			.andExpect(jsonPath("$.page").value(2147483647))
 			.andExpect(jsonPath("$.totalElements").value(1))
 			.andExpect(jsonPath("$.hasNext").value(false));
+		mockMvc.perform(get("/api/links?page=2147483647&size=1"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.items").isEmpty())
+			.andExpect(jsonPath("$.hasNext").value(false));
 	}
 
 }
