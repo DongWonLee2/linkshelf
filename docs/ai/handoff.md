@@ -1,10 +1,10 @@
-# Agent Handoff — spec 002 (목록 조회·태그 필터·읽음 표시, Standard)
+# Agent Handoff — spec 002 완료 (목록 조회·태그 필터·읽음 표시)
 
-- 상태: spec 002 US1(PR #16)·US2(PR #17) 병합. US3(#14) PR #18 리뷰 반영 완료, 사용자 병합 대기
+- 상태: spec 002 완료. PR #15(spec)·#16(US1)·#17(US2)·#18(US3) 병합, Issue #12~#14 닫힘. main `4c016ee` 120 tests PASS. 마무리 문서 PR(T046·T047) 진행
 - task_id: spec 002 T001~T047 (R-LINK-09~18)
 - 작성: 2026-10-14 KST · Claude Code (Opus 5.5)
 - 규칙: 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` §8(8-3a: 승인 요청 전 advisor 먼저). 플레이북 규칙 20(병합 후 정리), 21(기능 먼저)
-- 작업 브랜치: `feat/14-read-state` · 기준 SHA `d399789` (main, PR #17 병합)
+- 작업 브랜치: `chore/spec-002-wrapup` · 기준 SHA `4c016ee` (main, PR #18 병합)
 - 진행 요약: `~/Dev/AI_개발_가이드/plans/mvp1-status.md`
 ## 지금까지 완료한 것
 
@@ -66,11 +66,12 @@
 
 ## 다음 행동 1개
 
-사용자가 PR #18 병합 → 규칙 20 정리 → spec 002 마무리(T046·T047: R-LINK-09~18 ↔ 테스트 표, status 갱신).
+마무리 PR 병합 후 다음 기능을 정한다(PRD 5장의 PRD-01~04는 모두 구현됨. 남은 것은 MVP-3 프론트엔드 등 로드맵). "조언 확인해"로 다음 지시를 받는다.
 
 ## 사람이 결정하거나 승인할 사항
 
-- PR #18 병합
+- 마무리 문서 PR 병합
+- 로컬 DB 백업 `~/Dev/linkshelf-db-backup/20261014-235640/`는 되돌리기용으로 남김. 지워도 되면 사용자가 직접 지운다
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 
 ## Codex로 이어받을 때
