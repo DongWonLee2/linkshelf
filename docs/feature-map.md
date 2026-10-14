@@ -22,6 +22,7 @@
 | | 항목 URL(링크) | `link-item-url` | | |
 | | 항목 메모 | `link-item-memo` | | |
 | | 항목 태그 하나 | `link-item-tag` | | |
+| | 항목 저장 시각 | `link-item-created-at` | `createdAt` | |
 | | 빈 목록 안내 | `link-list-empty` | `items: []` | `E2E_PRD02_shows_empty_state` |
 | | 이전 쪽 / 다음 쪽 | `link-list-prev` / `link-list-next` | `page`, `hasNext` | `E2E_PRD02_pages_through_links` |
 | | 쪽 정보(예: 1 / 3). 빈 목록(`totalPages` 0)이면 표시하지 않는다 | `link-list-page-info` | `page`, `totalPages` | |
