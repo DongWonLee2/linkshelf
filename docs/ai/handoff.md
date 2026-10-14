@@ -1,10 +1,10 @@
-# Agent Handoff — MVP-1 완료(6단계 결과 작성) → Issue #7 리뷰어 Bash 쓰기 차단
+# Agent Handoff — Issue #5 OSIV 끄기 (Light 모드)
 
-- 상태: #7 PR #8 ready, 사용자 병합 대기. 후속 Issue #9·#10. 전역 advisor 설정 적용·동작 확인 PASS(재시작 없이 목록에 나타남). 다음 #5(Light)
-- task_id: CHORE-AGENT-GUARD-01 (Issue #7, R-ID 해당 없음)
+- 상태: PR #11 리뷰 반영 완료, CI run 38539605512 @ `a18f58e` PASS, 사용자 병합 대기. 이전 #7은 PR #8 병합(`3f2f7be`), 후속 Issue #9·#10 open
+- task_id: CHORE-OSIV-01 (Issue #5, R-ID 없음, 관련 R-LINK-01) · 직전 CHORE-AGENT-GUARD-01(#7) 완료
 - 작성: 2026-10-14 KST · Claude Code (Opus 5.5)
 - 규칙: 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` §8 자율 진행 규칙을 따른다(8-2만 승인). "조언 확인해" = `plans/advisor-notes.md` 맨 위 항목
-- 작업 브랜치: `chore/7-reviewer-bash-guard` · 기준 SHA `dfb3311` (main, PR #6 병합)
+- 작업 브랜치: `fix/5-disable-osiv` · 기준 SHA `3f2f7be` (main, PR #8 병합)
 - 진행 요약: `~/Dev/AI_개발_가이드/plans/mvp1-status.md` · MVP-1 결과: `plans/mvp1-result.md`
 
 ## 지금까지 완료한 것
@@ -49,19 +49,22 @@
 
 - advisor 첫 호출(조언 16:10 3번): 결과 돌아옴, transcript `model` = `claude-opus-5-5`, 도구는 Read·Grep·Glob·WebFetch·WebSearch만, 저장소 무변경(HEAD `0aaec1f`, status clean). 재시작 불필요였음. advisor 추천: #5를 #9보다 먼저, PR #8 병합을 기다리지 않고 main 기준 `fix/5-...`로 시작 가능(파일 겹침 없음). #9는 시작 시 방식 승인 필요(보안 정책 변경)
 
+- #5 (17:33~17:41 KST): 기준선 53 PASS → Red `809ee0d`(인터셉터 테스트 FAIL) → main에만 설정 넣었더니 계속 FAIL: **test `application.properties`가 main을 가림**(기존 테스트가 main 설정을 안 읽었음) → advisor 판단으로 test 파일을 `src/test/resources/config/`로 이동 → Green `2fcec53` 55/55, main 줄 제거 시 FAIL 확인, bootRun 경고 0건. PR #11, CI run 38536802084 PASS
+- PR #11 리뷰: 병합 막는 결함 없음. 수용 2건 = 테스트 DB 격리 가드 `a18f58e`(파일 DB 주소로 FAIL 확인, 56/56), 태그 테스트 변별력 낮음 본문 명시. 분류 코멘트 6164809603
+
 ## 수정했지만 커밋하지 않은 파일
 
 - 없음
 
 ## 다음 행동 1개
 
-런북 8-3·플레이북 4장("승인 요청 전 advisor 먼저") 재독 → main 기준 `fix/5-<slug>` 브랜치로 #5(OSIV, Light 모드) 시작. 걸린 시간과 사용량 기록.
+사용자가 PR #11 병합 → MVP-1 남은 Issue(#9 `.env` 읽기 구멍은 시작 시 방식 승인 필요, #10 훅 테스트 CI 편입) 중 다음 작업 확인.
 
 ## 사람이 결정하거나 승인할 사항
 
 - 전역 설정 2건 적용 완료(사용자 승인 "1번으로 해", 16:23 KST): `~/.claude/agents/advisor.md`(원본과 cmp 동일), `~/.claude/settings.json` `permissions.additionalDirectories` = `/Users/dongwon/Dev/AI_개발_가이드`. 백업 `~/.claude/settings.json.bak-20261014-advisor`. 재시작 없이 반영됨
 - 시험 후 auto mode 복귀(사용자)
-- #7 PR #8 병합(ready)
+- PR #11 병합. 이때 확인할 것: 기존 테스트가 이제 main 설정을 읽는다(test 설정을 `config/`로 옮긴 결과, advisor 판단으로 진행)
 - #5는 #7 다음, Spec Kit 없이 Light 모드로(사용자 지시). 걸린 시간과 사용량 기록
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 
