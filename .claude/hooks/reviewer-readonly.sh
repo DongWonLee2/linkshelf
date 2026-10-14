@@ -3,8 +3,11 @@
 # Reads the hook JSON on stdin and exits 2 (block) unless the Bash command is a
 # single read-only git/gh command from the allow list below.
 # Order: unconditional blocks first (chaining, redirection, substitution,
-# newline, file output options), then the allow list.
+# newline, any other shell metacharacter, file output options), then the allow list.
 set -u
+# Fail closed: any exit other than 0 (allow) or 2 (block), e.g. a script error,
+# becomes a block. Claude Code only treats exit 2 as a block.
+trap 'rc=$?; [ "$rc" -eq 0 ] || [ "$rc" -eq 2 ] || exit 2' EXIT
 
 block() {
   echo "reviewer-readonly: blocked ($1). pr-reviewer may only run single read-only git/gh commands." >&2
@@ -21,12 +24,20 @@ case "$cmd" in
   *'$('* | *'`'*) block "command substitution" ;;
 esac
 
+# Quotes, backslashes, $, braces and globs let the shell turn a word into a
+# different one (e.g. '--output=x' or --out""put=x), so the word checks below
+# would not see it. Only plain characters are allowed.
+case "$cmd" in
+  *[!A-Za-z0-9\ ._/:=@,+%^~-]*) block "shell metacharacter" ;;
+esac
+
 read -r -a words <<< "$cmd"
+[ "${#words[@]}" -gt 0 ] || block "empty command"
 
 for w in "${words[@]}"; do
   case "$w" in
     --output* | -o*) block "file output option $w" ;;
-    --web | -w) block "opens a browser: $w" ;;
+    --web) block "opens a browser: $w" ;;
   esac
 done
 
@@ -37,10 +48,13 @@ action=${words[2]:-}
 case "$prog" in
   git)
     case "$sub" in
-      diff | log | show | status | rev-parse | ls-files | ls-remote | merge-base | blame) exit 0 ;;
+      diff | log | show | status | rev-parse | ls-files | merge-base | blame) exit 0 ;;
     esac
     ;;
   gh)
+    for w in "${words[@]}"; do
+      [ "$w" != "-w" ] || block "opens a browser: $w"
+    done
     case "$sub $action" in
       "pr view" | "pr diff" | "pr checks" | "pr list" | \
       "issue view" | "issue list" | \

@@ -36,14 +36,16 @@ A-1, B-1 채택. 사용자 지시로 A-1에 두 가지를 더했다(사용자 �
 
 ## 결정 내용
 
-- `.claude/hooks/reviewer-readonly.sh`: 순서대로 ① 줄바꿈 ② `;` `|` `&` ③ `>` `<` ④ `$(`, 백틱 ⑤ `--output*`, `-o*`, `--web`/`-w` 토큰을 무조건 차단 → ⑥ 첫 두(gh는 세) 단어가 허용 목록일 때만 통과. 그 외는 exit 2.
-- 허용 목록: `git diff|log|show|status|rev-parse|ls-files|ls-remote|merge-base|blame`, `gh pr view|diff|checks|list`, `gh issue view|list`, `gh run view|list`. 첫 단어 앞의 환경 변수, `git -C`/`-c` 같은 전역 옵션, 따옴표로 감싼 명령 이름은 허용 목록에 맞지 않아 차단된다.
+- `.claude/hooks/reviewer-readonly.sh`: 순서대로 ① 줄바꿈 ② `;` `|` `&` ③ `>` `<` ④ `$(`, 백틱 ⑤ 영문·숫자·공백·`._/:=@,+%^~-` 밖의 문자(따옴표, 백슬래시, `$`, 중괄호, glob 등) ⑥ `--output*`, `-o*`, `--web` 토큰(gh는 `-w`도)을 무조건 차단 → ⑦ 첫 두(gh는 세) 단어가 허용 목록일 때만 통과. 그 외는 exit 2. 스크립트 오류 등 0·2 외 종료 코드는 EXIT trap으로 2로 바꾼다(실패 시 닫힘).
+- 허용 목록: `git diff|log|show|status|rev-parse|ls-files|merge-base|blame`, `gh pr view|diff|checks|list`, `gh issue view|list`, `gh run view|list`. 첫 단어 앞의 환경 변수, `git -C`/`-c` 같은 전역 옵션, 따옴표로 감싼 명령 이름은 허용 목록에 맞지 않아 차단된다.
 - `./gradlew`는 허용하지 않는다. 리뷰어는 CI 결과를 읽는다.
 - `.claude/settings.json` deny 추가: `Bash(git push * --force*)`, `Bash(git push * -f)`, `Bash(git push * -f *)`.
 
 ## 포기하는 것·운영 영향
 
-- 리뷰어는 `git log --format='%h|%s'`처럼 따옴표 안에 `|`가 있는 읽기 명령도 못 쓴다(무조건 차단의 대가).
+- 리뷰어는 `git log --format='%h|%s'`처럼 따옴표 안에 `|`가 있는 읽기 명령도 못 쓴다. 따옴표 자체를 쓸 수 없어 공백이 든 인자(`--grep="a b"`)도 못 쓴다(무조건 차단의 대가). `git ls-files -o`(`--others`)도 `-o*` 규칙에 걸린다.
+- PR #8 리뷰 반영(2026-10-14): 따옴표·이스케이프·중괄호로 `--output`을 숨기면 단어 검사를 통과하던 구멍을 막았다. `git ls-remote`는 `--upload-pack`으로 명령을 실행하거나 임의 호스트에 접속할 수 있어 허용 목록에서 뺐다.
+- 남은 구멍(쓰기 아님, 별도 검토): 허용된 `git diff --no-index`, `git blame --contents`로 저장소 밖 파일이나 `.env`를 읽을 수 있다. 서브에이전트 Bash에는 `Read(.env)` deny가 적용되지 않는다.
 - 리뷰어는 로컬 테스트로 재현하지 못한다. CI가 돌지 않은 커밋은 테스트 결과를 NOT_RUN으로 적어야 한다.
 - 허용된 `git diff`·`git show`는 저장소 `.git/config`의 외부 diff·textconv 설정을 따른다. 저장소 설정은 PR로 바뀌지 않으므로 받아들인다.
 - `git status`는 인덱스 stat 캐시를 갱신할 수 있다(내용 변경 아님).
@@ -53,6 +55,7 @@ A-1, B-1 채택. 사용자 지시로 A-1에 두 가지를 더했다(사용자 �
 
 ## 결정 검증
 
-- 실행할 실험: `bash .claude/hooks/test-reviewer-readonly.sh`(허용 12 / 차단 38), 차단 규칙을 하나씩 지운 사본으로 테스트가 FAIL하는지 확인, pr-reviewer 서브에이전트에게 금지 명령(쓰기, 연결 기호, `--output`, gradlew)을 실제로 시켜 훅 메시지로 막히는지 확인
-- 성공 판정: 단위 테스트 50/50, 변형마다 FAIL 발생, 서브에이전트 시도가 `reviewer-readonly: blocked`로 막히고 파일이 생기지 않음
+- 실행할 실험: `bash .claude/hooks/test-reviewer-readonly.sh`(허용 18 / 차단 52, PR #8 리뷰 반영 후), 차단 규칙을 하나씩 지운 사본으로 테스트가 FAIL하는지 확인, pr-reviewer 서브에이전트에게 금지 명령(쓰기, 연결 기호, `--output`, gradlew)을 실제로 시켜 훅 메시지로 막히는지 확인
+- 성공 판정: 단위 테스트 전부 PASS, 변형마다 FAIL 발생, 서브에이전트 시도가 `reviewer-readonly: blocked`로 막히고 파일이 생기지 않음
+- 검증 결과(2026-10-14): 서브에이전트 실제 호출에서 훅이 막아야 하는 읽기 명령 2개는 `reviewer-readonly: blocked`로 막혔다. 쓰기 명령은 서브에이전트가 지침을 근거로 시도하지 않아 훅 층에서는 관찰하지 못했다(NOT_RUN). 이 판정 항목은 부분 충족이다.
 - 재검토 트리거: 리뷰어가 허용 목록 밖 명령이 꼭 필요해질 때, Claude Code의 서브에이전트 훅·sandbox 동작이 바뀔 때
