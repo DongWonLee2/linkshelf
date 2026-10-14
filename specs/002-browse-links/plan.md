@@ -4,7 +4,7 @@
 
 **Input**: Feature specification from `specs/002-browse-links/spec.md` · 기준 SHA `c2c2bc3`
 
-**상태**: 승인 대기. 아래 [승인 요청](#승인-요청)을 본다.
+**상태**: 승인됨 (2026-10-14). 사용자 답변 "추천으로 가" (B1~B5 승인, 이유 미기재). 아래 [승인 요청](#승인-요청-완료)을 본다.
 
 ## Summary
 
@@ -38,7 +38,7 @@
 
 | 원칙 | 판정 | 근거 |
 |---|---|---|
-| I. 승인 없는 계약 변경 금지 | **승인 대기** | 새 공개 API 2개, 저장 응답 `read` 추가, 테이블 컬럼 1개 추가. 아래 승인 요청 |
+| I. 승인 없는 계약 변경 금지 | PASS | 새 공개 API 2개, 저장 응답 `read` 추가, 테이블 컬럼 1개 추가, R-LINK-11 예외(B5). 2026-10-14 사용자 답변 "추천으로 가" (B1~B5 승인, 이유 미기재) |
 | II. 테스트 먼저 | PASS(계획) | 스토리마다 Red 커밋 후 구현. 고장 내기 검증은 quickstart §5 |
 | III. 네 가지 결과 | PASS(계획) | quickstart 보고 방식 |
 | IV. 2회 실패 중단 | 해당 시 적용 | — |
@@ -46,7 +46,7 @@
 | VI. ID 추적 | PASS(계획) | R-LINK-09~18 → tasks → Issue → `R_LINK_NN_…` 테스트 |
 | VII. 우회 금지 | PASS | — |
 
-**Phase 1 후 재확인**: 설계에서 새 위반은 없다. I은 승인 후 PASS로 바꾼다.
+**Phase 1 후 재확인**: 설계에서 새 위반은 없다. I은 2026-10-14 사용자 승인으로 PASS.
 
 ## 핵심 설계 결정
 
@@ -117,7 +117,7 @@ backend/src/main/java/dev/linkshelf/
 backend/src/test/java/dev/linkshelf/link/  # 스토리별 테스트 추가
 ```
 
-## 승인 요청
+## 승인 요청 (완료)
 
 constitution I에 따라 아래를 한 번에 승인받는다. 상세: [contracts/browse-links.md](contracts/browse-links.md), [data-model.md](data-model.md).
 

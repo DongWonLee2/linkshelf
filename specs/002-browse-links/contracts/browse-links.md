@@ -1,6 +1,6 @@
 # Contract: 링크 목록 조회·태그 필터·읽음 표시 API
 
-> **상태: 승인 대기**. 새 공개 API 2개와 기존 저장 응답의 필드 추가는 constitution I에 따라 사용자 승인이 필요하다.
+> **상태: 승인됨 (2026-10-14)**. 사용자 답변 "추천으로 가" (B1~B5 승인, 이유 미기재). 변경하려면 다시 승인을 받는다(constitution I).
 
 오류 응답 형식은 [001 contract](../001-save-link/contracts/save-link.md)와 같다(`application/problem+json`, `type` 없음, 입력 오류는 `errors: [{field, message}]`).
 
