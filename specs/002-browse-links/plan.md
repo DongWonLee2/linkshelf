@@ -64,7 +64,7 @@
 
 ### 웹 슬라이스 (`@WebMvcTest`, 서비스 `@MockitoBean`)
 
-- US1: `page`·`size` 기본값 전달, 경계(`size` 1·100 허용, 0·101 거부, `page` -1 거부), 숫자가 아닌 값 400과 `errors[field]`, 응답 JSON 모양(6개 필드).
+- US1: `tag` 생략 → 200(거르지 않음), `page`·`size` 기본값 전달, 경계(`size` 1·100 허용, 0·101 거부, `page` -1 거부), 숫자가 아닌 값 400과 `errors[field]`, 응답 JSON 모양(6개 필드).
 - US2: `tag` 공백만 → 400, 31 코드 포인트 → 400, 30 → 허용.
 - US3: `read` 없음·`null`·`"true"`·`1` → 400, 숫자가 아닌 id → 400, 없는 id → 404 모양.
 
@@ -127,6 +127,10 @@ constitution I에 따라 아래를 한 번에 승인받는다. 상세: [contract
 | B2 | `PUT /api/links/{id}/read` `{"read": bool}` → 200 링크 / 400 / 404 | 새 공개 API |
 | B3 | 모든 링크 표현(저장 201 포함)에 `read` 추가 | 기존 API 응답 필드 추가 |
 | B4 | `link.is_read BOOLEAN DEFAULT FALSE NOT NULL` | DB 컬럼 추가 |
+| B5 | `page=abc&size=0`처럼 숫자가 아닌 값과 다른 오류가 함께 오면 숫자가 아닌 항목 하나만 알려 준다(R-LINK-11 "모두 알려 준다"의 예외) | spec 요구사항 예외 |
+
+- 되돌리기: 코드를 이전으로 돌려도 `is_read`는 기본값 덕에 INSERT가 깨지지 않는다. 컬럼까지 없애려면 US3 시작 전에 만든 로컬 DB 백업(quickstart §4-0)으로 바꾼다.
+- advisor 검토(2026-10-14)로 고친 것: tag 제약(`@NotBlank` → null 허용 공백 검사), SC-004 증거 세 층, 계약 경계 동작(400 우선, 415, detail 문구), 001 계약 동기화.
 
 ## Complexity Tracking
 

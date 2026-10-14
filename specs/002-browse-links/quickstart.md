@@ -40,10 +40,13 @@ curl -s -o /dev/null -w '%{http_code}\n' -X PUT localhost:8080/api/links/999999/
 
 자동 테스트는 빈 메모리 DB라 이 경우를 잡지 못한다([research R1](research.md#r1-기존-로컬-db에-읽음-컬럼을-더하는-방법)). 원본을 건드리지 않게 **복사본**으로 확인한다.
 
-1. US3 브랜치에서 `backend/data/linkshelf.mv.db`를 임시 폴더로 복사한다(읽음 컬럼이 없는 상태, 행이 있는 상태).
-2. `SPRING_DATASOURCE_URL=jdbc:h2:file:<임시 폴더>/linkshelf ./gradlew bootRun`으로 기동한다.
-3. 기대: `Started LinkshelfApplication`, `GET /api/links`에서 기존 링크가 모두 `read:false`. 로그에서 Hibernate가 실행한 `alter table link add column is_read …` 문장을 확인한다(`@ColumnDefault` 반영 여부).
-4. 대조: 같은 복사본에 대해 기본값 없는 엔티티로 기동하면 실패하는지(검증기 검증, constitution II). 결과를 PR 검증 표에 층별로 적는다.
+0. US3 작업을 시작하기 전에 원본 `backend/data/linkshelf.mv.db`를 백업 폴더에 복사해 둔다(되돌리기용, 원본은 건드리지 않음).
+1. 같은 원본을 임시 폴더에 한 번 더 복사한다(읽음 컬럼이 없고 행이 있는 상태).
+2. `SPRING_DATASOURCE_URL=jdbc:h2:file:<임시 폴더>/linkshelf ./gradlew bootRun`으로 기동한다. `ddl-auto=update`는 ALTER가 실패해도 기동을 계속할 수 있으므로 "떴다"만으로는 PASS가 아니다. 아래 세 층을 따로 적는다:
+   - 층 1 기동 로그: 스키마 변경 예외·경고가 없고, `alter table link add column is_read …` 문장이 보인다.
+   - 층 2 DB 직접 조회(앱 종료 후 H2 Shell로 복사본 조회): `is_read` 컬럼이 있고 `DEFAULT FALSE`, `NOT NULL`이며 기존 행이 모두 false.
+   - 층 3 API: `GET /api/links`에서 기존 링크가 모두 `read:false`, 다른 필드 불변.
+3. 대조: 새 복사본에 대해 `@ColumnDefault`를 뺀 엔티티로 기동하면 층 1 또는 층 2에서 실패가 드러나는지(검증기 검증, constitution II).
 
 ## 5. 일부러 고장 내기 (검증기 검증)
 

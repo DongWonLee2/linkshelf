@@ -12,7 +12,7 @@
   | `alter table link add column is_read boolean default false not null` | 성공, 기존 2행 모두 false |
   | `alter table link add column is_read boolean` (null 허용) | 성공, 기존 행 null |
   - 기본값 없이 NOT NULL로 두면 기존 데이터가 있는 로컬 DB에서 앱이 뜨지 않는다. 테스트는 매번 빈 메모리 DB(`create-drop`)라 이 실패를 잡지 못한다 → SC-004는 실제 기동으로 확인한다.
-  - Hibernate가 `update`에서 `@ColumnDefault`를 ALTER 문에 넣는지는 미확인이다. US3 구현 때 로컬 DB 복사본을 대상으로 기동해 확인한다(quickstart §4).
+  - Hibernate가 `update`에서 `@ColumnDefault`를 ALTER 문에 넣는지는 미확인이다. 또 `ddl-auto=update`는 ALTER 실패를 로그만 남기고 기동을 계속할 수 있다(SchemaUpdate `haltOnError`, Hibernate 7.4 기본값 미확인). 그래서 "앱이 떴다"는 증거가 되지 못한다. quickstart §4에서 기동 로그·DB 컬럼 직접 조회·API 응답 세 층으로 따로 확인한다.
 - **Alternatives considered**:
   - null 허용 + 앱에서 null을 안 읽음으로 취급: 3가지 상태(null/true/false)가 생겨 규칙이 늘어난다.
   - 로컬 DB 파일을 지우고 새로 만들기: 데이터 삭제라 사용자 승인이 필요하고 되돌릴 수 없다.
@@ -33,9 +33,9 @@
 
 ## R4. 쪽 나누기 값 검증과 오류 모양
 
-- **Decision**: `page`, `size`, `tag`를 컨트롤러 `@RequestParam`으로 받고 `@Min`·`@Max`·`@MaxCodePoints`·`@NotBlank`를 붙인다. Spring의 메서드 검증(`HandlerMethodValidationException`)을 `ApiExceptionHandler`에서 기존 400 형식(`errors: [{field, message}]`)으로 바꾼다. 숫자가 아닌 값(`MethodArgumentTypeMismatchException`)도 같은 형식으로 바꾼다.
+- **Decision**: `page`, `size`, `tag`를 컨트롤러 `@RequestParam`으로 받고 `@Min`·`@Max`·`@MaxCodePoints`와, `tag`에는 "값이 있을 때만 공백 불가" 제약(null 통과, 예: `@Pattern(".*\\S.*")`)을 붙인다. `@NotBlank`는 null도 거부해 tag 없는 목록 요청까지 400으로 만들므로 쓰지 않는다(advisor 검토). 컨트롤러 클래스에 `@Validated`를 붙이지 않는다(붙이면 `ConstraintViolationException`으로 바뀌어 오류 형식이 달라진다). Spring의 메서드 검증(`HandlerMethodValidationException`)을 `ApiExceptionHandler`에서 기존 400 형식(`errors: [{field, message}]`)으로 바꾼다. 숫자가 아닌 값(`MethodArgumentTypeMismatchException`)도 같은 형식으로 바꾼다.
 - **Rationale**: 저장 API의 입력 오류 형식(R-LINK-06)과 같아야 사용자가 하나의 규칙으로 처리한다(clarify Q2).
-- **한계**: 타입 변환 실패는 검증보다 먼저 일어나므로, `page=abc&size=0`처럼 두 가지가 함께 틀리면 타입 오류 항목만 알려 준다. spec R-LINK-11 "모두 알려 준다"와 어긋나는 유일한 경우라 plan에 적고 테스트로 고정한다.
+- **한계(승인 B5)**: 타입 변환 실패는 검증보다 먼저 일어나므로, `page=abc&size=0`처럼 두 가지가 함께 틀리면 타입 오류 항목만 알려 준다. spec R-LINK-11 "모두 알려 준다"와 어긋나는 유일한 경우라 plan에 적고 테스트로 고정한다.
 
 ## R5. 읽음 값의 엄격한 해석
 

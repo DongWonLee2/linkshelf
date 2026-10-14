@@ -62,7 +62,9 @@
 ```
 
 - `field`는 `page` / `size` / `tag` 중 하나다. 범위·공백·길이 오류는 한 번에 모두 담는다.
-- 숫자가 아닌 값(`page=abc`)은 그 항목 하나만 담는다. 타입 변환이 검증보다 먼저 실패하기 때문이다([research R4](../research.md#r4-쪽-나누기-값-검증과-오류-모양)).
+- 숫자가 아닌 값(`page=abc`)은 그 항목 하나만 담는다. 타입 변환이 검증보다 먼저 실패하기 때문이다([research R4](../research.md#r4-쪽-나누기-값-검증과-오류-모양)). 승인 B5.
+- `detail` 문구 `Invalid request parameters.`는 Spring 기본값이 아니라 직접 지정하고 테스트로 고정한다.
+- `tag`를 생략하면 거르지 않는다(200). 빈 문자열이나 공백만 보내면 400이다.
 
 ## `PUT /api/links/{id}/read` — 읽음 지정
 
@@ -97,6 +99,13 @@
 ```
 
 - `id`가 숫자가 아니면 400(`field: id`).
+- 없는 id와 잘못된 본문이 함께 오면 400이 먼저다(본문 검증이 조회보다 먼저 돈다).
+- `Content-Type`이 JSON이 아니면 415(Spring 기본).
+
+## 문서 동기화
+
+- B3 적용 PR(US3)에서 [001 contract](../../001-save-link/contracts/save-link.md)의 201 예시에 `read`를 더하고 이 문서를 참조하는 개정 표기를 단다.
+- 응답 record 구성요소 이름은 `read`로 한다(`isRead`로 지으면 JSON 키도 `isRead`가 된다).
 
 ## 상태 코드 ↔ 요구사항
 
