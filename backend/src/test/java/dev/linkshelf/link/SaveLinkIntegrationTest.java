@@ -11,10 +11,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,6 +41,9 @@ class SaveLinkIntegrationTest {
 
 	@MockitoSpyBean
 	private LinkRepository linkRepository;
+
+	@Autowired
+	private PlatformTransactionManager transactionManager;
 
 	@BeforeEach
 	void clearLinks() {
@@ -97,6 +104,35 @@ class SaveLinkIntegrationTest {
 			.andExpect(jsonPath("$.tags[0]").value(tags.get(0)))
 			.andExpect(jsonPath("$.tags[9]").value(tags.get(9)));
 		assertThat(linkRepository.count()).isEqualTo(1);
+	}
+
+	@Test
+	@DisplayName("R-LINK-03: max memo and ten max tags saved through the service read back equal from the DB, tag order kept")
+	void R_LINK_03_round_trips_max_memo_and_max_tags_through_db() throws Exception {
+		String memo = "가".repeat(248) + "😀".repeat(250) + "👍🏽";
+		List<String> tags = IntStream.iterate(9, i -> i >= 0, i -> i - 1)
+			.mapToObj(i -> i + "태그" + "😀".repeat(27))
+			.toList();
+		assertThat(Texts.codePoints(memo)).isEqualTo(500);
+		assertThat(tags).allSatisfy(tag -> assertThat(Texts.codePoints(tag)).isEqualTo(30));
+		String json = "{\"url\":\"https://example.com/round-trip\",\"memo\":\"" + memo + "\",\"tags\":"
+				+ tags.stream().map(tag -> "\"" + tag + "\"").collect(Collectors.joining(",", "[", "]")) + "}";
+
+		String body = postLink(json).andExpect(status().isCreated())
+			.andReturn()
+			.getResponse()
+			.getContentAsString(StandardCharsets.UTF_8);
+		long id = ((Number) JsonPath.read(body, "$.id")).longValue();
+
+		// The service transaction has committed; a new transaction starts with an empty persistence context.
+		Link reloaded = new TransactionTemplate(transactionManager).execute(status -> {
+			Link link = linkRepository.findById(id).orElseThrow();
+			return new Link(link.getNormalizedUrl(), link.getMemo(), link.getTags(), link.getCreatedAt());
+		});
+
+		assertThat(reloaded.getNormalizedUrl()).isEqualTo("https://example.com/round-trip");
+		assertThat(reloaded.getMemo()).isEqualTo(memo);
+		assertThat(reloaded.getTags()).containsExactlyElementsOf(tags);
 	}
 
 	@ParameterizedTest
