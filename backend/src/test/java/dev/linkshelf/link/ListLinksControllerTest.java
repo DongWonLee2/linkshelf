@@ -39,7 +39,7 @@ class ListLinksControllerTest {
 	@BeforeEach
 	void stubService() {
 		LinkResponse link = new LinkResponse(3L, "https://example.com/c", "메모", List.of("Java", "스프링"),
-				Instant.parse("2026-10-14T03:00:02Z"));
+				Instant.parse("2026-10-14T03:00:02Z"), false);
 		given(linkService.list(anyInt(), anyInt(), isNull())).willReturn(new LinkPageResponse(List.of(link), 0, 20, 1, 1, false));
 	}
 

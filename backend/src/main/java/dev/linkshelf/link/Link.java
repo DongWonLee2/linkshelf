@@ -16,6 +16,7 @@ import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.ColumnDefault;
 
 /**
  * A saved link (data-model.md, approved 2026-10-14). Column lengths are UTF-16 units sized at twice the code-point
@@ -49,6 +50,14 @@ public class Link {
 	@Column(name = "created_at", nullable = false)
 	private Instant createdAt;
 
+	/**
+	 * Read state (R-LINK-15, 16). The DB default lets the column be added to a local database that already has links;
+	 * NOT NULL without a default fails there (research R1).
+	 */
+	@Column(name = "is_read", nullable = false)
+	@ColumnDefault("false")
+	private boolean read;
+
 	protected Link() {
 	}
 
@@ -77,6 +86,14 @@ public class Link {
 
 	public Instant getCreatedAt() {
 		return createdAt;
+	}
+
+	public boolean isRead() {
+		return read;
+	}
+
+	public void markRead(boolean read) {
+		this.read = read;
 	}
 
 }

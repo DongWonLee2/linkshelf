@@ -2,6 +2,8 @@
 
 > **상태: 승인됨 (2026-10-14)**. 사용자 답변 "A2·A3 승인" (이유 미기재). 변경하려면 다시 승인을 받는다(constitution I).
 >
+> **개정 (2026-10-14, spec 002 승인 B3 "추천으로 가")**: 201 응답에 `read`(boolean)를 더했다. 기존 필드는 그대로다.
+>
 > **개정 (2026-10-14, 사용자 승인 "계약 문서 수정")**: 400/409 응답에서 `type` 필드를 뺐다. Spring은 기본값 `about:blank`이면 `type`을 응답하지 않고, RFC 9457 §3.1.1에 따라 `type`이 없으면 `about:blank`로 간주한다. converge(T049)에서 실제 응답과 다른 점으로 발견됐다.
 
 ## `POST /api/links`
@@ -30,11 +32,13 @@
   "url": "https://example.com/articles/1",
   "memo": "주말에 읽기 😀",
   "tags": ["Java", "스프링"],
-  "createdAt": "2026-10-14T03:00:00.123456Z"
+  "createdAt": "2026-10-14T03:00:00.123456Z",
+  "read": false
 }
 ```
 
 - `url`은 정규화된 값이다.
+- `read`는 spec 002에서 더해졌다. 새 링크는 항상 `false`다([002 contract](../../002-browse-links/contracts/browse-links.md)).
 - `Location` 헤더는 넣지 않는다. 단건 조회 API가 아직 없기 때문이며, PRD-02 때 검토한다.
 
 ### 400 Bad Request: 입력 오류 (`application/problem+json`)
