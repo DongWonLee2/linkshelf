@@ -45,7 +45,7 @@
   - 시험 폴더 빔, HEAD `63a1634`, `git status --porcelain --ignored` 해시 전후 동일
   - 발견: 과잉 차단(따옴표 안 `|`, `ls-files -o`). 이번엔 둠
 
-- 16:30~ PR #8 리뷰(pr-reviewer): 높음 3건(따옴표 우회, `ls-remote --upload-pack`, 테스트 공백) 재현 → 같은 PR에서 수정. 분류 코멘트 6163704335. 별도 Issue 후보 2건(#4 `git diff --no-index`로 `.env` 읽기, #9 훅 테스트 CI 편입) 승인 대기
+- 16:30~ PR #8 리뷰(pr-reviewer): 높음 3건(따옴표 우회, `ls-remote --upload-pack`, 테스트 공백) 재현 → 같은 PR에서 수정. 분류 코멘트 6163704335. 별도 Issue 2건 생성(사용자 "둘 다 해"): Issue #9 `.env` 등 읽기 구멍, Issue #10 훅 테스트 CI 편입
 
 ## 수정했지만 커밋하지 않은 파일
 
@@ -60,7 +60,6 @@
 - 전역 설정 2건 적용 완료(사용자 승인 "1번으로 해", 16:23 KST): `~/.claude/agents/advisor.md`(원본과 cmp 동일), `~/.claude/settings.json` `permissions.additionalDirectories` = `/Users/dongwon/Dev/AI_개발_가이드`. 백업 `~/.claude/settings.json.bak-20261014-advisor`. **Claude Code 재시작 필요**(사용자)
 - 시험 후 auto mode 복귀(사용자)
 - #7 PR #8 병합(ready)
-- 별도 Issue 2건 생성 여부: `.env` 등 읽기 구멍(`git diff --no-index`, `git blame --contents`), 훅 테스트 CI 편입
 - #5는 #7 다음, Spec Kit 없이 Light 모드로(사용자 지시). 걸린 시간과 사용량 기록
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 
