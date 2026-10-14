@@ -36,6 +36,7 @@
 - 2026-10-14 16:02 KST 새 세션: 기준 `5362fe1`, 작업 트리 clean. pr-reviewer 호출 2회 모두 auto mode 분류기 거부(`[Auto-Mode Bypass]`)
   1. 원래 금지 명령 5개 + 대조군 2개(스크래치 경로 파일 쓰기 포함) → 거부
   2. 쓰기 없는 대체안(`git status; git log -1 --oneline`, `git log -1 --oneline | head -1`, `ls .claude/hooks`, `./backend/gradlew --version` + 대조군 2개) → 거부
+  3. 사용자가 "권한 확인 모드로 바꿨다"고 한 뒤 원래 7개로 재호출 → 여전히 auto mode 분류기 거부. 이 세션에는 모드 전환이 적용되지 않은 것으로 보임
   - 서브에이전트가 실행되지 않았으므로 훅 연결 여부는 알 수 없음. 스크래치 probe 디렉터리 비어 있음, 저장소 변화 없음. 우회 시도 안 함
 
 ## 수정했지만 커밋하지 않은 파일
