@@ -71,4 +71,16 @@ class TagFilterRepositoryTest {
 			.containsExactly("https://example.com/lower");
 	}
 
+	@Test
+	@DisplayName("R-LINK-12: a link whose tags match twice (stored outside the save API) still appears once")
+	void R_LINK_12_link_matching_twice_appears_once() {
+		save("twice", List.of("Java", "java"), 5);
+
+		Page<Link> page = linkRepository.findNewestFirstByTag("java", 0, 10);
+
+		assertThat(urls(page)).containsExactly("https://example.com/twice", "https://example.com/lower",
+				"https://example.com/upper");
+		assertThat(page.getTotalElements()).isEqualTo(3);
+	}
+
 }
