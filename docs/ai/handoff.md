@@ -51,11 +51,11 @@
 
 ## 다음 행동 1개
 
-PR #8 CI가 끝나면 pr-reviewer로 리뷰(런북 8-4) → 분류를 PR 코멘트로 → ready. 이어서 조언 16:10 항목 1번(전역 설정 2건) 승인 요청.
+재시작 후: `advisor` 서브에이전트를 한 번 호출해 결과가 돌아오는지, 아무것도 바꾸지 않는지, transcript `model`이 Opus인지 확인(조언 16:10 3번) → 런북 8-3·플레이북 4장 재독 → PR #8 리뷰 분류가 끝나지 않았다면 마저 → 사용자 병합 → #5(Light).
 
 ## 사람이 결정하거나 승인할 사항
 
-- 전역 설정 2건: `~/.claude/agents/advisor.md` 복사, `~/.claude/settings.json` `additionalDirectories`에 `~/Dev/AI_개발_가이드` 추가 → 이후 재시작
+- 전역 설정 2건 적용 완료(사용자 승인 "1번으로 해", 16:23 KST): `~/.claude/agents/advisor.md`(원본과 cmp 동일), `~/.claude/settings.json` `permissions.additionalDirectories` = `/Users/dongwon/Dev/AI_개발_가이드`. 백업 `~/.claude/settings.json.bak-20261014-advisor`. **Claude Code 재시작 필요**(사용자)
 - 시험 후 auto mode 복귀(사용자)
 - #7 PR 병합(검증 후)
 - #5는 #7 다음, Spec Kit 없이 Light 모드로(사용자 지시). 걸린 시간과 사용량 기록
