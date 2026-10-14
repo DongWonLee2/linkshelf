@@ -9,7 +9,9 @@ import dev.linkshelf.link.validation.NotBlankText;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,6 +43,11 @@ public class LinkController {
 					message = "1 이상 100 이하여야 합니다") int size,
 			@RequestParam(required = false) @NotBlankText @MaxCodePoints(30) String tag) {
 		return linkService.list(page, size, tag);
+	}
+
+	@PutMapping("/{id}/read")
+	public LinkResponse markRead(@PathVariable long id, @Valid @RequestBody MarkReadRequest request) {
+		return linkService.markRead(id, request.read());
 	}
 
 }

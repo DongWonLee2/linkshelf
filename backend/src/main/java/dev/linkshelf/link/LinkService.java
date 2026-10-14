@@ -51,6 +51,14 @@ public class LinkService {
 		return LinkPageResponse.from(links.map(LinkResponse::from));
 	}
 
+	/** Sets, not toggles, so repeating the same request gives the same result (R-LINK-15). */
+	@Transactional
+	public LinkResponse markRead(long id, boolean read) {
+		Link link = linkRepository.findById(id).orElseThrow(() -> new LinkNotFoundException(id));
+		link.markRead(read);
+		return LinkResponse.from(link);
+	}
+
 	private static boolean isNormalizedUrlViolation(Throwable ex) {
 		for (Throwable cause = ex; cause != null; cause = cause.getCause()) {
 			if (cause instanceof SQLException sqlException

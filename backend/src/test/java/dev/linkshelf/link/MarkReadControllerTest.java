@@ -65,7 +65,7 @@ class MarkReadControllerTest {
 	@ValueSource(strings = { "{\"read\":\"true\"}", "{\"read\":1}", "{\"read\":\"yes\"}", "{\"read\":[true]}" })
 	@DisplayName("R-LINK-17: a read value that is not a JSON boolean is rejected")
 	void R_LINK_17_non_boolean_read_400(String json) throws Exception {
-		putRead("7", json).andExpect(status().isBadRequest());
+		putRead("7", json).andExpect(status().isBadRequest()).andExpect(jsonPath("$.errors[0].field").value("read"));
 		verify(linkService, never()).markRead(anyLong(), anyBoolean());
 	}
 

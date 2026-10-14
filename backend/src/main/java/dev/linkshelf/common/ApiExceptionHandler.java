@@ -3,6 +3,7 @@ package dev.linkshelf.common;
 import java.util.List;
 
 import dev.linkshelf.link.DuplicateLinkException;
+import dev.linkshelf.link.LinkNotFoundException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -74,6 +75,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	ProblemDetail handleDuplicateLink(DuplicateLinkException ex) {
 		ProblemDetail body = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "이미 저장된 URL입니다");
 		body.setProperty("url", ex.getNormalizedUrl());
+		return body;
+	}
+
+	@ExceptionHandler(LinkNotFoundException.class)
+	ProblemDetail handleLinkNotFound(LinkNotFoundException ex) {
+		ProblemDetail body = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "링크를 찾을 수 없습니다");
+		body.setProperty("id", ex.getId());
 		return body;
 	}
 
