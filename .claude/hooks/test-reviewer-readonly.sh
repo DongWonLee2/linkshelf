@@ -78,5 +78,31 @@ check 2 'gh pr view 7 --web'
 check 2 'gh run download 123'
 check 2 ''
 
+# PR #8 review: shell quoting/expansion that hides blocked options from the word check.
+check 2 "git diff '--output=/tmp/x'"
+check 2 'git log --out""put=x'
+check 2 'git log --out\put=x'
+check 2 'git log --{output=x,}'
+check 2 'git ls-files "-o"'
+check 2 "gh pr view 8 '--web'"
+check 2 'git log $HOME'
+check 2 'git diff *'
+check 2 'git diff x?'
+# PR #8 review: ls-remote can run a command via --upload-pack and reach any host.
+check 2 "git ls-remote --upload-pack='touch x' ."
+check 2 'git ls-remote --upload-pack=touch .'
+check 2 'git ls-remote origin'
+# PR #8 review: a hook error must block, not fall through.
+check 2 ' '
+check 2 'gh pr view 7 -w'
+
+# PR #8 review: allowed commands not covered above.
+check 0 'git diff -w HEAD~1'
+check 0 'git log -1 --format=%h:%s HEAD^'
+check 0 'git merge-base main HEAD'
+check 0 'git blame -L 1,5 README.md'
+check 0 'gh issue list --state open'
+check 0 'gh run list --limit 5'
+
 echo "pass=$pass fail=$fail"
 [ "$fail" -eq 0 ]
