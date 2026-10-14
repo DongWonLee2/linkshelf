@@ -76,4 +76,27 @@ class TagFilterControllerTest {
 		verify(linkService).list(1, 5, " JAVA ");
 	}
 
+	@ParameterizedTest
+	@ValueSource(strings = { "java\n", "a\nb", "\tjava", "\u00A0java", "\u00A0" })
+	@DisplayName("R-LINK-14: a tag the save API would accept (newlines, tabs, NBSP) is not rejected as blank")
+	void R_LINK_14_same_blank_rule_as_save(String tag) throws Exception {
+		mockMvc.perform(get("/api/links").param("tag", tag)).andExpect(status().isOk());
+
+		verify(linkService).list(0, 20, tag);
+	}
+
+	@Test
+	@DisplayName("R-LINK-14: length is counted after stripping, so 30 code points with padding are accepted")
+	void R_LINK_14_padded_30_code_points_ok() throws Exception {
+		mockMvc.perform(get("/api/links").param("tag", "  " + "가".repeat(30) + "  ")).andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("R-LINK-11, R-LINK-14: bad page, size and tag are reported together")
+	void R_LINK_14_reports_all_three_parameters_together() throws Exception {
+		mockMvc.perform(get("/api/links").param("page", "-1").param("size", "0").param("tag", " "))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errors.length()").value(3));
+	}
+
 }

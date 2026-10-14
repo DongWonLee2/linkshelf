@@ -83,4 +83,26 @@ class TagFilterRepositoryTest {
 		assertThat(page.getTotalElements()).isEqualTo(3);
 	}
 
+	@Test
+	@DisplayName("R-LINK-13: non-ASCII letters match regardless of case")
+	void R_LINK_13_non_ascii_case_insensitive() {
+		save("eclair", List.of("Éclair"), 6);
+
+		assertThat(urls(linkRepository.findNewestFirstByTag("éclair", 0, 10))).containsExactly("https://example.com/eclair");
+	}
+
+	@Test
+	@DisplayName("R-LINK-12: walking small filtered pages returns each link once even when one matches twice")
+	void R_LINK_12_small_filtered_pages_without_overlap_or_gap() {
+		save("twice", List.of("Java", "java"), 5);
+
+		List<String> seen = new java.util.ArrayList<>();
+		for (int p = 0; p < 2; p++) {
+			seen.addAll(urls(linkRepository.findNewestFirstByTag("java", p, 2)));
+		}
+
+		assertThat(seen).containsExactly("https://example.com/twice", "https://example.com/lower",
+				"https://example.com/upper");
+	}
+
 }

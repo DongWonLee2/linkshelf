@@ -75,4 +75,14 @@ class TagFilterIntegrationTest {
 		mockMvc.perform(get("/api/links")).andExpect(status().isOk()).andExpect(jsonPath("$.totalElements").value(3));
 	}
 
+	@Test
+	@DisplayName("R-LINK-10, R-LINK-12: a huge page with a tag is an empty page counting filtered links")
+	void R_LINK_12_huge_page_with_tag_is_empty() throws Exception {
+		mockMvc.perform(get("/api/links").param("tag", "java").param("page", "2147483647").param("size", "100"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.items").isEmpty())
+			.andExpect(jsonPath("$.totalElements").value(2))
+			.andExpect(jsonPath("$.hasNext").value(false));
+	}
+
 }
