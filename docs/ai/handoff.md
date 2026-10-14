@@ -1,6 +1,6 @@
 # Agent Handoff — MVP-1 완료(6단계 결과 작성) → Issue #7 리뷰어 Bash 쓰기 차단
 
-- 상태: paused — 재시작한 새 세션(2026-10-14 16:02 KST)에서 pr-reviewer 시험 호출이 auto mode 분류기에 막힘([Auto-Mode Bypass], 2회). #7 실제 차단 확인 여전히 NOT_RUN. 다음은 #5
+- 상태: #7 실제 호출 시험 완료(2026-10-14 16:15 KST, 권한 확인 모드). 훅 차단 PASS(B1·B2), 원래 쓰기 명령 5개는 서브에이전트가 시도 거부 → 훅 층 NOT_RUN. PR #8 본문 갱신. 다음: PR #8 리뷰(8-4) → 조언 16:10 항목(전역 설정 2건 승인 → 재시작)
 - task_id: CHORE-AGENT-GUARD-01 (Issue #7, R-ID 해당 없음)
 - 작성: 2026-10-14 KST · Claude Code (Opus 5.5)
 - 규칙: 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` §8 자율 진행 규칙을 따른다(8-2만 승인). "조언 확인해" = `plans/advisor-notes.md` 맨 위 항목
@@ -39,17 +39,24 @@
   3. 사용자가 "권한 확인 모드로 바꿨다"고 한 뒤 원래 7개로 재호출 → 여전히 auto mode 분류기 거부. 이 세션에는 모드 전환이 적용되지 않은 것으로 보임
   - 서브에이전트가 실행되지 않았으므로 훅 연결 여부는 알 수 없음. 스크래치 probe 디렉터리 비어 있음, 저장소 변화 없음. 우회 시도 안 함
 
+- 2026-10-14 16:09~16:15 KST 권한 확인 모드(사용자 전환): pr-reviewer 시스템 프롬프트에 새 정의 반영 확인
+  - A1~A5(원래 쓰기 명령): 서브에이전트가 지침을 근거로 시도 안 함. A6·A7 대조군 실행됨
+  - B1 `git log -1 --oneline --grep="a|b"` → `reviewer-readonly: blocked (command chaining)`, B2 `git ls-files -o` → `blocked (file output option -o)`, B3 대조군 실행됨. 승인 창 층·guardrails·auto 분류기 관여 없음
+  - 시험 폴더 빔, HEAD `63a1634`, `git status --porcelain --ignored` 해시 전후 동일
+  - 발견: 과잉 차단(따옴표 안 `|`, `ls-files -o`). 이번엔 둠
+
 ## 수정했지만 커밋하지 않은 파일
 
 - 없음
 
 ## 다음 행동 1개
 
-사용자가 직접 시험 호출을 허용(auto mode 밖에서 승인하거나 사용자가 `@pr-reviewer`로 직접 시킴)한 뒤, pr-reviewer로 같은 금지 명령(쓰기 리다이렉트, `;` 연결, `--output`, `./backend/gradlew --version`, 허용 목록 밖 `touch`) + 대조군 2개를 다시 시켜, 서브에이전트 transcript에 `reviewer-readonly` 훅 기록과 `reviewer-readonly: blocked` 메시지가 있는지, 시험 파일이 생기지 않는지 확인 → draft PR #8 본문 검증 표 갱신 → ready.
+PR #8 CI가 끝나면 pr-reviewer로 리뷰(런북 8-4) → 분류를 PR 코멘트로 → ready. 이어서 조언 16:10 항목 1번(전역 설정 2건) 승인 요청.
 
 ## 사람이 결정하거나 승인할 사항
 
-- pr-reviewer 시험 호출 허용 방법 선택(auto mode 분류기 거부) — 에이전트가 우회할 수 없음
+- 전역 설정 2건: `~/.claude/agents/advisor.md` 복사, `~/.claude/settings.json` `additionalDirectories`에 `~/Dev/AI_개발_가이드` 추가 → 이후 재시작
+- 시험 후 auto mode 복귀(사용자)
 - #7 PR 병합(검증 후)
 - #5는 #7 다음, Spec Kit 없이 Light 모드로(사용자 지시). 걸린 시간과 사용량 기록
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
