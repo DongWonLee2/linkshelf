@@ -1,6 +1,6 @@
 # Feature Specification: 링크 저장
 
-**Feature Branch**: `feat/<issue>-save-link` (Issue 생성 후 확정)
+**Feature Branch**: `feat/3-save-link` (Issue #3)
 
 **Created**: 2026-10-14
 

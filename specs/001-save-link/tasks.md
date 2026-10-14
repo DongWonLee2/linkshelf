@@ -1,7 +1,7 @@
 # Tasks: 링크 저장
 
 **Input**: `specs/001-save-link/` — spec.md, plan.md(승인됨 2026-10-14), research.md, data-model.md, contracts/save-link.md, quickstart.md
-**기준 SHA**: `8c26558` · **브랜치**: `feat/<issue>-save-link` (T002에서 확정)
+**기준 SHA**: `8c26558` · **브랜치**: `feat/3-save-link` · **Issue**: #3
 
 **Tests**: 필수다. constitution II(TDD)를 따른다.
 - 모든 구현 task 앞에 실패하는 테스트 task와 **Red 확인** task를 둔다.
@@ -23,7 +23,7 @@ GitHub Issue 하나 = 독립적으로 검증 가능한 묶음 하나. 번호는 
 
 | Issue | 제목 | 포함 task | R-ID | 독립 검증 |
 |---|---|---|---|---|
-| #___ | 링크 저장 API (저장·입력 검증·중복 409) | T004~T041 | R-LINK-01~08 | 유효 요청 201, 규칙 위반 400(경계값 포함), 동치 URL·경쟁 경로 409, 거부 시 건수 유지 |
+| [#3](https://github.com/DongWonLee2/linkshelf/issues/3) | 링크 저장 API (저장·입력 검증·중복 409) | T004~T041 | R-LINK-01~08 | 유효 요청 201, 규칙 위반 400(경계값 포함), 동치 URL·경쟁 경로 409, 거부 시 건수 유지 |
 
 - 사용자 결정(2026-10-14): "하나로 만들어". 후보 A(저장·검증)와 B(중복 409)를 Issue 하나로 합쳤다. PR #2가 `Closes #N`으로 닫는다.
 
@@ -33,15 +33,17 @@ GitHub Issue 하나 = 독립적으로 검증 가능한 묶음 하나. 번호는 
 
 **Purpose**: Issue·브랜치 준비. 기능 코드는 없다.
 
-- [ ] T001 Issue의 제목·본문 미리보기를 보여준다.
+- [x] T001 Issue의 제목·본문 미리보기를 보여준다.
   - 본문에 `Task-ID`(`Task-ID: T004-T041`), R-ID, 커밋에 고정한 spec 링크를 넣는다.
   - 중복 확인: `gh issue list --search "Task-ID: T004-T041 in:body" --state all`.
   - **사용자 승인 후** `gh issue create`를 실행하고 `gh issue view`로 재확인한다.
   - 번호를 이 파일 "Issue" 표에 기록한다(specs/001-save-link/tasks.md).
-- [ ] T002 `main`(`8c26558`)에서 임시 로컬 브랜치 `feat/save-link`를 만들고, Issue 생성 후 `git branch -m feat/<Issue 번호>-save-link`로 이름을 바꾼다(사용자 승인 2026-10-14).
+- [x] T002 `main`(`8c26558`)에서 임시 로컬 브랜치 `feat/save-link`를 만들고, Issue 생성 후 `git branch -m feat/<Issue 번호>-save-link`로 이름을 바꾼다(사용자 승인 2026-10-14).
   - Issue 생성 전에 `specs/001-save-link/` 전체를 커밋하고, Issue의 spec 링크를 그 SHA로 고정한다(코드 변경 없음).
-- [ ] T003 기준 테스트를 실행해 기존 실패와 새 회귀를 구분한다.
+  - 결과(2026-10-14): 문서 커밋 `6556d7f`, Issue #3 생성(중복 검색 결과 `[3]`), 브랜치 `feat/3-save-link`
+- [x] T003 기준 테스트를 실행해 기존 실패와 새 회귀를 구분한다.
   - `cd backend && ./gradlew test --rerun` → 2 tests PASS를 기록한다(backend/build/test-results/test/*.xml).
+  - 결과(2026-10-14, `feat/3-save-link` @ `6556d7f`): PASS — 2 tests, 0 failures/errors/skipped
 
 ---
 

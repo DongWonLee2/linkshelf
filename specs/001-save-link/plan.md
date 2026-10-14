@@ -1,6 +1,6 @@
 # Implementation Plan: 링크 저장
 
-**Branch**: `feat/<issue>-save-link` (Issue 생성 후 확정) | **Date**: 2026-10-14 | **Spec**: [spec.md](spec.md)
+**Branch**: `feat/3-save-link` (Issue #3) | **Date**: 2026-10-14 | **Spec**: [spec.md](spec.md)
 
 **Input**: Feature specification from `specs/001-save-link/spec.md` · 기준 SHA `8c26558`
 
