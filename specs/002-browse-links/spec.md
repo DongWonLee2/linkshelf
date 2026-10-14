@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-14
 
-**Status**: Draft
+**Status**: Implemented (PR #16·#17·#18)
 
 **Input**: User description: "저장된 링크를 최신순으로 보고(PRD-02), 태그 하나로 거르고(PRD-03), 링크별로 읽음/안 읽음을 표시한다(PRD-04)." (출처: [PRD-02~04](../../docs/prd.md))
 
@@ -127,3 +127,29 @@
 - 범위 밖(Clarifications에서 확정): 안 읽은 것만 보기 필터, 여러 태그로 거르기, 검색, 링크 수정·삭제, 정렬 기준 바꾸기.
 - 구현 순서와 단위: US1 → US2 → US3, 스토리마다 Issue·PR 하나. 세 스토리가 같은 코드(목록 요청 처리, 응답 모양)를 고치므로 병렬로 하지 않는다(advisor 판단).
 - 응답 형식·상태 코드·읽음 여부의 DB 표현 같은 구체 계약은 plan 단계에서 정하고 승인받는다. 기존 로컬 데이터에 읽음 여부를 더하는 방식도 plan에서 정한다.
+
+## 추적 (구현 완료, 2026-10-15)
+
+`main` `4c016ee`에서 `cd backend && ./gradlew test` → 120 tests, 0 failed (SC-006).
+
+| R-ID | PR | 테스트 |
+|---|---|---|
+| R-LINK-09 | #16 | `ListLinksIntegrationTest.R_LINK_09_empty_store_returns_empty_items`, `ListLinksIntegrationTest.R_LINK_09_lists_saved_links_newest_first_with_korean_intact`, `ListLinksRepositoryTest.R_LINK_09_orders_by_created_at_desc_then_id_desc` |
+| R-LINK-10 | #16 | `ListLinksControllerTest.R_LINK_10_defaults_page_0_size_20`, `ListLinksControllerTest.R_LINK_10_returns_page_object_shape`, `ListLinksIntegrationTest.R_LINK_10_all_pages_together_return_every_link`, `ListLinksIntegrationTest.R_LINK_10_huge_page_is_empty_not_server_error`, `ListLinksIntegrationTest.R_LINK_10_page_after_last_is_empty`, `ListLinksRepositoryTest.R_LINK_10_counts_total`, `ListLinksRepositoryTest.R_LINK_10_pages_without_overlap_or_gap` |
+| R-LINK-11 | #16 | `ListLinksControllerTest.R_LINK_11_error_messages_match_contract`, `ListLinksControllerTest.R_LINK_11_negative_page_400`, `ListLinksControllerTest.R_LINK_11_non_numeric_page_reports_only_that_field`, `ListLinksControllerTest.R_LINK_11_non_numeric_size_400`, `ListLinksControllerTest.R_LINK_11_reports_page_and_size_together`, `ListLinksControllerTest.R_LINK_11_size_bounds_accepted`, `ListLinksControllerTest.R_LINK_11_size_out_of_bounds_400` |
+| R-LINK-12 | #17 | `TagFilterControllerTest.R_LINK_12_passes_tag_to_service`, `TagFilterIntegrationTest.R_LINK_12_filtered_pages_keep_newest_first`, `TagFilterIntegrationTest.R_LINK_12_huge_page_with_tag_is_empty`, `TagFilterIntegrationTest.R_LINK_12_no_tag_lists_everything`, `TagFilterRepositoryTest.R_LINK_12_link_matching_twice_appears_once`, `TagFilterRepositoryTest.R_LINK_12_link_with_many_tags_appears_once_and_total_counts_filtered_only`, `TagFilterRepositoryTest.R_LINK_12_small_filtered_pages_without_overlap_or_gap` |
+| R-LINK-13 | #17 | `TagFilterIntegrationTest.R_LINK_13_padded_uppercase_tag_filters_end_to_end`, `TagFilterIntegrationTest.R_LINK_13_unknown_tag_returns_empty_items`, `TagFilterRepositoryTest.R_LINK_13_korean_tag`, `TagFilterRepositoryTest.R_LINK_13_matches_case_insensitively`, `TagFilterRepositoryTest.R_LINK_13_non_ascii_case_insensitive`, `TagFilterRepositoryTest.R_LINK_13_requires_whole_tag` |
+| R-LINK-14 | #17 | `TagFilterControllerTest.R_LINK_14_blank_tag_400`, `TagFilterControllerTest.R_LINK_14_padded_30_code_points_ok`, `TagFilterControllerTest.R_LINK_14_reports_all_three_parameters_together`, `TagFilterControllerTest.R_LINK_14_same_blank_rule_as_save`, `TagFilterControllerTest.R_LINK_14_tag_of_30_code_points_ok`, `TagFilterControllerTest.R_LINK_14_tag_over_30_code_points_400` |
+| R-LINK-15 | #18 | `MarkReadControllerTest.R_LINK_15_returns_changed_link`, `MarkReadIntegrationTest.R_LINK_15_can_mark_unread_again`, `MarkReadIntegrationTest.R_LINK_15_marking_twice_gives_same_result_and_keeps_other_fields`, `MarkReadRepositoryTest.R_LINK_15_read_state_persists` |
+| R-LINK-16 | #18 | `MarkReadIntegrationTest.R_LINK_16_list_items_have_read`, `MarkReadIntegrationTest.R_LINK_16_save_response_has_read_false`, `MarkReadRepositoryTest.R_LINK_16_new_link_is_unread` |
+| R-LINK-17 | #18 | `MarkReadControllerTest.R_LINK_17_bad_body_before_unknown_id`, `MarkReadControllerTest.R_LINK_17_malformed_json_400_without_errors`, `MarkReadControllerTest.R_LINK_17_missing_or_null_read_400`, `MarkReadControllerTest.R_LINK_17_non_boolean_read_400`, `MarkReadControllerTest.R_LINK_17_non_json_content_type_415`, `MarkReadControllerTest.R_LINK_17_non_numeric_id_400`, `MarkReadControllerTest.R_LINK_17_unknown_id_404_shape`, `MarkReadIntegrationTest.R_LINK_17_unknown_id_changes_nothing` |
+| R-LINK-18 | #18 | 기존 R-LINK-01~08 테스트 전부(단언 수정 없음, 생성자 인자 `read`만 추가) |
+
+| 성공 기준 | 근거 |
+|---|---|
+| SC-001 | `ListLinksIntegrationTest.R_LINK_10_all_pages_together_return_every_link` |
+| SC-002 | `TagFilterIntegrationTest.R_LINK_13_padded_uppercase_tag_filters_end_to_end` |
+| SC-003 | `MarkReadIntegrationTest.R_LINK_15_marking_twice_gives_same_result_and_keeps_other_fields` |
+| SC-004 | 실제 기동(PR #18 검증 표, `docs/ai/handoff.md`): DB 직접 조회·API PASS, 기동 로그의 ALTER 문은 확인 불가(층 2·3으로 대체) |
+| SC-005 | NOT_RUN(별도 성능 측정 없음. 쪽 크기 상한 100, 태그 배치 로딩) |
+| SC-006 | 위 표 |
