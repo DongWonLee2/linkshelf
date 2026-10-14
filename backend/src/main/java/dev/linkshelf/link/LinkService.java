@@ -42,6 +42,12 @@ public class LinkService {
 		}
 	}
 
+	/** Builds responses inside the transaction because open-in-view is off (#5). */
+	@Transactional(readOnly = true)
+	public LinkPageResponse list(int page, int size) {
+		return LinkPageResponse.from(linkRepository.findNewestFirst(page, size).map(LinkResponse::from));
+	}
+
 	private static boolean isNormalizedUrlViolation(Throwable ex) {
 		for (Throwable cause = ex; cause != null; cause = cause.getCause()) {
 			if (cause instanceof SQLException sqlException
