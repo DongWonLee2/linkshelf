@@ -19,13 +19,13 @@
 
 ## Issue
 
-스토리 하나 = Issue 하나 = PR 하나. 순서대로 진행한다(병렬 없음: 세 스토리가 `LinkController`·`LinkService`·`LinkResponse`를 함께 고친다, advisor 판단). 번호는 생성 후 기록한다.
+스토리 하나 = Issue 하나 = PR 하나. 순서대로 진행한다(병렬 없음: 세 스토리가 `LinkController`·`LinkService`·`LinkResponse`를 함께 고친다, advisor 판단). 사용자 승인 "추천안으로 ㄱ"(2026-10-14)으로 생성.
 
 | Issue | 제목 | 포함 task | R-ID | 독립 검증 |
 |---|---|---|---|---|
-| (생성 후) | 링크 목록 조회 API (쪽 나누기) | T001~T016 | R-LINK-09, 10, 11 | 최신순·동률 id순, 쪽 경계 겹침·빠짐 없음, 잘못된 page·size 400 |
-| (생성 후) | 태그 하나로 목록 거르기 | T017~T027 | R-LINK-12, 13, 14 | 대소문자·공백 무시 전체 일치, 부분 불일치, 공백·31자 tag 400 |
-| (생성 후) | 읽음/안 읽음 지정과 기존 데이터 기본값 | T028~T045 | R-LINK-15, 16, 17, 18 | 반복 지정 같은 결과, 404·400, 저장 응답 `read:false`, 기존 DB 복사본 기동 세 층 |
+| [#12](https://github.com/DongWonLee2/linkshelf/issues/12) | 링크 목록 조회 API (쪽 나누기) | T001~T016 | R-LINK-09, 10, 11 | 최신순·동률 id순, 쪽 경계 겹침·빠짐 없음, 잘못된 page·size 400 |
+| [#13](https://github.com/DongWonLee2/linkshelf/issues/13) | 태그 하나로 목록 거르기 | T017~T027 | R-LINK-12, 13, 14 | 대소문자·공백 무시 전체 일치, 부분 불일치, 공백·31자 tag 400 |
+| [#14](https://github.com/DongWonLee2/linkshelf/issues/14) | 읽음/안 읽음 지정과 기존 데이터 기본값 | T028~T045 | R-LINK-15, 16, 17, 18 | 반복 지정 같은 결과, 404·400, 저장 응답 `read:false`, 기존 DB 복사본 기동 세 층 |
 
 ---
 

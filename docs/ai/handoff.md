@@ -1,12 +1,11 @@
-# Agent Handoff — Issue #5 OSIV 끄기 (Light 모드)
+# Agent Handoff — spec 002 (목록 조회·태그 필터·읽음 표시, Standard)
 
-- 상태: PR #11 리뷰 반영 완료, CI run 38539605512 @ `a18f58e` PASS, 사용자 병합 대기. 이전 #7은 PR #8 병합(`3f2f7be`), 후속 Issue #9·#10 open
-- task_id: CHORE-OSIV-01 (Issue #5, R-ID 없음, 관련 R-LINK-01) · 직전 CHORE-AGENT-GUARD-01(#7) 완료
+- 상태: spec·clarify·plan(B1~B5 승인)·tasks 완료, Issue #12·#13·#14 생성(사용자 승인). spec 문서 PR 생성 → 다음 US1(#12) 구현
+- task_id: spec 002 T001~T047 (R-LINK-09~18)
 - 작성: 2026-10-14 KST · Claude Code (Opus 5.5)
-- 규칙: 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` §8 자율 진행 규칙을 따른다(8-2만 승인). "조언 확인해" = `plans/advisor-notes.md` 맨 위 항목
-- 작업 브랜치: `fix/5-disable-osiv` · 기준 SHA `3f2f7be` (main, PR #8 병합)
-- 진행 요약: `~/Dev/AI_개발_가이드/plans/mvp1-status.md` · MVP-1 결과: `plans/mvp1-result.md`
-
+- 규칙: 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` §8(8-3a: 승인 요청 전 advisor 먼저). 플레이북 규칙 20(병합 후 정리), 21(기능 먼저)
+- 작업 브랜치: `chore/spec-002-browse-links` · 기준 SHA `c2c2bc3` (main, PR #11 병합)
+- 진행 요약: `~/Dev/AI_개발_가이드/plans/mvp1-status.md`
 ## 지금까지 완료한 것
 
 | 단계 | 결과 | 증거 |
@@ -52,20 +51,21 @@
 - #5 (17:33~17:41 KST): 기준선 53 PASS → Red `809ee0d`(인터셉터 테스트 FAIL) → main에만 설정 넣었더니 계속 FAIL: **test `application.properties`가 main을 가림**(기존 테스트가 main 설정을 안 읽었음) → advisor 판단으로 test 파일을 `src/test/resources/config/`로 이동 → Green `2fcec53` 55/55, main 줄 제거 시 FAIL 확인, bootRun 경고 0건. PR #11, CI run 38536802084 PASS
 - PR #11 리뷰: 병합 막는 결함 없음. 수용 2건 = 테스트 DB 격리 가드 `a18f58e`(파일 DB 주소로 FAIL 확인, 56/56), 태그 테스트 변별력 낮음 본문 명시. 분류 코멘트 6164809603
 
+- 22:12~ spec 002: advisor 판단으로 spec 하나에 US 3개, 순차 진행. clarify 5문항(2개 직접 답 "a", 3개 사용자 위임 "다 추천안으로 해"). plan: 로컬 H2 복사본 실측(기본값 없는 NOT NULL 추가 실패 → `DEFAULT FALSE NOT NULL`), advisor 검토로 tag 제약·SC-004 세 층·B5 추가. 사용자 "추천으로 가"(B1~B5). tasks 47개. Issue 승인 "추천안으로 ㄱ" → #12·#13·#14
+- 그 전: #9·#10 not planned로 닫음(사용자 "#9 보류, 샌드박스 Issue 아니오", 조언 22:10), 병합 브랜치 정리·`delete_branch_on_merge=true`(사용자 승인)
+
 ## 수정했지만 커밋하지 않은 파일
 
 - 없음
 
 ## 다음 행동 1개
 
-사용자가 PR #11 병합 → MVP-1 남은 Issue(#9 `.env` 읽기 구멍은 시작 시 방식 승인 필요, #10 훅 테스트 CI 편입) 중 다음 작업 확인.
+main 기준 `feat/12-list-links` 브랜치로 US1(T001~T016) 시작: 테스트 3파일 → Red 커밋 → 구현 → Green → 고장 내기 → PR.
 
 ## 사람이 결정하거나 승인할 사항
 
-- 전역 설정 2건 적용 완료(사용자 승인 "1번으로 해", 16:23 KST): `~/.claude/agents/advisor.md`(원본과 cmp 동일), `~/.claude/settings.json` `permissions.additionalDirectories` = `/Users/dongwon/Dev/AI_개발_가이드`. 백업 `~/.claude/settings.json.bak-20261014-advisor`. 재시작 없이 반영됨
-- 시험 후 auto mode 복귀(사용자)
-- PR #11 병합. 이때 확인할 것: 기존 테스트가 이제 main 설정을 읽는다(test 설정을 `config/`로 옮긴 결과, advisor 판단으로 진행)
-- #5는 #7 다음, Spec Kit 없이 Light 모드로(사용자 지시). 걸린 시간과 사용량 기록
+- spec 002 문서 PR 병합
+- US1~US3 PR 병합(각각, 순서대로)
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 
 ## Codex로 이어받을 때
