@@ -44,3 +44,4 @@ Agent 추천안 채택. 판단 이유: 사용자 위임
 - 실행할 실험: `tmp/ci-should-fail`에 실패 테스트를 넣어 CI FAIL 확인, 보호 규칙 재조회
 - 성공 판정: 실패 CI 링크 1개, 성공 CI 링크 1개, 보호 규칙 조회 결과
 - 재검토 트리거: 프론트엔드 추가(MVP-3) 시 경로별 잡 분리
+- 재검토 기록(2026-10-15, spec 003 plan, advisor 판단): 경로별 분리는 **보류**. 경로 필터로 건너뛴 필수 검사는 Pending으로 남아 병합이 막히고, 프론트 E2E는 백엔드를 띄우므로 백엔드 변경에도 돌아야 한다. `frontend-e2e` job은 모든 PR에서 돈다([spec 003 research R4](../../specs/003-first-screen/research.md)).
