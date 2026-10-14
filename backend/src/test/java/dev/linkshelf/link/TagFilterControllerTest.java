@@ -46,10 +46,10 @@ class TagFilterControllerTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "", "%20%20", "%E3%80%80" })
+	@ValueSource(strings = { "", "  ", "\u3000" })
 	@DisplayName("R-LINK-14: an empty or whitespace-only tag (including an ideographic space) is rejected")
-	void R_LINK_14_blank_tag_400(String encoded) throws Exception {
-		expectTagRejected(mockMvc.perform(get("/api/links?tag=" + encoded)), "공백만 있을 수 없습니다");
+	void R_LINK_14_blank_tag_400(String tag) throws Exception {
+		expectTagRejected(mockMvc.perform(get("/api/links").param("tag", tag)), "공백만 있을 수 없습니다");
 	}
 
 	@Test
