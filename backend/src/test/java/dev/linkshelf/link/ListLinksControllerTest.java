@@ -49,7 +49,9 @@ class ListLinksControllerTest {
 		result.andExpect(status().isBadRequest())
 			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
 			.andExpect(jsonPath("$.status").value(400))
+			.andExpect(jsonPath("$.title").value("Bad Request"))
 			.andExpect(jsonPath("$.detail").value("Invalid request parameters."))
+			.andExpect(jsonPath("$.instance").value("/api/links"))
 			.andExpect(jsonPath("$.errors.length()").value(fields.length))
 			.andExpect(jsonPath("$.errors[*].field", containsInAnyOrder((Object[]) fields)));
 		verify(linkService, never()).list(anyInt(), anyInt());
@@ -107,6 +109,15 @@ class ListLinksControllerTest {
 	@DisplayName("R-LINK-11: a bad page and a bad size are reported together")
 	void R_LINK_11_reports_page_and_size_together() throws Exception {
 		expectRejected(getLinks("?page=-1&size=0"), "page", "size");
+	}
+
+	@Test
+	@DisplayName("R-LINK-11: error messages match the contract")
+	void R_LINK_11_error_messages_match_contract() throws Exception {
+		getLinks("?page=-1&size=101").andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errors[?(@.field == 'page')].message").value("0 이상이어야 합니다"))
+			.andExpect(jsonPath("$.errors[?(@.field == 'size')].message").value("1 이상 100 이하여야 합니다"));
+		getLinks("?size=ten").andExpect(jsonPath("$.errors[0].message").value("숫자여야 합니다"));
 	}
 
 	@Test

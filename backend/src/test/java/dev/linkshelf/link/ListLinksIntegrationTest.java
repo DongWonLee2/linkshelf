@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,7 +87,8 @@ class ListLinksIntegrationTest {
 		assertThat((Boolean) JsonPath.read(second, "$.hasNext")).isFalse();
 		assertThat(urls).hasSize(25);
 		assertThat(new HashSet<>(urls)).hasSize(25);
-		assertThat(urls.get(0)).isEqualTo("https://example.com/n24");
+		assertThat(urls).containsExactlyElementsOf(
+				IntStream.iterate(24, i -> i >= 0, i -> i - 1).mapToObj(i -> "https://example.com/n" + i).toList());
 	}
 
 	@Test
@@ -109,6 +111,19 @@ class ListLinksIntegrationTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.items").isEmpty())
 			.andExpect(jsonPath("$.totalElements").value(1));
+	}
+
+	@Test
+	@DisplayName("R-LINK-10: a page whose offset exceeds the int range is an empty page past the last one, not an error")
+	void R_LINK_10_huge_page_is_empty_not_server_error() throws Exception {
+		saveLink("{\"url\":\"https://example.com/only\"}");
+
+		mockMvc.perform(get("/api/links?page=2147483647&size=100"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.items").isEmpty())
+			.andExpect(jsonPath("$.page").value(2147483647))
+			.andExpect(jsonPath("$.totalElements").value(1))
+			.andExpect(jsonPath("$.hasNext").value(false));
 	}
 
 }

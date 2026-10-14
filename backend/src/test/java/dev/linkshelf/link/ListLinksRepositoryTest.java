@@ -59,6 +59,7 @@ class ListLinksRepositoryTest {
 		assertThat(seen).hasSize(5);
 		Set<String> distinct = new HashSet<>(seen);
 		assertThat(distinct).hasSize(5);
+		assertThat(seen).containsExactlyElementsOf(urls(linkRepository.findNewestFirst(0, 10)));
 		assertThat(linkRepository.findNewestFirst(3, 2).getContent()).isEmpty();
 	}
 
