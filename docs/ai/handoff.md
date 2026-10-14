@@ -1,10 +1,10 @@
 # Agent Handoff — spec 002 (목록 조회·태그 필터·읽음 표시, Standard)
 
-- 상태: spec·clarify·plan(B1~B5 승인)·tasks 완료, Issue #12·#13·#14 생성(사용자 승인). spec 문서 PR 생성 → 다음 US1(#12) 구현
+- 상태: spec 002 US1(PR #16)·US2(PR #17) 병합. US3(#14) PR #18 리뷰 반영 완료, 사용자 병합 대기
 - task_id: spec 002 T001~T047 (R-LINK-09~18)
 - 작성: 2026-10-14 KST · Claude Code (Opus 5.5)
 - 규칙: 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` §8(8-3a: 승인 요청 전 advisor 먼저). 플레이북 규칙 20(병합 후 정리), 21(기능 먼저)
-- 작업 브랜치: `chore/spec-002-browse-links` · 기준 SHA `c2c2bc3` (main, PR #11 병합)
+- 작업 브랜치: `feat/14-read-state` · 기준 SHA `d399789` (main, PR #17 병합)
 - 진행 요약: `~/Dev/AI_개발_가이드/plans/mvp1-status.md`
 ## 지금까지 완료한 것
 
@@ -54,18 +54,23 @@
 - 22:12~ spec 002: advisor 판단으로 spec 하나에 US 3개, 순차 진행. clarify 5문항(2개 직접 답 "a", 3개 사용자 위임 "다 추천안으로 해"). plan: 로컬 H2 복사본 실측(기본값 없는 NOT NULL 추가 실패 → `DEFAULT FALSE NOT NULL`), advisor 검토로 tag 제약·SC-004 세 층·B5 추가. 사용자 "추천으로 가"(B1~B5). tasks 47개. Issue 승인 "추천안으로 ㄱ" → #12·#13·#14
 - 그 전: #9·#10 not planned로 닫음(사용자 "#9 보류, 샌드박스 Issue 아니오", 조언 22:10), 병합 브랜치 정리·`delete_branch_on_merge=true`(사용자 승인)
 
+- US1 #12 → PR #16(리뷰: 큰 page 500 재현·수정), US2 #13 → PR #17(리뷰: 줄바꿈 태그 400 재현, `@NotBlankText`로 수정) 병합
+- US3 #14 (2026-10-14 23:56~): 로컬 DB 백업 `~/Dev/linkshelf-db-backup/20261014-235640/linkshelf.mv.db`(원본과 cmp 동일). Red `9fdfb4d` → Green `908503a`(118) → 리뷰 반영 `45bc22c`(120). Jackson 3이 `"true"`·`1`을 boolean으로 강제 변환함을 확인 → `read` 필드 전용 `StrictBooleanDeserializer`
+- SC-004 증거(백업본 복사본, 행 2개, `SPRING_DATASOURCE_URL`로 bootRun):
+  - A `@ColumnDefault` 있음: 층1 `Started`, WARN·ERROR 없음(ALTER 문은 로그에 안 남음 → quickstart §4 층1 기준 미충족, 층2·3으로 대체). 층2 H2 Shell `IS_READ | BOOLEAN | FALSE | NO`, 행 `1 FALSE`, `2 FALSE`. 층3 `GET /api/links` → `2 [(2, '…/a/', False), (1, '…/a', False)]`
+  - B 대조 `@ColumnDefault` 없음: 층1 `Started` + WARN `CommandAcceptanceException … alter table if exists link add column is_read boolean not null … NULL not allowed for column "IS_READ"`. 층2 컬럼 없음(0 rows). 층3 `GET` 500
+
 ## 수정했지만 커밋하지 않은 파일
 
 - 없음
 
 ## 다음 행동 1개
 
-main 기준 `feat/12-list-links` 브랜치로 US1(T001~T016) 시작: 테스트 3파일 → Red 커밋 → 구현 → Green → 고장 내기 → PR.
+사용자가 PR #18 병합 → 규칙 20 정리 → spec 002 마무리(T046·T047: R-LINK-09~18 ↔ 테스트 표, status 갱신).
 
 ## 사람이 결정하거나 승인할 사항
 
-- spec 002 문서 PR 병합
-- US1~US3 PR 병합(각각, 순서대로)
+- PR #18 병합
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 
 ## Codex로 이어받을 때
