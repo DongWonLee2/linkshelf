@@ -14,14 +14,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * A saved link (data-model.md, approved 2026-10-14). Column lengths are UTF-16 units sized at twice the code-point
  * limit, because H2 counts VARCHAR length in UTF-16 units (research R1).
  */
 @Entity
-@Table(name = "link")
+@Table(name = "link",
+		uniqueConstraints = @UniqueConstraint(name = Link.NORMALIZED_URL_CONSTRAINT, columnNames = "normalized_url"))
 public class Link {
+
+	/** Named so a violation can be told apart from other integrity errors (research R3). */
+	static final String NORMALIZED_URL_CONSTRAINT = "uk_link_normalized_url";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

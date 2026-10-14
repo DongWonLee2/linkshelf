@@ -172,4 +172,17 @@ class LinkControllerTest {
 		verify(linkService, never()).save(any());
 	}
 
+	@Test
+	@DisplayName("R-LINK-06: a duplicate URL returns a 409 problem carrying the normalized url")
+	void R_LINK_06_returns_409_problem_on_duplicate() throws Exception {
+		given(linkService.save(any())).willThrow(new DuplicateLinkException("https://example.com/a"));
+
+		postLink("HTTPS://Example.COM:443/a", null, null)
+			.andExpect(status().isConflict())
+			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+			.andExpect(jsonPath("$.status").value(409))
+			.andExpect(jsonPath("$.detail").value("이미 저장된 URL입니다"))
+			.andExpect(jsonPath("$.url").value("https://example.com/a"));
+	}
+
 }

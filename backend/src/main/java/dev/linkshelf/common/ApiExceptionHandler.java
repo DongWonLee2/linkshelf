@@ -2,17 +2,21 @@ package dev.linkshelf.common;
 
 import java.util.List;
 
+import dev.linkshelf.link.DuplicateLinkException;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- * RFC 9457 problem responses (ADR-0001). Validation failures add an {@code errors} list with every invalid field.
+ * RFC 9457 problem responses (ADR-0001). Validation failures add an {@code errors} list with every invalid field;
+ * a duplicate link adds the conflicting normalized {@code url}.
  */
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -28,6 +32,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			.toList();
 		body.setProperty("errors", errors);
 		return handleExceptionInternal(ex, body, headers, status, request);
+	}
+
+	@ExceptionHandler(DuplicateLinkException.class)
+	ProblemDetail handleDuplicateLink(DuplicateLinkException ex) {
+		ProblemDetail body = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "이미 저장된 URL입니다");
+		body.setProperty("url", ex.getNormalizedUrl());
+		return body;
 	}
 
 	record FieldErrorResponse(String field, String message) {

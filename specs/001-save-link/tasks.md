@@ -182,29 +182,29 @@ GitHub Issue 하나 = 독립적으로 검증 가능한 묶음 하나. 번호는 
 
 ### Tests (먼저 작성) ⚠️
 
-- [ ] T032 [P] [US3] 테스트 추가: `LinkRepositoryTest.R_LINK_04_unique_constraint_rejects_same_normalized_url` (R-LINK-04)
+- [x] T032 [P] [US3] 테스트 추가: `LinkRepositoryTest.R_LINK_04_unique_constraint_rejects_same_normalized_url` (R-LINK-04)
   - 같은 URL을 두 번 `saveAndFlush`하면 `DataIntegrityViolationException`
   - 원인 체인에 SQLState `23505`가 있고 메시지에 `UK_LINK_NORMALIZED_URL`(대소문자 무시)이 있다
   - backend/src/test/java/dev/linkshelf/link/LinkRepositoryTest.java
-- [ ] T033 [P] [US3] 테스트 추가: `LinkControllerTest.R_LINK_06_returns_409_problem_on_duplicate` (R-LINK-04, 06)
+- [x] T033 [P] [US3] 테스트 추가: `LinkControllerTest.R_LINK_06_returns_409_problem_on_duplicate` (R-LINK-04, 06)
   - `linkService.save`가 `DuplicateLinkException`을 던지면 409, `application/problem+json`, `detail`, 확장 필드 `url`
   - backend/src/test/java/dev/linkshelf/link/LinkControllerTest.java
-- [ ] T034 [P] [US3] 테스트 추가: backend/src/test/java/dev/linkshelf/link/SaveLinkIntegrationTest.java
+- [x] T034 [P] [US3] 테스트 추가: backend/src/test/java/dev/linkshelf/link/SaveLinkIntegrationTest.java
   - `SaveLinkIntegrationTest.R_LINK_04_rejects_equivalent_url_with_409_and_keeps_count` (R-LINK-04, 06) — `/a` 저장, `HTTPS://Example.COM:443/a`는 409, 건수 1, `/a/`는 201
   - `SaveLinkIntegrationTest.R_LINK_04_translates_unique_violation_to_409_when_precheck_misses` (R-LINK-04, 06) — `@MockitoSpyBean LinkRepository`로 `existsByNormalizedUrl`을 `false`로 고정한다. 같은 URL을 두 번 보내면 두 번째가 409, 건수 1
-- [ ] T035 [US3] Red 확인: `cd backend && ./gradlew test --tests 'dev.linkshelf.link.*'` → T032~T034 FAIL을 기록한다.
+- [x] T035 [US3] Red 확인: `cd backend && ./gradlew test --tests 'dev.linkshelf.link.*'` → T032~T034 FAIL을 기록한다.
 
 ### Implementation
 
-- [ ] T036 [US3] `Link`에 `@Table(name="link", uniqueConstraints=@UniqueConstraint(name="uk_link_normalized_url", columnNames="normalized_url"))`를 추가한다("CONSTRAINT uk_link_normalized_url UNIQUE"). backend/src/main/java/dev/linkshelf/link/Link.java → T032 PASS
-- [ ] T037 [P] [US3] `DuplicateLinkException(String normalizedUrl)`: backend/src/main/java/dev/linkshelf/link/DuplicateLinkException.java
-- [ ] T038 [US3] `LinkRepository.existsByNormalizedUrl(String)`를 추가한다. backend/src/main/java/dev/linkshelf/link/LinkRepository.java
-- [ ] T039 [US3] `LinkService.save`를 수정한다: backend/src/main/java/dev/linkshelf/link/LinkService.java
+- [x] T036 [US3] `Link`에 `@Table(name="link", uniqueConstraints=@UniqueConstraint(name="uk_link_normalized_url", columnNames="normalized_url"))`를 추가한다("CONSTRAINT uk_link_normalized_url UNIQUE"). backend/src/main/java/dev/linkshelf/link/Link.java → T032 PASS
+- [x] T037 [P] [US3] `DuplicateLinkException(String normalizedUrl)`: backend/src/main/java/dev/linkshelf/link/DuplicateLinkException.java
+- [x] T038 [US3] `LinkRepository.existsByNormalizedUrl(String)`를 추가한다. backend/src/main/java/dev/linkshelf/link/LinkRepository.java
+- [x] T039 [US3] `LinkService.save`를 수정한다: backend/src/main/java/dev/linkshelf/link/LinkService.java
   - 정규화 뒤 `existsByNormalizedUrl`이 true면 `DuplicateLinkException`
   - `saveAndFlush`에서 `DataIntegrityViolationException`이 나면, 원인 체인의 `SQLException`이 SQLState `23505`이고 메시지에 `UK_LINK_NORMALIZED_URL`(대소문자 무시)이 있을 때만 `DuplicateLinkException`으로 바꾼다
   - 그 밖의 경우는 그대로 다시 던진다
-- [ ] T040 [US3] `ApiExceptionHandler`에 `@ExceptionHandler(DuplicateLinkException)` → ProblemDetail 409(`detail`="이미 저장된 URL입니다", 확장 필드 `url`)를 추가한다. backend/src/main/java/dev/linkshelf/common/ApiExceptionHandler.java → T033, T034 PASS
-- [ ] T041 [US3] Green 확인: `cd backend && ./gradlew test` 전체 PASS를 기록한다.
+- [x] T040 [US3] `ApiExceptionHandler`에 `@ExceptionHandler(DuplicateLinkException)` → ProblemDetail 409(`detail`="이미 저장된 URL입니다", 확장 필드 `url`)를 추가한다. backend/src/main/java/dev/linkshelf/common/ApiExceptionHandler.java → T033, T034 PASS
+- [x] T041 [US3] Green 확인: `cd backend && ./gradlew test` 전체 PASS를 기록한다.
 
 **Checkpoint**: US3 완료. 전 스토리 동작.
 

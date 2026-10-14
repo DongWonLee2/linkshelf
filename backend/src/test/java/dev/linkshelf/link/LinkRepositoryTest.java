@@ -1,7 +1,9 @@
 package dev.linkshelf.link;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @DataJpaTest
 class LinkRepositoryTest {
@@ -54,6 +57,31 @@ class LinkRepositoryTest {
 		assertThat(reloaded.getMemo()).isEqualTo(memo);
 		assertThat(reloaded.getTags()).containsExactly(tag);
 		assertThat(reloaded.getNormalizedUrl()).isEqualTo(url);
+	}
+
+	@Test
+	@DisplayName("R-LINK-04: the DB unique constraint uk_link_normalized_url rejects the same normalized URL")
+	void R_LINK_04_unique_constraint_rejects_same_normalized_url() {
+		linkRepository.saveAndFlush(new Link("https://example.com/a", null, List.of(), Instant.now()));
+
+		assertThatThrownBy(() -> linkRepository
+			.saveAndFlush(new Link("https://example.com/a", null, List.of(), Instant.now())))
+			.isInstanceOf(DataIntegrityViolationException.class)
+			.satisfies(ex -> {
+				SQLException sqlException = findCause(ex, SQLException.class);
+				assertThat((Throwable) sqlException).isNotNull();
+				assertThat(sqlException.getSQLState()).isEqualTo("23505");
+				assertThat(sqlException.getMessage()).containsIgnoringCase("uk_link_normalized_url");
+			});
+	}
+
+	private static <T extends Throwable> T findCause(Throwable ex, Class<T> type) {
+		for (Throwable cause = ex; cause != null; cause = cause.getCause()) {
+			if (type.isInstance(cause)) {
+				return type.cast(cause);
+			}
+		}
+		return null;
 	}
 
 }
