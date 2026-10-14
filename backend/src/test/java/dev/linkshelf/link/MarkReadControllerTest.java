@@ -96,4 +96,20 @@ class MarkReadControllerTest {
 		verify(linkService, never()).markRead(anyLong(), anyBoolean());
 	}
 
+	@Test
+	@DisplayName("R-LINK-17: malformed JSON is rejected without an errors list")
+	void R_LINK_17_malformed_json_400_without_errors() throws Exception {
+		putRead("7", "{\"read\":").andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errors").doesNotExist());
+		verify(linkService, never()).markRead(anyLong(), anyBoolean());
+	}
+
+	@Test
+	@DisplayName("R-LINK-17: a non-JSON content type is rejected with 415")
+	void R_LINK_17_non_json_content_type_415() throws Exception {
+		mockMvc.perform(put("/api/links/7/read").contentType(MediaType.TEXT_PLAIN).content("read=true"))
+			.andExpect(status().isUnsupportedMediaType());
+		verify(linkService, never()).markRead(anyLong(), anyBoolean());
+	}
+
 }
