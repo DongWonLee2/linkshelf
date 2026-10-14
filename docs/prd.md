@@ -64,3 +64,4 @@ MVP-1에서 구현하는 것은 PRD-01뿐이다. 나머지는 다음 기능으�
 - [ADR-0001 백엔드 스택](decisions/ADR-0001-backend-stack.md)
 - [ADR-0002 저장소와 CI](decisions/ADR-0002-repo-and-ci.md)
 - [ADR-0003 테스트 전략](decisions/ADR-0003-test-strategy.md)
+- [ADR-0005 프론트엔드 스택](decisions/ADR-0005-frontend-stack.md) (MVP-3 화면, [Feature Map](feature-map.md))

@@ -21,3 +21,9 @@ bin/
 
 # Local H2 database files (ADR-0001)
 data/
+
+# Frontend (ADR-0005)
+node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
