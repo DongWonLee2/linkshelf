@@ -1,6 +1,8 @@
 # Contract: 링크 저장 API
 
 > **상태: 승인됨 (2026-10-14)**. 사용자 답변 "A2·A3 승인" (이유 미기재). 변경하려면 다시 승인을 받는다(constitution I).
+>
+> **개정 (2026-10-14, 사용자 승인 "계약 문서 수정")**: 400/409 응답에서 `type` 필드를 뺐다. Spring은 기본값 `about:blank`이면 `type`을 응답하지 않고, RFC 9457 §3.1.1에 따라 `type`이 없으면 `about:blank`로 간주한다. converge(T049)에서 실제 응답과 다른 점으로 발견됐다.
 
 ## `POST /api/links`
 
@@ -39,7 +41,6 @@
 
 ```json
 {
-  "type": "about:blank",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid request content.",
@@ -51,6 +52,7 @@
 }
 ```
 
+- `type`은 응답에 없다(= `about:blank`, RFC 9457 §3.1.1). 409도 같다.
 - 틀린 항목을 모두 한 번에 담는다. `field`는 `url` / `memo` / `tags` 중 하나다.
 - 깨진 JSON은 `errors` 없이 400을 돌려준다.
 
@@ -58,7 +60,6 @@
 
 ```json
 {
-  "type": "about:blank",
   "title": "Conflict",
   "status": 409,
   "detail": "이미 저장된 URL입니다",

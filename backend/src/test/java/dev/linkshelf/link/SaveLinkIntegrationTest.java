@@ -1,6 +1,7 @@
 package dev.linkshelf.link;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -9,6 +10,10 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,6 +62,40 @@ class SaveLinkIntegrationTest {
 			.andExpect(jsonPath("$.tags[1]").value("스프링"))
 			.andExpect(jsonPath("$.createdAt").isString());
 
+		assertThat(linkRepository.count()).isEqualTo(1);
+	}
+
+	@Test
+	@DisplayName("R-LINK-01: a URL-only request (or a whitespace-only memo) stores null memo and empty tags")
+	void R_LINK_01_url_only_returns_null_memo_and_empty_tags() throws Exception {
+		postLink("""
+				{"url":"https://example.com/only"}
+				""")
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.memo").value(nullValue()))
+			.andExpect(jsonPath("$.tags").isArray())
+			.andExpect(jsonPath("$.tags").isEmpty());
+
+		postLink("{\"url\":\"https://example.com/blank-memo\",\"memo\":\"  \u3000 \",\"tags\":[]}")
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.memo").value(nullValue()))
+			.andExpect(jsonPath("$.tags").isEmpty());
+	}
+
+	@Test
+	@DisplayName("R-LINK-03: a 500 code-point memo and ten 30 code-point tags are saved together")
+	void R_LINK_03_saves_max_memo_and_max_tags_together() throws Exception {
+		String memo = "가".repeat(249) + "😀".repeat(251);
+		List<String> tags = IntStream.range(0, 10).mapToObj(i -> i + "😀".repeat(29)).toList();
+		String json = "{\"url\":\"https://example.com/max\",\"memo\":\"" + memo + "\",\"tags\":"
+				+ tags.stream().map(tag -> "\"" + tag + "\"").collect(Collectors.joining(",", "[", "]")) + "}";
+
+		postLink(json)
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.memo").value(memo))
+			.andExpect(jsonPath("$.tags.length()").value(10))
+			.andExpect(jsonPath("$.tags[0]").value(tags.get(0)))
+			.andExpect(jsonPath("$.tags[9]").value(tags.get(9)));
 		assertThat(linkRepository.count()).isEqualTo(1);
 	}
 

@@ -212,10 +212,10 @@ GitHub Issue 하나 = 독립적으로 검증 가능한 묶음 하나. 번호는 
 
 ## Phase 6: Polish & 검증 (런북 5-6 ~ 5-9)
 
-- [ ] T042 전체 검증: `cd backend && ./gradlew test --rerun`
+- [x] T042 전체 검증: `cd backend && ./gradlew test --rerun`
   - 결과 xml의 tests/failures/errors/skipped 합계를 기록한다
   - SC-004 확인: R-LINK-01~08 각각에 연결된 테스트 이름을 grep으로 확인한다(`grep -rhoE 'R_LINK_0[1-8]_[a-z0-9_]+' backend/src/test`)
-- [ ] T043 `/speckit-converge`로 spec·plan 대비 누락을 확인한다. 누락은 R-LINK-01~08 범위 안에서만 tasks에 추가해 처리한다.
+- [x] T043 `/speckit-converge`로 spec·plan 대비 누락을 확인한다. 누락은 R-LINK-01~08 범위 안에서만 tasks에 추가해 처리한다.
 - [ ] T044 오류 주입(런북 5-8, A4):
   - `LinkControllerTest.R_LINK_06_returns_409_problem_on_duplicate`의 기대 상태를 409 → 400으로 바꾼다
   - `./gradlew test` FAIL 출력을 저장한다
@@ -249,3 +249,9 @@ GitHub Issue 하나 = 독립적으로 검증 가능한 묶음 하나. 번호는 
 2. US2를 더하면 데이터 오염을 막는 최소 기능이 된다.
 3. US3를 더하면 Issue 수용 기준이 모두 충족된다.
 4. Phase 6: 검증, converge, 오류 주입, PR #2 하나.
+
+## Phase 7: Convergence
+
+- [x] T048 Add `SaveLinkIntegrationTest.R_LINK_01_url_only_returns_null_memo_and_empty_tags` (URL only → 201, `memo` null, `tags` `[]`; whitespace-only memo `"  　 "` → `memo` null) in backend/src/test/java/dev/linkshelf/link/SaveLinkIntegrationTest.java per US1/AC1 (partial)
+- [x] T049 Assert the contract fields `type`(`about:blank`), `title`, `instance`(`/api/links`) and 400 `detail` in `LinkControllerTest.R_LINK_06_reports_all_invalid_fields_at_once` and `R_LINK_06_returns_409_problem_on_duplicate`, in backend/src/test/java/dev/linkshelf/link/LinkControllerTest.java per contracts/save-link.md (partial)
+- [x] T050 Add `SaveLinkIntegrationTest.R_LINK_03_saves_max_memo_and_max_tags_together` (500 code-point memo + ten 30 code-point tags in one request → 201, stored values equal) in backend/src/test/java/dev/linkshelf/link/SaveLinkIntegrationTest.java per US1/AC3 (partial)

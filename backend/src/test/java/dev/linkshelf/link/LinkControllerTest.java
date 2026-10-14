@@ -158,7 +158,11 @@ class LinkControllerTest {
 	@Test
 	@DisplayName("R-LINK-06: all invalid fields are reported in one response")
 	void R_LINK_06_reports_all_invalid_fields_at_once() throws Exception {
-		expectRejected(postLink("ftp://example.com", "가".repeat(501), List.of("   ")), "url", "memo", "tags");
+		expectRejected(postLink("ftp://example.com", "가".repeat(501), List.of("   ")), "url", "memo", "tags")
+			.andExpect(jsonPath("$.type").doesNotExist())
+			.andExpect(jsonPath("$.title").value("Bad Request"))
+			.andExpect(jsonPath("$.detail").value("Invalid request content."))
+			.andExpect(jsonPath("$.instance").value("/api/links"));
 		verify(linkService, never()).save(any());
 	}
 
@@ -181,6 +185,9 @@ class LinkControllerTest {
 			.andExpect(status().isConflict())
 			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
 			.andExpect(jsonPath("$.status").value(409))
+			.andExpect(jsonPath("$.type").doesNotExist())
+			.andExpect(jsonPath("$.title").value("Conflict"))
+			.andExpect(jsonPath("$.instance").value("/api/links"))
 			.andExpect(jsonPath("$.detail").value("이미 저장된 URL입니다"))
 			.andExpect(jsonPath("$.url").value("https://example.com/a"));
 	}
