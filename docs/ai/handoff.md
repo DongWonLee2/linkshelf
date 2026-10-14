@@ -25,6 +25,7 @@
 | 5단계 Issue | Issue #3 (closed) |
 | PR #2 (링크 저장 API) | PR #4 (merged) |
 | OSIV 별도 Issue | Issue #5 (open) |
+| 서브에이전트 Bash 쓰기 강제 차단 | Issue #7 (open) |
 | pr-reviewer 서브에이전트 | PR #6 (open) |
 
 ## 결과 보고용 교훈 (6단계 `mvp1-result.md`에 옮길 것)
@@ -35,7 +36,7 @@
 ## 마지막 실행 명령과 결과
 
 - `Agent(subagent_type=pr-reviewer)`로 PR #6 리뷰 → 결과 반환, 전후 상태 동일(리뷰 전 HEAD `b6ad907`)
-- 수용 지적 반영 커밋 push → CI 결과는 PR #6 검증 표 참고
+- 수용 지적 반영 `7ce1d71` push → CI PASS run 38518835739. 처리 표 PR #6 코멘트 6161964376(첫 시도는 가드레일 오탐으로 차단, 사용자 승인 후 예시 문구 바꿔 게시). Issue #7 생성(사용자 승인)
 
 ## 수정했지만 커밋하지 않은 파일
 
@@ -48,7 +49,7 @@
 ## 사람이 결정하거나 승인할 사항
 
 - PR #6 병합
-- 별도 Issue 후보(승인 대기): 서브에이전트 Bash 쓰기를 규칙으로 막기 + `settings.json` deny 패턴 변형 취약점
+- #7 착수 시점(서브에이전트 Bash 쓰기 차단 + deny 패턴 보강, 보안 정책 변경이라 적용 전 승인)
 - 6단계 `mvp1-result.md` 작성 시점, #5 착수 시점
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 
