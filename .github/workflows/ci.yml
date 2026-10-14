@@ -36,6 +36,9 @@ jobs:
 
   # spec 003 / ADR-0005: frontend E2E against the backend on an in-memory H2. Pinned runner image so visual
   # baselines (*-chromium-linux.png) are made and compared on the same OS (research R1).
+  # spec 003 / ADR-0005: frontend E2E against the backend on an in-memory H2. The OS major version is pinned so
+  # visual baselines (*-chromium-linux.png) are made and compared on the same OS; the runner image and fonts still
+  # update (research R1). Artifact names carry the run attempt so re-runs do not collide.
   frontend-e2e:
     name: frontend-e2e
     runs-on: ubuntu-24.04
@@ -46,6 +49,8 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
@@ -77,7 +82,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report
+          name: playwright-report-${{ github.run_attempt }}
           path: |
             frontend/playwright-report/
             frontend/test-results/
@@ -87,7 +92,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-snapshots
+          name: playwright-snapshots-${{ github.run_attempt }}
           path: frontend/e2e/**/*-snapshots/**
           retention-days: 7
           if-no-files-found: ignore
