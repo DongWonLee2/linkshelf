@@ -12,28 +12,38 @@ export function formatCreatedAt(iso: string): string {
 function LinkItem({ link }: { link: Link }) {
   const [read, setRead] = useState(link.read);
   const [error, setError] = useState<string | null>(null);
-  // Only the latest toggle's response may settle the checkbox, so the last change wins.
-  const seq = useRef(0);
+  // PUTs are serialized: one request at a time, and after it settles the latest wanted state is sent if it differs.
+  // So the server sees changes in order, the last change wins, and a failure reverts to the server-confirmed value.
+  const confirmed = useRef(link.read);
+  const desired = useRef(link.read);
+  const sending = useRef(false);
 
   useEffect(() => {
+    if (sending.current) return;
+    confirmed.current = link.read;
+    desired.current = link.read;
     setRead(link.read);
     setError(null);
   }, [link]);
 
   async function toggle(next: boolean) {
-    const previous = read;
+    desired.current = next;
     setRead(next);
     setError(null);
-    const mine = ++seq.current;
-    const result = await markRead(link.id, next);
-    if (mine !== seq.current) return;
-    if (result.ok) {
-      setRead(result.data.read);
-    } else {
-      // R-UI-10: revert and explain on this item.
-      setRead(previous);
-      setError(`읽음 표시를 바꾸지 못했습니다: ${failureMessage(result.error)}`);
+    if (sending.current) return;
+    sending.current = true;
+    while (desired.current !== confirmed.current) {
+      const result = await markRead(link.id, desired.current);
+      if (result.ok) {
+        confirmed.current = result.data.read;
+      } else {
+        // R-UI-10: revert to the last value the server confirmed and explain on this item.
+        desired.current = confirmed.current;
+        setError(`읽음 표시를 바꾸지 못했습니다: ${failureMessage(result.error)}`);
+      }
     }
+    sending.current = false;
+    setRead(confirmed.current);
   }
 
   return (

@@ -24,7 +24,6 @@
 body {
   margin: 0;
   background: var(--bg);
-  overflow-x: hidden;
 }
 
 .app {
@@ -135,6 +134,7 @@ button:disabled {
 .notice {
   margin: 8px 0;
   color: var(--muted);
+  overflow-wrap: anywhere;
 }
 
 .notice.error {
