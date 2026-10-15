@@ -1,10 +1,10 @@
 # Agent Handoff — MVP-3 첫 화면 (조언 00:40)
 
-- 상태: spec 002 완료(PR #19까지 병합). MVP-3 골격 PR #20(ADR-0005, `frontend/`, Feature Map) 리뷰 반영 중. 다음은 spec 003
-- task_id: MVP-3 골격(조언 00:40 2번) · 직전 spec 002 T001~T047 완료
+- 상태: MVP-3. 골격 PR #20 병합. spec 003 specify·clarify(5문항 "추천")·plan·tasks 완료, 승인("승인") → Issue #21(B1 CI)·#22(A 화면)·#23(B2 E2E). spec PR 생성, 다음 B1
+- task_id: spec 003 T001~T034 (R-UI-01~13)
 - 작성: 2026-10-14 KST · Claude Code (Opus 5.5)
 - 규칙: 런북 `~/Dev/AI_개발_가이드/plans/mvp1-runbook.md` §8(8-3a: 승인 요청 전 advisor 먼저). 플레이북 규칙 20(병합 후 정리), 21(기능 먼저)
-- 작업 브랜치: `chore/frontend-skeleton` · 기준 SHA `2c1f6d9` (main, PR #19 병합)
+- 작업 브랜치: `chore/spec-003-first-screen` · 기준 SHA `f1609fa` (main, PR #20 병합)
 - 진행 요약: `~/Dev/AI_개발_가이드/plans/mvp1-status.md`
 ## 지금까지 완료한 것
 
@@ -70,11 +70,11 @@
 
 ## 다음 행동 1개
 
-PR #20 병합 후 spec 003(`003-first-screen`: 목록, 저장 폼, 태그 필터, 읽음 토글) specify → clarify → plan 승인 → tasks → Issue 승인. 그다음 화면(`frontend/src/`)과 E2E·CI(`frontend/e2e/`, `.github/workflows/`)를 implementer 2개로 병렬.
+B1(#21): main 기준 `ci/21-frontend-e2e` 브랜치에서 `frontend-e2e` job + config 보강 → PR → CI PASS. 병합 후 A(#22)·B2(#23)를 implementer 2개로 동시에(worktree 검증 기록).
 
 ## 사람이 결정하거나 승인할 사항
 
-- PR #20 병합
+- spec 003 문서 PR 병합, B1·A·B2 PR 병합, `frontend-e2e` 필수 검사 추가(main 첫 PASS 뒤 승인)
 - 로컬 DB 백업 `~/Dev/linkshelf-db-backup/20261014-235640/`는 되돌리기용으로 남김. 지워도 되면 사용자가 직접 지운다
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 
