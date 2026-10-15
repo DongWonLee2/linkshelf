@@ -68,8 +68,9 @@ test('E2E_R_UI_02_pages_through_links', async ({ page, request }) => {
   await expectPageInfo(page, 1);
   await expect(items).toHaveCount(20);
   await expect(items.first()).toHaveAttribute('data-link-id', String(newest.id));
-  await expect(prev).toBeDisabled();
+  // Next enabled first: both buttons are disabled while a page loads, so prev is disabled by the page boundary.
   await expect(next).toBeEnabled();
+  await expect(prev).toBeDisabled();
 
   await next.click();
   await expectPageInfo(page, 2);
@@ -85,6 +86,8 @@ test('E2E_R_UI_02_pages_through_links', async ({ page, request }) => {
     await expectPageInfo(page, current + 1, total);
   }
   await expectPageInfo(page, total, total);
+  // Prev enabled first, so next is disabled by the last page and not by loading.
+  await expect(prev).toBeEnabled();
   await expect(next).toBeDisabled();
 
   await prev.click();

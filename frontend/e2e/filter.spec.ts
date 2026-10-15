@@ -99,6 +99,8 @@ test('E2E_R_UI_08_pages_within_filter', async ({ page, request }) => {
   await expectPageInfo(page, 2, 2);
   await expect(items).toHaveCount(1);
   await expect(items.first()).toHaveAttribute('data-link-id', String(saved[0].id));
+  // Prev enabled first, so next is disabled by the last page and not by loading.
+  await expect(page.getByTestId('link-list-prev')).toBeEnabled();
   await expect(page.getByTestId('link-list-next')).toBeDisabled();
   await expect(page.getByTestId('tag-filter-active')).toBeVisible();
 
