@@ -116,6 +116,12 @@ button:disabled {
   flex: 1 1 240px;
 }
 
+/* Keep the label on one line; the full-width input would otherwise squeeze it (#28). */
+.field.inline span {
+  flex: none;
+  white-space: nowrap;
+}
+
 .tag-filter .field-error {
   flex-basis: 100%;
 }
