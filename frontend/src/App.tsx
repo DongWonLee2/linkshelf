@@ -15,12 +15,14 @@ export function App() {
   const [busy, setBusy] = useState(false);
   // Only the newest request may update the screen.
   const latest = useRef(0);
+  const browseTop = useRef<HTMLElement>(null);
 
+  // Resolves true when this request's page was shown.
   const load = useCallback(async (page: number, nextTag: string | null, fromFilter: boolean) => {
     const mine = ++latest.current;
     setBusy(true);
     const result = await listLinks({ page, tag: nextTag });
-    if (mine !== latest.current) return;
+    if (mine !== latest.current) return false;
     setBusy(false);
 
     if (result.ok) {
@@ -28,17 +30,23 @@ export function App() {
       setTag(nextTag);
       setListError(null);
       setFilterError(null);
-      return;
+      return true;
     }
     const error = result.error;
     if (fromFilter && error.kind === 'validation') {
       // R-UI-08: keep the previous list and filter, show the error by the filter input.
       const tagErrors = error.errors.filter((e) => e.field === 'tag').map((e) => e.message);
       setFilterError(tagErrors.length > 0 ? tagErrors.join(', ') : failureMessage(error));
-      return;
+      return false;
     }
     setListError(failureMessage(error));
+    return false;
   }, []);
+
+  // R-UI-16: after paging, bring the list's top (and so the new first item) into view.
+  const goToPage = async (page: number) => {
+    if (await load(page, tag, false)) browseTop.current?.scrollIntoView({ block: 'start' });
+  };
 
   useEffect(() => {
     void load(0, null, false);
@@ -61,7 +69,7 @@ export function App() {
     <main className="app" data-testid="app-root">
       <h1>linkshelf</h1>
       <LinkForm onSaved={onSaved} />
-      <section className="browse">
+      <section className="browse" ref={browseTop}>
         <h2>저장한 링크</h2>
         <TagFilter
           input={filterInput}
@@ -72,7 +80,7 @@ export function App() {
           onApply={applyFilter}
           onClear={clearFilter}
         />
-        <LinkList data={data} error={listError} busy={busy} onPage={(page) => void load(page, tag, false)} />
+        <LinkList data={data} error={listError} busy={busy} onPage={(page) => void goToPage(page)} />
       </section>
     </main>
   );
