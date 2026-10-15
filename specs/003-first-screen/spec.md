@@ -130,6 +130,7 @@
 - **R-UI-14** (PRD-01, Issue #32 F1): 저장에 성공해 성공 표시(`link-form-saved`)가 보이는 동안 아무것도 입력하지 않고 다시 제출(Enter·저장 버튼)하면 저장 요청을 보내지 않고, 성공 표시를 그대로 두며 입력 오류도 보이지 않는다. 그 밖의 빈 제출(처음 화면, 입력을 시작한 뒤 지운 경우)은 R-UI-06대로 서버 오류를 보여 준다.
 - **R-UI-15** (PRD-04, Issue #32 F2): 각 항목의 읽음 체크박스의 접근성 이름은 `<그 항목의 URL> 읽음`(예: "https://example.com/a 읽음")이라 스크린리더로 항목끼리 구분할 수 있다.
 - **R-UI-16** (PRD-02, Issue #32 F3): 이전 쪽·다음 쪽으로 넘겨 새 쪽이 보이면, 목록 영역의 맨 위가 화면 맨 위에 오도록 스크롤해 새 쪽의 첫 항목이 화면 안에 다 보이게 한다. 불러오기에 실패하면 스크롤하지 않는다. 저장·필터로 첫 쪽으로 돌아갈 때는 스크롤하지 않는다.
+- **R-UI-17** (PRD-02, Issue #34): 이전 쪽·다음 쪽으로 넘겨 새 쪽이 보이면 키보드 포커스를 새 쪽 첫 항목의 링크(`link-item-url`)로 옮겨, 키보드·스크린리더 사용자가 새 쪽 처음부터 이어 갈 수 있게 한다. 불러오기에 실패하면 포커스를 옮기지 않는다.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -174,6 +175,7 @@
 | R-UI-14 | #33 | `E2E_R_UI_14_resubmitting_empty_form_after_save_keeps_saved_notice`, `E2E_R_UI_14_empty_submit_on_fresh_form_still_shows_url_error`, `E2E_R_UI_14_typing_after_save_reenables_empty_submit` |
 | R-UI-15 | #33 | `E2E_R_UI_15_read_checkbox_name_includes_url` (역할·이름으로 찾음) |
 | R-UI-16 | #33 | `E2E_R_UI_16_paging_scrolls_new_first_item_into_view` |
+| R-UI-17 | #35 | `E2E_R_UI_17_paging_moves_focus_to_new_first_link` (역할·이름으로 찾음) |
 | R-UI-13 | #26·#29 | `VISUAL_R_UI_13_first_screen`, `VISUAL_R_UI_13_empty_list`, `VISUAL_R_UI_13_form_errors`. 회귀 방지(Issue #28, spec 문장 없음): `E2E_R_UI_13_tag_filter_label_stays_on_one_line` |
 
 | 성공 기준 | 근거 |
