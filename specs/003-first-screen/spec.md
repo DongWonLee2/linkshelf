@@ -167,8 +167,8 @@
 | R-UI-09 | #26 | `E2E_R_UI_09_marks_read_and_keeps_after_reload`, `E2E_R_UI_09_marks_unread_again` |
 | R-UI-10 | #26 | `E2E_R_UI_10_reverts_checkbox_when_marking_fails` |
 | R-UI-11 | #26·#27·#29 | 세 PR 모두 `backend/` diff 없음 + 위 기능 E2E가 실제 API로 PASS |
-| R-UI-12 | — | `E2E_R_UI_12_backend_uses_in_memory_db` (메모리 DB 설정을 빼면 FAIL 확인, PR #27) |
-| R-UI-13 | #26·#29 | `VISUAL_R_UI_13_first_screen`, `VISUAL_R_UI_13_empty_list`, `VISUAL_R_UI_13_form_errors`, `E2E_R_UI_13_tag_filter_label_stays_on_one_line` |
+| R-UI-12 | — | `E2E_R_UI_12_backend_uses_in_memory_db` (파일 DB 미사용 부분만. 메모리 DB 설정을 빼면 FAIL 확인, PR #27). testid·역할로 찾기와 고유 URL은 리뷰로 확인 |
+| R-UI-13 | #26·#29 | `VISUAL_R_UI_13_first_screen`, `VISUAL_R_UI_13_empty_list`, `VISUAL_R_UI_13_form_errors`. 회귀 방지(Issue #28, spec 문장 없음): `E2E_R_UI_13_tag_filter_label_stays_on_one_line` |
 
 | 성공 기준 | 근거 |
 |---|---|

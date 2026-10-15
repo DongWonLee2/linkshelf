@@ -9,8 +9,8 @@
 | ADR-0005, `frontend/` 골격, Feature Map | #20 | React + Vite + TS, Playwright(메모리 H2 + Vite webServer), testid 계약 |
 | spec 003 (US1~US4, R-UI-01~13) | #24 | clarify 1회, plan·Issue 승인 1회 |
 | CI `frontend-e2e` (B1) | #25 | ubuntu-24.04 고정, 아티팩트, `update_snapshots` 입력 |
-| 첫 화면 (A, implementer) | #26 | 목록·저장·필터·읽음, 리뷰 수용 4건(읽음 PUT 직렬화 등) |
-| E2E 22개 + Visual 3개 (B2, implementer) | #27 | Red 커밋 → 화면 병합 후 merge → 기준 이미지 → 리뷰 수용 6건(25개) |
+| 첫 화면 (A, implementer) | #26 | 목록·저장·필터·읽음, 리뷰 수용 4건(코드 수정 기준, 읽음 PUT 직렬화 등. 분류상 수용 5건 중 1건은 T016·T017 증거 보강) |
+| E2E·Visual (B2, implementer) | #27 | Red 커밋 → 화면 병합 후 merge → 기준 이미지 → 리뷰 수용 6건. 최종 기능 21 + smoke 1 + visual 3 = 25개 |
 | 라벨 줄바꿈 수정 + 기준 이미지 갱신 | #29 | Red(라벨 높이 42px) → Green, visual 차이로 FAIL → 새 기준 이미지 |
 | 보호 규칙 | — | main 필수 검사 `backend-test` + `frontend-e2e` |
 
@@ -28,7 +28,7 @@
 
 | 항목 | 값 | 비고 |
 |---|---|---|
-| 병렬 단계 시간 | A 첫 PR 약 6분, B2 Red 약 15분(동시) | 순차였다면 약 21분. 이후 T016·리뷰·기준 이미지는 포트 때문에 순차 |
+| 병렬 단계 시간 | A 첫 PR 약 6분, B2 Red 약 15분(동시) | 순차였다면 약 21분. 이후 T016·리뷰·기준 이미지는 포트 때문에 순차. 출처: 구현 세션의 서브에이전트 실행 시간(저장소 기록 아님) |
 | PR 생성 → 병합 | #26 23분, #27 33분 | 사용자 병합 대기 포함 |
 | 사용자 질문(이 단계) | 승인 1회("다 승인": 병합·필수 검사·새 Issue·정리), 병합 알림 3회 | spec 003 단계의 clarify 1·승인 1은 별도 |
 | advisor 호출 | 2회 | 필수 검사 시점(묶어서 묻기), 묶음 질문 검토 |
