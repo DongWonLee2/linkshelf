@@ -43,10 +43,21 @@ export function App() {
     return false;
   }, []);
 
-  // R-UI-16: after paging, bring the list's top (and so the new first item) into view.
+  // Set when paging succeeded; the effect below acts once the new page has rendered.
+  const pagedTo = useRef(false);
+
   const goToPage = async (page: number) => {
-    if (await load(page, tag, false)) browseTop.current?.scrollIntoView({ block: 'start' });
+    if (await load(page, tag, false)) pagedTo.current = true;
   };
+
+  useEffect(() => {
+    if (!pagedTo.current) return;
+    pagedTo.current = false;
+    // R-UI-16: bring the list's top (and so the new first item) into view.
+    browseTop.current?.scrollIntoView({ block: 'start' });
+    // R-UI-17: move keyboard focus off the pager to the new page's first link.
+    browseTop.current?.querySelector<HTMLAnchorElement>('.link-body a')?.focus({ preventScroll: true });
+  }, [data]);
 
   useEffect(() => {
     void load(0, null, false);

@@ -169,3 +169,26 @@ test('E2E_R_UI_16_paging_scrolls_new_first_item_into_view', async ({ page, reque
   await expect(page.getByTestId('link-item').first()).toHaveAttribute('data-link-id', String(links[39].id));
   await expect(page.getByTestId('link-item').first()).toBeInViewport({ ratio: 1 });
 });
+
+test('E2E_R_UI_17_paging_moves_focus_to_new_first_link', async ({ page, request }) => {
+  // Issue #34 (PR #33 review): after paging, focus stayed on the off-screen pager button.
+  // 40 links under one unique tag give two full pages of 20. Page with the keyboard, as a keyboard user would.
+  const tag = `focus${uniqueId()}`;
+  const links: Link[] = [];
+  for (let i = 0; i < 40; i++) links.push(await saveLinkViaApi(request, { url: uniqueUrl('r-ui-17'), tags: [tag] }));
+
+  await page.goto('/');
+  await applyTagFilter(page, tag);
+  await expectPageInfo(page, 1, 2);
+
+  await page.getByRole('button', { name: '다음' }).focus();
+  await page.keyboard.press('Enter');
+  await expectPageInfo(page, 2, 2);
+  // Newest first: page 2 starts with the 21st newest link.
+  await expect(page.getByRole('link', { name: links[19].url, exact: true })).toBeFocused();
+
+  await page.getByRole('button', { name: '이전' }).focus();
+  await page.keyboard.press('Enter');
+  await expectPageInfo(page, 1, 2);
+  await expect(page.getByRole('link', { name: links[39].url, exact: true })).toBeFocused();
+});
