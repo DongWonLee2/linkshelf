@@ -36,7 +36,7 @@
 - 이 마무리 PR 병합
 - 로컬 `tmp/t016` 브랜치: `-d` 거부(임시 merge commit). 내용은 main에 있음. 지우려면 직접 `git branch -D tmp/t016`
 - 로컬 DB 백업 `~/Dev/linkshelf-db-backup/20261014-235640/`: 지워도 되면 사용자가 직접
-- 다음 기능: 조언 확인(플레이북 4장 "할 일이 떨어졌을 때"). ego lite 시범은 NOT_RUN
+- 다음 기능: 조언 확인(플레이북 4장 "할 일이 떨어졌을 때"). ego lite 시범 완료(`docs/ai/result.md`), 발견 F1~F3 처리는 사용자 결정 대기
 - 이전부터 남은 것: Codex `~/.codex/hooks.json` Orca 훅 정리, 런북 4단계 순서 수정
 
 ## Codex로 이어받을 때
