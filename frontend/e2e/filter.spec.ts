@@ -119,3 +119,18 @@ test('E2E_R_UI_08_pages_within_filter', async ({ page, request }) => {
   await expectPageInfo(page, 1, 2);
   await expect(items).toHaveCount(20);
 });
+
+test('E2E_R_UI_13_tag_filter_label_stays_on_one_line', async ({ page }) => {
+  // Issue #28: the label "태그로 거르기" wrapped to two lines next to the full-width input.
+  await page.goto('/');
+  const input = page.getByTestId('tag-filter-input');
+  await expect(input).toBeVisible();
+
+  const { height, fontSize } = await input.evaluate((el) => {
+    const label = el.closest('label')?.querySelector('span');
+    if (!label) throw new Error('tag filter label text not found');
+    return { height: label.getBoundingClientRect().height, fontSize: parseFloat(getComputedStyle(label).fontSize) };
+  });
+  // One line is about 1.2-1.5 × font size; two lines are at least 2 ×.
+  expect(height).toBeLessThan(fontSize * 2);
+});
