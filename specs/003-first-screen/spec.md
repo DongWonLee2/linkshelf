@@ -127,6 +127,9 @@
 - **R-UI-11**: 화면은 백엔드 API(spec 001·002 계약)를 바꾸지 않고 그대로 쓴다.
 - **R-UI-12**: E2E 테스트는 Feature Map의 testid와 역할로만 요소를 찾고, 서로의 데이터에 기대지 않는다(각자 고유한 URL을 쓴다). 로컬 파일 데이터는 쓰지 않는다.
 - **R-UI-13**: 화면 상태 3가지(링크가 있는 첫 화면, 빈 목록, 저장 입력 오류)의 스크린샷을 기준 이미지와 비교해 의도하지 않은 화면 변화를 찾는다(Visual QA). 기준 이미지는 자동 검사 환경과 같은 환경에서 만든다.
+- **R-UI-14** (PRD-01, Issue #32 F1): 저장에 성공해 성공 표시(`link-form-saved`)가 보이는 동안 아무것도 입력하지 않고 다시 제출(Enter·저장 버튼)하면 저장 요청을 보내지 않고, 성공 표시를 그대로 두며 입력 오류도 보이지 않는다. 그 밖의 빈 제출(처음 화면, 입력을 시작한 뒤 지운 경우)은 R-UI-06대로 서버 오류를 보여 준다.
+- **R-UI-15** (PRD-04, Issue #32 F2): 각 항목의 읽음 체크박스의 접근성 이름은 `<그 항목의 URL> 읽음`(예: "https://example.com/a 읽음")이라 스크린리더로 항목끼리 구분할 수 있다.
+- **R-UI-16** (PRD-02, Issue #32 F3): 이전 쪽·다음 쪽으로 넘겨 새 쪽이 보이면, 목록 영역의 맨 위가 화면 맨 위에 오도록 스크롤해 새 쪽의 첫 항목이 화면 안에 다 보이게 한다. 불러오기에 실패하면 스크롤하지 않는다. 저장·필터로 첫 쪽으로 돌아갈 때는 스크롤하지 않는다.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -168,12 +171,15 @@
 | R-UI-10 | #26 | `E2E_R_UI_10_reverts_checkbox_when_marking_fails` |
 | R-UI-11 | #26·#27·#29 | 세 PR 모두 `backend/` diff 없음 + 위 기능 E2E가 실제 API로 PASS |
 | R-UI-12 | — | `E2E_R_UI_12_backend_uses_in_memory_db` (파일 DB 미사용 부분만. 메모리 DB 설정을 빼면 FAIL 확인, PR #27). testid·역할로 찾기와 고유 URL은 리뷰로 확인 |
+| R-UI-14 | #33 | `E2E_R_UI_14_resubmitting_empty_form_after_save_keeps_saved_notice`, `E2E_R_UI_14_empty_submit_on_fresh_form_still_shows_url_error`, `E2E_R_UI_14_typing_after_save_reenables_empty_submit` |
+| R-UI-15 | #33 | `E2E_R_UI_15_read_checkbox_name_includes_url` (역할·이름으로 찾음) |
+| R-UI-16 | #33 | `E2E_R_UI_16_paging_scrolls_new_first_item_into_view` |
 | R-UI-13 | #26·#29 | `VISUAL_R_UI_13_first_screen`, `VISUAL_R_UI_13_empty_list`, `VISUAL_R_UI_13_form_errors`. 회귀 방지(Issue #28, spec 문장 없음): `E2E_R_UI_13_tag_filter_label_stays_on_one_line` |
 
 | 성공 기준 | 근거 |
 |---|---|
 | SC-001 | `E2E_SC_001_full_flow` |
-| SC-002 | 위 표. PR #29 최종 CI run 38666997040(`0356ddf`): `frontend-e2e` 26개 중 26 PASS |
+| SC-002 | 위 표. PR #33 최종 CI(아래 PR 본문의 run): `frontend-e2e` 31개 중 31 PASS. 그 전 PR #29 run 38666997040: 26개 중 26 PASS |
 | SC-003 | PR #26 고장 내기 3건(정렬 뒤집기 10 FAIL, `list-error` 제거 1 FAIL, 읽음 되돌림 제거 1 FAIL), PR #27 새 단언 4개 각각 고장으로 FAIL 확인 |
 | SC-004 | PR #29 첫 CI run 38666210871: 화면 변화로 visual 3개 FAIL, 차이 이미지(`*-diff.png`)가 `playwright-report` 아티팩트에 남음 |
 | SC-005 | `E2E_R_UI_12_backend_uses_in_memory_db`(로컬·CI), 고장 시험은 implementer worktree 안에서만 실행(사용자 로컬 DB 무접촉) |

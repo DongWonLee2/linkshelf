@@ -34,6 +34,8 @@ export function LinkForm({ onSaved }: { onSaved: () => void }) {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (inFlight.current) return;
+    // R-UI-14: resubmitting the emptied form right after a save (e.g. a second Enter) does nothing.
+    if (saved && url === '' && memo === '' && tags === '') return;
     inFlight.current = true;
     setSaving(true);
     setFieldErrors([]);

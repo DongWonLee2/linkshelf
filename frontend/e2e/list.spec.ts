@@ -141,3 +141,31 @@ test('E2E_R_UI_03_shows_list_error_when_api_returns_400', async ({ page }) => {
   await expect(page.getByTestId('list-error')).toBeVisible();
   await expect(page.getByTestId('link-item')).toHaveCount(0);
 });
+
+test('E2E_R_UI_16_paging_scrolls_new_first_item_into_view', async ({ page, request }) => {
+  // Issue #32 F3 (ego lite): paging from the bottom kept the scroll position, leaving the new page's top off screen.
+  // 40 links under one unique tag give two full pages of 20, so the page stays long after paging.
+  const tag = `scroll${uniqueId()}`;
+  const links: Link[] = [];
+  for (let i = 0; i < 40; i++) links.push(await saveLinkViaApi(request, { url: uniqueUrl('r-ui-16'), tags: [tag] }));
+
+  await page.goto('/');
+  await applyTagFilter(page, tag);
+  await expectPageInfo(page, 1, 2);
+
+  const next = page.getByTestId('link-list-next');
+  await next.scrollIntoViewIfNeeded();
+  await next.click();
+  await expectPageInfo(page, 2, 2);
+  const first = page.getByTestId('link-item').first();
+  // Newest first: page 2 starts with the 21st newest link.
+  await expect(first).toHaveAttribute('data-link-id', String(links[19].id));
+  await expect(first).toBeInViewport({ ratio: 1 });
+
+  const prev = page.getByTestId('link-list-prev');
+  await prev.scrollIntoViewIfNeeded();
+  await prev.click();
+  await expectPageInfo(page, 1, 2);
+  await expect(page.getByTestId('link-item').first()).toHaveAttribute('data-link-id', String(links[39].id));
+  await expect(page.getByTestId('link-item').first()).toBeInViewport({ ratio: 1 });
+});

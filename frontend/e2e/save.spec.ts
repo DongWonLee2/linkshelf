@@ -171,3 +171,50 @@ test('E2E_R_UI_06_shows_tags_error', async ({ page, request }) => {
   await expect(page.getByTestId('link-url-input')).toHaveValue(url);
   await expect(page.getByTestId('link-form-saved')).toBeHidden();
 });
+
+test('E2E_R_UI_14_resubmitting_empty_form_after_save_keeps_saved_notice', async ({ page }) => {
+  // Issue #32 F1 (ego lite): a second Enter right after a save sent the empty form and replaced the notice.
+  const url = uniqueUrl('r-ui-14-resubmit');
+  await page.goto('/');
+  await page.getByTestId('link-url-input').fill(url);
+  await page.getByTestId('link-save-button').click();
+  await expect(page.getByTestId('link-form-saved')).toBeVisible();
+  await expect(page.getByTestId('link-url-input')).toHaveValue('');
+
+  let posts = 0;
+  page.on('request', (req) => {
+    if (req.method() === 'POST' && isLinksList(new URL(req.url()))) posts += 1;
+  });
+  await page.getByTestId('link-url-input').press('Enter');
+  await page.getByTestId('link-save-button').click();
+  // Nothing should happen, so there is no event to wait for; leave time for a wrongly sent request to land.
+  await page.waitForTimeout(500);
+
+  expect(posts).toBe(0);
+  await expect(page.getByTestId('link-form-saved')).toBeVisible();
+  await expect(page.getByTestId('link-form-error')).toHaveCount(0);
+});
+
+test('E2E_R_UI_14_empty_submit_on_fresh_form_still_shows_url_error', async ({ page }) => {
+  // R-UI-14 only covers the emptied form right after a save; an empty submit otherwise still reaches the server (R-UI-06).
+  await page.goto('/');
+  await page.getByTestId('link-save-button').click();
+  await expect(page.getByTestId('link-form-error').and(page.locator('[data-field="url"]'))).toBeVisible();
+  await expect(page.getByTestId('link-form-saved')).toHaveCount(0);
+});
+
+test('E2E_R_UI_14_typing_after_save_reenables_empty_submit', async ({ page }) => {
+  // Starting new input clears the saved notice (R-UI-05), so a later empty submit is sent and gets the URL error.
+  await page.goto('/');
+  await page.getByTestId('link-url-input').fill(uniqueUrl('r-ui-14-typing'));
+  await page.getByTestId('link-save-button').click();
+  await expect(page.getByTestId('link-form-saved')).toBeVisible();
+
+  await page.getByTestId('link-memo-input').fill('x');
+  await page.getByTestId('link-memo-input').fill('');
+  await expect(page.getByTestId('link-form-saved')).toHaveCount(0);
+  const posted = page.waitForRequest((req) => req.method() === 'POST' && isLinksList(new URL(req.url())));
+  await page.getByTestId('link-save-button').click();
+  await posted;
+  await expect(page.getByTestId('link-form-error').and(page.locator('[data-field="url"]'))).toBeVisible();
+});

@@ -54,7 +54,8 @@ function LinkItem({ link }: { link: Link }) {
           type="checkbox"
           checked={read}
           onChange={(e) => void toggle(e.target.checked)}
-          aria-label="읽음"
+          // R-UI-15: the name carries the URL so screen readers can tell items apart.
+          aria-label={`${link.url} 읽음`}
         />
       </label>
       <div className="link-body">

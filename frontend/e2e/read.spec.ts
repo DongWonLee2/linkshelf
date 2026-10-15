@@ -78,3 +78,21 @@ test('E2E_R_UI_10_reverts_checkbox_when_marking_fails', async ({ page, request }
   await page.reload();
   await expect(linkItem(page, link.id).getByTestId('link-item-read-toggle')).not.toBeChecked();
 });
+
+test('E2E_R_UI_15_read_checkbox_name_includes_url', async ({ page, request }) => {
+  // Issue #32 F2 (ego lite): every checkbox was named just "읽음". Find by role + name, so the name is what we test.
+  const a = await saveLinkViaApi(request, { url: uniqueUrl('r-ui-15-a') });
+  const b = await saveLinkViaApi(request, { url: uniqueUrl('r-ui-15-b') });
+
+  await page.goto('/');
+  const toggleA = page.getByRole('checkbox', { name: `${a.url} 읽음`, exact: true });
+  const toggleB = page.getByRole('checkbox', { name: `${b.url} 읽음`, exact: true });
+  await expect(toggleA).toHaveCount(1);
+  await expect(toggleB).toHaveCount(1);
+  // The checkbox named after a link is the one inside that link's item.
+  await expect(linkItem(page, a.id).getByRole('checkbox', { name: `${a.url} 읽음`, exact: true })).toBeVisible();
+
+  await toggleA.click();
+  await expect(toggleA).toBeChecked();
+  await expect(toggleB).not.toBeChecked();
+});
