@@ -173,7 +173,7 @@
 | 성공 기준 | 근거 |
 |---|---|
 | SC-001 | `E2E_SC_001_full_flow` |
-| SC-002 | 위 표. PR #29 최종 CI run 38666499624: `frontend-e2e` 26개 중 26 PASS |
+| SC-002 | 위 표. PR #29 최종 CI run 38666997040(`0356ddf`): `frontend-e2e` 26개 중 26 PASS |
 | SC-003 | PR #26 고장 내기 3건(정렬 뒤집기 10 FAIL, `list-error` 제거 1 FAIL, 읽음 되돌림 제거 1 FAIL), PR #27 새 단언 4개 각각 고장으로 FAIL 확인 |
 | SC-004 | PR #29 첫 CI run 38666210871: 화면 변화로 visual 3개 FAIL, 차이 이미지(`*-diff.png`)가 `playwright-report` 아티팩트에 남음 |
 | SC-005 | `E2E_R_UI_12_backend_uses_in_memory_db`(로컬·CI), 고장 시험은 implementer worktree 안에서만 실행(사용자 로컬 DB 무접촉) |
