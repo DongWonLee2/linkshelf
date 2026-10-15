@@ -6,12 +6,16 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 0,
   workers: 1,
+  globalTimeout: 600_000,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
   use: {
     baseURL: 'http://localhost:5173',
     trace: 'retain-on-failure',
+    // spec 003 clarify Q2: created-at is shown in local time, so tests and screenshots fix the zone and locale.
+    timezoneId: 'Asia/Seoul',
+    locale: 'ko-KR',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800 } } }],
   webServer: [
     {
       command: './gradlew bootRun --console=plain',

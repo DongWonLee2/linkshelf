@@ -49,11 +49,11 @@ PRD-01~04 백엔드 API(spec 001·002)가 끝났다. Feature Map, E2E, Visual QA
 - Playwright 브라우저는 Chromium만 받는다(`npx playwright install chromium`).
 - E2E는 Playwright `webServer`로 백엔드(메모리 H2, `SPRING_DATASOURCE_URL`)와 Vite 개발 서버를 함께 띄운다. 로컬 파일 DB를 건드리지 않는다. 지금 이를 지키는 장치는 환경 변수와 `reuseExistingServer: false`(이미 떠 있는 서버를 쓰지 않음)뿐이고, 명시적 가드는 spec 003에서 검토한다.
 - 화면과 E2E 사이의 계약은 `docs/feature-map.md`의 `data-testid` 목록이다.
-- CI에 `frontend-e2e` job을 더한다. 시점은 spec 003 구현 단계(E2E와 CI를 맡는 PR)이고, ADR-0002의 재검토 트리거("프론트 추가 시 경로별 CI 분리")도 그때 함께 본다. Node 버전(Vite 8 요구 `^20.19.0 || >=22.12.0`)도 그 job에서 정한다. 필수 검사로 넣는 일(보호 규칙 변경)은 첫 PASS 뒤 따로 묻는다.
+- CI에 `frontend-e2e` job을 더한다. 시점은 spec 003 구현 단계(E2E와 CI를 맡는 PR)이고, ADR-0002의 재검토 트리거("프론트 추가 시 경로별 CI 분리")도 그때 함께 본다. Node 버전은 그 job에서 22로 정했다(2026-10-15, PR #25, Vite 8 요구 `^20.19.0 || >=22.12.0` 충족). runner는 `ubuntu-24.04`(OS 메이저만 고정, 이미지·글꼴은 갱신됨). 필수 검사로 넣는 일(보호 규칙 변경)은 첫 PASS 뒤 따로 묻는다.
 
 ## 포기하는 것·운영 영향
 
-- Node가 필요하다. 로컬 v25. CI 버전은 `frontend-e2e` job을 더할 때 정한다(Vite 요구 범위 안의 LTS). 버전 차이로 생기는 문제는 CI 결과를 기준으로 본다.
+- Node가 필요하다. 로컬 v25, CI v22(LTS). 버전 차이로 생기는 문제는 CI 결과를 기준으로 본다. 버전 차이로 생기는 문제는 CI 결과를 기준으로 본다.
 - 운영 배포·정적 파일 서빙은 범위 밖(PRD 제외: 배포).
 - 단위 테스트 러너 없이 E2E로 화면을 검증한다. 화면 로직이 복잡해지면 다시 검토한다.
 - 되돌리기: `frontend/`와 이 ADR을 지우는 PR.
