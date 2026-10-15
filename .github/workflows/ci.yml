@@ -34,8 +34,6 @@ jobs:
           set -euo pipefail
           ./gradlew test --console=plain
 
-  # spec 003 / ADR-0005: frontend E2E against the backend on an in-memory H2. Pinned runner image so visual
-  # baselines (*-chromium-linux.png) are made and compared on the same OS (research R1).
   # spec 003 / ADR-0005: frontend E2E against the backend on an in-memory H2. The OS major version is pinned so
   # visual baselines (*-chromium-linux.png) are made and compared on the same OS; the runner image and fonts still
   # update (research R1). Artifact names carry the run attempt so re-runs do not collide.
