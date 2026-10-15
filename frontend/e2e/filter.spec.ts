@@ -123,14 +123,16 @@ test('E2E_R_UI_08_pages_within_filter', async ({ page, request }) => {
 test('E2E_R_UI_13_tag_filter_label_stays_on_one_line', async ({ page }) => {
   // Issue #28: the label "태그로 거르기" wrapped to two lines next to the full-width input.
   await page.goto('/');
-  const input = page.getByTestId('tag-filter-input');
-  await expect(input).toBeVisible();
+  // The label has no testid (Feature Map); find the input by role and accessible name, then measure its label text.
+  const input = page.getByRole('textbox', { name: '태그로 거르기' });
+  await expect(input).toHaveAttribute('data-testid', 'tag-filter-input');
 
   const { height, fontSize } = await input.evaluate((el) => {
     const label = el.closest('label')?.querySelector('span');
     if (!label) throw new Error('tag filter label text not found');
     return { height: label.getBoundingClientRect().height, fontSize: parseFloat(getComputedStyle(label).fontSize) };
   });
-  // One line is about 1.2-1.5 × font size; two lines are at least 2 ×.
+  // One line is about 1.2-1.5 × font size; two lines are at least 2 ×. A hidden label (height 0) must not pass.
+  expect(height).toBeGreaterThan(0);
   expect(height).toBeLessThan(fontSize * 2);
 });
