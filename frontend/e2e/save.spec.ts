@@ -171,3 +171,26 @@ test('E2E_R_UI_06_shows_tags_error', async ({ page, request }) => {
   await expect(page.getByTestId('link-url-input')).toHaveValue(url);
   await expect(page.getByTestId('link-form-saved')).toBeHidden();
 });
+
+test('E2E_R_UI_14_resubmitting_empty_form_after_save_keeps_saved_notice', async ({ page }) => {
+  // Issue #32 F1 (ego lite): a second Enter right after a save sent the empty form and replaced the notice.
+  const url = uniqueUrl('r-ui-14-resubmit');
+  await page.goto('/');
+  await page.getByTestId('link-url-input').fill(url);
+  await page.getByTestId('link-save-button').click();
+  await expect(page.getByTestId('link-form-saved')).toBeVisible();
+  await expect(page.getByTestId('link-url-input')).toHaveValue('');
+
+  let posts = 0;
+  page.on('request', (req) => {
+    if (req.method() === 'POST' && isLinksList(new URL(req.url()))) posts += 1;
+  });
+  await page.getByTestId('link-url-input').press('Enter');
+  await page.getByTestId('link-save-button').click();
+  // Nothing should happen, so there is no event to wait for; leave time for a wrongly sent request to land.
+  await page.waitForTimeout(500);
+
+  expect(posts).toBe(0);
+  await expect(page.getByTestId('link-form-saved')).toBeVisible();
+  await expect(page.getByTestId('link-form-error')).toHaveCount(0);
+});
