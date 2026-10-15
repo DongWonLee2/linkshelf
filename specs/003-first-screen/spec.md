@@ -149,3 +149,31 @@
 - 범위 밖: 로그인, 링크 수정·삭제, 검색, 여러 태그 필터, 안 읽은 것만 보기, 반응형 세부 디자인, 배포, 다국어.
 - 구현 단위: 화면(US1~US4 화면 코드)과 E2E·CI·Visual QA를 나눈다. 둘은 Feature Map의 testid를 계약으로 고칠 파일이 겹치지 않으므로 병렬로 진행한다(조언 00:40 4번). 세부 Issue 구성은 tasks에서 정한다.
 - 디자인: 기본 HTML 요소와 최소 스타일. 디자인 시스템은 쓰지 않는다.
+
+## 추적 (구현 완료, 2026-10-15)
+
+화면은 PR #26(`frontend/src/`), E2E·Visual QA는 PR #27(`frontend/e2e/`), 라벨 줄바꿈 수정은 PR #29. CI는 PR #25의 `frontend-e2e` job이며 2026-10-15부터 main 필수 검사다.
+
+| R-ID | 화면 PR | E2E (`frontend/e2e/`) |
+|---|---|---|
+| R-UI-01 | #26 | `E2E_R_UI_01_lists_newest_first_with_fields` |
+| R-UI-02 | #26 | `E2E_R_UI_02_pages_through_links` |
+| R-UI-03 | #26 | `E2E_R_UI_03_shows_empty_state`, `E2E_R_UI_03_shows_list_error_when_api_fails`, `E2E_R_UI_03_shows_list_error_when_api_returns_400` |
+| R-UI-04 | #26 | `E2E_R_UI_04_save_button_disabled_while_saving` |
+| R-UI-05 | #26 | `E2E_R_UI_05_saves_link_and_shows_it_first`, `E2E_R_UI_05_save_clears_tag_filter`, `E2E_R_UI_05_save_returns_to_first_page` |
+| R-UI-06 | #26 | `E2E_R_UI_06_shows_field_errors`, `E2E_R_UI_06_shows_tags_error`, `E2E_R_UI_06_shows_duplicate_notice` |
+| R-UI-07 | #26 | `E2E_R_UI_07_filters_by_tag_ignoring_case`, `E2E_R_UI_07_blank_filter_clears` |
+| R-UI-08 | #26 | `E2E_R_UI_08_shows_filter_error_and_keeps_list`, `E2E_R_UI_08_pages_within_filter` |
+| R-UI-09 | #26 | `E2E_R_UI_09_marks_read_and_keeps_after_reload`, `E2E_R_UI_09_marks_unread_again` |
+| R-UI-10 | #26 | `E2E_R_UI_10_reverts_checkbox_when_marking_fails` |
+| R-UI-11 | #26·#27·#29 | 세 PR 모두 `backend/` diff 없음 + 위 기능 E2E가 실제 API로 PASS |
+| R-UI-12 | — | `E2E_R_UI_12_backend_uses_in_memory_db` (파일 DB 미사용 부분만. 메모리 DB 설정을 빼면 FAIL 확인, PR #27). testid·역할로 찾기와 고유 URL은 리뷰로 확인 |
+| R-UI-13 | #26·#29 | `VISUAL_R_UI_13_first_screen`, `VISUAL_R_UI_13_empty_list`, `VISUAL_R_UI_13_form_errors`. 회귀 방지(Issue #28, spec 문장 없음): `E2E_R_UI_13_tag_filter_label_stays_on_one_line` |
+
+| 성공 기준 | 근거 |
+|---|---|
+| SC-001 | `E2E_SC_001_full_flow` |
+| SC-002 | 위 표. PR #29 최종 CI run 38666997040(`0356ddf`): `frontend-e2e` 26개 중 26 PASS |
+| SC-003 | PR #26 고장 내기 3건(정렬 뒤집기 10 FAIL, `list-error` 제거 1 FAIL, 읽음 되돌림 제거 1 FAIL), PR #27 새 단언 4개 각각 고장으로 FAIL 확인 |
+| SC-004 | PR #29 첫 CI run 38666210871: 화면 변화로 visual 3개 FAIL, 차이 이미지(`*-diff.png`)가 `playwright-report` 아티팩트에 남음 |
+| SC-005 | `E2E_R_UI_12_backend_uses_in_memory_db`(로컬·CI), 고장 시험은 implementer worktree 안에서만 실행(사용자 로컬 DB 무접촉) |

@@ -150,6 +150,6 @@
 | SC-001 | `ListLinksIntegrationTest.R_LINK_10_all_pages_together_return_every_link` |
 | SC-002 | `TagFilterIntegrationTest.R_LINK_13_padded_uppercase_tag_filters_end_to_end` |
 | SC-003 | `MarkReadIntegrationTest.R_LINK_15_marking_twice_gives_same_result_and_keeps_other_fields` |
-| SC-004 | 실제 기동(PR #18 검증 표, `docs/ai/handoff.md`): DB 직접 조회·API PASS, 기동 로그의 ALTER 문은 확인 불가(층 2·3으로 대체) |
+| SC-004 | 실제 기동(PR #18 검증 표, `git show 378b601:docs/ai/handoff.md`의 "SC-004 증거" 항목. 이후 handoff는 갱신됨): DB 직접 조회·API PASS, 기동 로그의 ALTER 문은 확인 불가(층 2·3으로 대체) |
 | SC-005 | NOT_RUN(별도 성능 측정 없음. 쪽 크기 상한 100, 태그 배치 로딩) |
 | SC-006 | 위 표 |
