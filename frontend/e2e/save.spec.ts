@@ -194,3 +194,27 @@ test('E2E_R_UI_14_resubmitting_empty_form_after_save_keeps_saved_notice', async 
   await expect(page.getByTestId('link-form-saved')).toBeVisible();
   await expect(page.getByTestId('link-form-error')).toHaveCount(0);
 });
+
+test('E2E_R_UI_14_empty_submit_on_fresh_form_still_shows_url_error', async ({ page }) => {
+  // R-UI-14 only covers the emptied form right after a save; an empty submit otherwise still reaches the server (R-UI-06).
+  await page.goto('/');
+  await page.getByTestId('link-save-button').click();
+  await expect(page.getByTestId('link-form-error').and(page.locator('[data-field="url"]'))).toBeVisible();
+  await expect(page.getByTestId('link-form-saved')).toHaveCount(0);
+});
+
+test('E2E_R_UI_14_typing_after_save_reenables_empty_submit', async ({ page }) => {
+  // Starting new input clears the saved notice (R-UI-05), so a later empty submit is sent and gets the URL error.
+  await page.goto('/');
+  await page.getByTestId('link-url-input').fill(uniqueUrl('r-ui-14-typing'));
+  await page.getByTestId('link-save-button').click();
+  await expect(page.getByTestId('link-form-saved')).toBeVisible();
+
+  await page.getByTestId('link-memo-input').fill('x');
+  await page.getByTestId('link-memo-input').fill('');
+  await expect(page.getByTestId('link-form-saved')).toHaveCount(0);
+  const posted = page.waitForRequest((req) => req.method() === 'POST' && isLinksList(new URL(req.url())));
+  await page.getByTestId('link-save-button').click();
+  await posted;
+  await expect(page.getByTestId('link-form-error').and(page.locator('[data-field="url"]'))).toBeVisible();
+});

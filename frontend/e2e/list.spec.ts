@@ -160,12 +160,12 @@ test('E2E_R_UI_16_paging_scrolls_new_first_item_into_view', async ({ page, reque
   const first = page.getByTestId('link-item').first();
   // Newest first: page 2 starts with the 21st newest link.
   await expect(first).toHaveAttribute('data-link-id', String(links[19].id));
-  await expect(first).toBeInViewport();
+  await expect(first).toBeInViewport({ ratio: 1 });
 
   const prev = page.getByTestId('link-list-prev');
   await prev.scrollIntoViewIfNeeded();
   await prev.click();
   await expectPageInfo(page, 1, 2);
   await expect(page.getByTestId('link-item').first()).toHaveAttribute('data-link-id', String(links[39].id));
-  await expect(page.getByTestId('link-item').first()).toBeInViewport();
+  await expect(page.getByTestId('link-item').first()).toBeInViewport({ ratio: 1 });
 });
