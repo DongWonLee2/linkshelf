@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { applyTagFilter, isLinksList, saveLinkViaApi, uniqueId, uniqueUrl } from './support';
+import { applyTagFilter, expectPageInfo, isLinksList, saveLinkViaApi, uniqueId, uniqueUrl } from './support';
 
 test('E2E_R_UI_05_saves_link_and_shows_it_first', async ({ page }) => {
   const url = uniqueUrl('r-ui-05-save');
@@ -41,6 +41,26 @@ test('E2E_R_UI_05_save_clears_tag_filter', async ({ page, request }) => {
 
   await expect(page.getByTestId('link-form-saved')).toBeVisible();
   await expect(page.getByTestId('tag-filter-active')).toBeHidden();
+  await expect(page.getByTestId('link-item').first().getByTestId('link-item-url')).toHaveText(url);
+});
+
+test('E2E_R_UI_05_save_returns_to_first_page', async ({ page, request }) => {
+  // 21 links guarantee a second page; saving from there reloads page 1 with the new link on top (PR #27 review).
+  for (let i = 0; i < 21; i += 1) {
+    await saveLinkViaApi(request, { url: uniqueUrl(`r-ui-05-page-${i}`) });
+  }
+  const url = uniqueUrl('r-ui-05-from-page-2');
+
+  await page.goto('/');
+  await expect(page.getByTestId('link-list-next')).toBeEnabled();
+  await page.getByTestId('link-list-next').click();
+  await expectPageInfo(page, 2);
+
+  await page.getByTestId('link-url-input').fill(url);
+  await page.getByTestId('link-save-button').click();
+
+  await expect(page.getByTestId('link-form-saved')).toBeVisible();
+  await expectPageInfo(page, 1);
   await expect(page.getByTestId('link-item').first().getByTestId('link-item-url')).toHaveText(url);
 });
 
@@ -128,4 +148,26 @@ test('E2E_R_UI_06_shows_duplicate_notice', async ({ page, request }) => {
   await expect(page.getByTestId('link-form-duplicate')).toBeVisible();
   await expect(page.getByTestId('link-form-saved')).toBeHidden();
   await expect(items.first()).toHaveAttribute('data-link-id', String(saved.id));
+});
+
+test('E2E_R_UI_06_shows_tags_error', async ({ page, request }) => {
+  const longTag = 't'.repeat(31);
+  const url = uniqueUrl('r-ui-06-tags');
+  // Server message for a 31-character tag (nothing is saved on 400).
+  const problem = await request.post('/api/links', { data: { url, tags: [longTag] } });
+  expect(problem.status()).toBe(400);
+  const { errors } = (await problem.json()) as { errors: { field: string; message: string }[] };
+  const tagsMessage = errors.find((e) => e.field === 'tags')!.message;
+
+  await page.goto('/');
+  await page.getByTestId('link-url-input').fill(url);
+  await page.getByTestId('link-tags-input').fill(`ok, ${longTag}`);
+  await page.getByTestId('link-save-button').click();
+
+  const tagsError = page.locator('[data-testid="link-form-error"][data-field="tags"]');
+  await expect(tagsError).toContainText(tagsMessage);
+  await expect(page.getByTestId('link-form-error')).toHaveCount(1);
+  await expect(page.getByTestId('link-tags-input')).toHaveValue(`ok, ${longTag}`);
+  await expect(page.getByTestId('link-url-input')).toHaveValue(url);
+  await expect(page.getByTestId('link-form-saved')).toBeHidden();
 });

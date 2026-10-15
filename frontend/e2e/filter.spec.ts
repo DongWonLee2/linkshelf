@@ -1,11 +1,20 @@
 import { expect, test } from '@playwright/test';
-import { applyTagFilter, expectPageInfo, isLinksList, saveLinkViaApi, uniqueId, uniqueUrl, type Link } from './support';
+import {
+  applyTagFilter,
+  expectPageInfo,
+  isLinksList,
+  linkItem,
+  saveLinkViaApi,
+  uniqueId,
+  uniqueUrl,
+  type Link,
+} from './support';
 
 test('E2E_R_UI_07_filters_by_tag_ignoring_case', async ({ page, request }) => {
   // Unique stand-ins for the spec's "Java", "java", "스프링" tags (shared DB).
   const id = uniqueId();
   const upper = await saveLinkViaApi(request, { url: uniqueUrl('r-ui-07-upper'), tags: [`Jv${id}`] });
-  await saveLinkViaApi(request, { url: uniqueUrl('r-ui-07-other'), tags: [`스프링${id}`] });
+  const other = await saveLinkViaApi(request, { url: uniqueUrl('r-ui-07-other'), tags: [`스프링${id}`] });
   const lower = await saveLinkViaApi(request, { url: uniqueUrl('r-ui-07-lower'), tags: [`jv${id}`] });
 
   await page.goto('/');
@@ -20,6 +29,8 @@ test('E2E_R_UI_07_filters_by_tag_ignoring_case', async ({ page, request }) => {
 
   // Clearing goes back to the whole list from the first page.
   await page.getByTestId('tag-filter-clear').click();
+  // The link with the other tag comes back (PR #27 review).
+  await expect(linkItem(page, other.id)).toBeVisible();
   await expect(page.getByTestId('tag-filter-active')).toBeHidden();
   await expectPageInfo(page, 1);
   await expect(items.first()).toHaveAttribute('data-link-id', String(lower.id));

@@ -117,3 +117,27 @@ test('E2E_R_UI_03_shows_list_error_when_api_fails', async ({ page }) => {
   await expect(page.getByTestId('list-error')).toBeVisible();
   await expect(page.getByTestId('link-item')).toHaveCount(0);
 });
+
+test('E2E_R_UI_03_shows_list_error_when_api_returns_400', async ({ page }) => {
+  // A problem response (not only a network failure) also shows list-error (PR #27 review).
+  const message = '0 이상이어야 합니다';
+  await page.route(isLinksList, (route) => {
+    if (route.request().method() !== 'GET') return route.fallback();
+    return route.fulfill({
+      status: 400,
+      contentType: 'application/problem+json',
+      body: JSON.stringify({
+        title: 'Bad Request',
+        status: 400,
+        detail: 'Invalid request parameters.',
+        instance: '/api/links',
+        errors: [{ field: 'page', message }],
+      }),
+    });
+  });
+
+  await page.goto('/');
+
+  await expect(page.getByTestId('list-error')).toBeVisible();
+  await expect(page.getByTestId('link-item')).toHaveCount(0);
+});
