@@ -6,7 +6,7 @@ test('E2E_SMOKE: app shell loads and /api reaches the backend through the Vite p
 
   const response = await page.request.get('/api/links');
   expect(response.status()).toBe(200);
-  // Shape only: E2E tests share one in-memory DB, so the list may not be empty (docs/feature-map.md).
+  // Shape only: E2E tests share one in-memory DB, so the list may not be empty (.claude/skills/verify-linkshelf/features/README.md).
   const body = await response.json();
   expect(Array.isArray(body.items)).toBe(true);
   expect(body).toMatchObject({ page: 0, size: 20 });
