@@ -59,7 +59,7 @@
 - [x] T016 [P] [US2] `frontend/src/SortSelect.tsx`: `<label>정렬<select data-testid="link-sort-select">` 옵션 "최신순"(`newest`)·"오래된순"(`oldest`), 요청 중에도 비활성으로 두지 않는다(Chromium은 비활성이 된 요소에서 포커스를 빼서 R-UI-19를 어긴다. 마지막 요청만 화면에 반영하는 `latest` 가드가 있어 안전. 구현 중 변경, implementer 실측)
 - [x] T017 [US2] `frontend/src/App.tsx`: `order` 상태(기본 `newest`), 정렬 변경 → `load(0, tag, order)`(스크롤·포커스 이동 없음), 쪽 넘김·필터 적용/해제는 현재 `order` 유지, `onSaved`에서 `newest`로 되돌림(R-UI-20). 선택 상자는 `.browse` 영역의 필터 옆
 - [x] T018 [US2] Green 커밋: `npx playwright test` 전체 PASS(visual 제외 기준 이미지 차이는 T019에서)
-- [ ] T019 [US2] Visual 기준 이미지 갱신: 브랜치 push 뒤 CI `workflow_dispatch` `update_snapshots=true` → 아티팩트의 `frontend/e2e/visual.spec.ts-snapshots/` 커밋(research R5). 바뀐 이미지가 선택 상자 추가 말고 다른 차이가 없는지 눈으로 확인
+- [x] T019 [US2] Visual 기준 이미지 갱신: 브랜치 push 뒤 CI `workflow_dispatch` `update_snapshots=true` → 아티팩트의 `frontend/e2e/visual.spec.ts-snapshots/` 커밋(research R5). 바뀐 이미지가 선택 상자 추가 말고 다른 차이가 없는지 눈으로 확인
 - [x] T020 [US2] 고장 내기(quickstart §5 3·4행): 정렬 변경 시 `order` 안 보내기, 저장 뒤 되돌리지 않기 → 해당 E2E FAIL 확인 후 되돌림. 커밋하지 않음
 
 ## Phase 5: Polish & Cross-Cutting
