@@ -111,7 +111,7 @@ frontend/
 │   └── visual.spec.ts-snapshots/*-chromium-linux.png  # 첫 CI에서 생성
 └── playwright.config.ts      # B1: globalTimeout, timezoneId·locale, visual Linux 전용
 .github/workflows/ci.yml      # B1: frontend-e2e job
-docs/decisions/ADR-0002-*.md  # 오케스트레이터: 경로별 분리 재검토 기록
+adr/ADR-0002-*.md  # 오케스트레이터: 경로별 분리 재검토 기록
 ```
 
 A는 `frontend/src/`만, B2는 `frontend/e2e/`만 고친다(겹치지 않음). B1은 둘보다 먼저 병합한다.

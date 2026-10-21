@@ -1,11 +1,11 @@
 # Agent Working Agreement — linkshelf
 
-> 짧고 안정적인 공통 규칙만 둔다. 원칙의 원문은 `.specify/memory/constitution.md`, 기술 결정은 `docs/decisions/`를 따른다.
+> 짧고 안정적인 공통 규칙만 둔다. 원칙의 원문은 `.specify/memory/constitution.md`, 기술 결정은 `adr/`를 따른다.
 
 ## 저장소 지도
-- `docs/prd.md` 제품 요구사항, `docs/decisions/ADR-*.md` 기술 결정, `docs/diagrams/` 다이어그램
+- `docs/prd.md` 제품 요구사항, `adr/ADR-*.md` 기술 결정, `adr/diagrams/` 다이어그램
 - `specs/<feature>/` Spec Kit 명세(spec·plan·tasks), `backend/` Spring Boot 앱, `frontend/` React+Vite 화면(ADR-0005), `docs/feature-map.md` 화면↔E2E testid 계약
-- `docs/ai/handoff.md` 세션 인계 기록
+- `docs/ai/handoff.md` 세션 인계 기록. `docs/`는 로컬 전용이며 커밋하지 않는다(docs-guard)
 
 ## 작업 시작
 - 현재 브랜치·기준 SHA, 담당 Issue, 관련 R-ID와 spec, 승인된 ADR을 확인한다.

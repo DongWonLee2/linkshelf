@@ -30,3 +30,6 @@ frontend/playwright-report/
 
 # Claude Code subagent worktrees (implementer, isolation: worktree)
 .claude/worktrees/
+
+# Local-only docs (rule 23, 2026-10-15)
+docs/
