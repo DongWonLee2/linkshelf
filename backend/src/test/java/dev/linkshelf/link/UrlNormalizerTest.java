@@ -31,7 +31,17 @@ class UrlNormalizerTest {
 		assertThat(UrlNormalizer.normalize("https://example.com/a%20b")).isEqualTo("https://example.com/a%20b");
 		assertThat(UrlNormalizer.normalize("https://example.com/경로/😀")).isEqualTo("https://example.com/경로/😀");
 		assertThat(UrlNormalizer.normalize("http://User@Example.com/")).isEqualTo("http://User@example.com/");
-		assertThat(UrlNormalizer.normalize("https://example.com")).isEqualTo("https://example.com");
+	}
+
+	@Test
+	@DisplayName("R-LINK-04: an empty path becomes \"/\" (standard-equivalent for http/https)")
+	void R_LINK_04_treats_empty_path_as_slash() {
+		assertThat(UrlNormalizer.normalize("https://example.com")).isEqualTo("https://example.com/");
+		assertThat(UrlNormalizer.normalize("HTTP://Example.COM:80")).isEqualTo("http://example.com/");
+		assertThat(UrlNormalizer.normalize("https://example.com?x=1")).isEqualTo("https://example.com/?x=1");
+		assertThat(UrlNormalizer.normalize("https://example.com#top")).isEqualTo("https://example.com/#top");
+		assertThat(UrlNormalizer.normalize("https://example.com:8443")).isEqualTo("https://example.com:8443/");
+		assertThat(UrlNormalizer.normalize("http://User@Example.com")).isEqualTo("http://User@example.com/");
 	}
 
 }

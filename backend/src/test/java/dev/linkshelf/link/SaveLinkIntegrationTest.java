@@ -173,6 +173,21 @@ class SaveLinkIntegrationTest {
 	}
 
 	@Test
+	@DisplayName("R-LINK-04: a bare host and the same host with \"/\" are one URL (409, count stays 1)")
+	void R_LINK_04_rejects_slash_variant_of_bare_host_with_409() throws Exception {
+		postLink("""
+				{"url":"https://example.com"}
+				""")
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.url").value("https://example.com/"));
+
+		postLink("""
+				{"url":"https://example.com/"}
+				""").andExpect(status().isConflict());
+		assertThat(linkRepository.count()).isEqualTo(1);
+	}
+
+	@Test
 	@DisplayName("R-LINK-04: when the pre-check misses (concurrent save), the unique constraint still yields 409")
 	void R_LINK_04_translates_unique_violation_to_409_when_precheck_misses() throws Exception {
 		doReturn(false).when(linkRepository).existsByNormalizedUrl(anyString());
