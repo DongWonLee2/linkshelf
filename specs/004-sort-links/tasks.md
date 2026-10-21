@@ -67,7 +67,7 @@
 - [x] T021 [P] `.claude/skills/verify-linkshelf/features/sort-links.md`(하위 기능 `sort-oldest`, `sort-keeps-filter`, `sort-reset-on-save`, 증거 파일 이름) + `.claude/skills/verify-linkshelf/drive/sort-links.verify.ts` + `features/README.md` 기능 목록에 링크. CI 타입 검사(PR #42) PASS
 - [x] T022 verify-linkshelf로 실제 앱 한 바퀴(`drive.sh sort-links`) PASS, 증거 경로 기록
 - [x] T023 [P] spec 시퀀스 그림 1장: `specs/004-sort-links/diagrams/` (diagram-design, 화면 → `GET /api/links?order` → 정렬 쿼리, 근거 커밋 표기, SVG export 뒤 `@import` 줄 제거). 아키텍처 그림은 바뀌지 않아 다시 그리지 않음(PR에 이유)
-- [ ] T024 spec 004에 추적 표(R-ID ↔ PR ↔ 테스트 이름) 추가, Status를 Implemented로
+- [x] T024 spec 004에 추적 표(R-ID ↔ PR ↔ 테스트 이름) 추가, Status를 Implemented로
 - [ ] T025 cleanup → blast-radius(공개 API 계약, 근거를 실행으로 증명) → PR(`Closes #43`, R-ID↔테스트 표, 검증 표, 고장 내기, verify 증거, CI run, blast-radius 요약, 기준 SHA) → CI → pr-reviewer → 지적 반영
 
 ## Dependencies & Execution Order

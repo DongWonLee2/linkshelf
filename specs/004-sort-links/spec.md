@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-21
 
-**Status**: Draft
+**Status**: Implemented (Issue #43, PR 병합 대기)
 
 **Input**: User description: "linkshelf 목록에 정렬 옵션 추가해 줘" (출처: [PRD-05](../../docs/prd.md), 2026-10-21 grilling에서 사용자가 추천안 선택)
 
@@ -104,3 +104,17 @@
 - 구체 파라미터 이름과 값(grilling 추천 `order=newest|oldest`), 오류 메시지 문구는 plan에서 정하고 계약 변경으로 승인받는다.
 - 정렬 선택 상자가 들어가면 Visual QA 기준 이미지(R-UI-13)가 바뀐다. 기준 이미지 갱신은 같은 PR에서 자동 검사 환경으로 만든다.
 - 결정 기록: 정렬 결정은 `adr/tech-decision-checklist.md`("시간대·정렬·페이지네이션 → Spec")대로 이 spec에 둔다. ADR은 만들지 않는다.
+
+## 추적 (구현 완료, 2026-10-21)
+
+| R-ID | Issue | 테스트 |
+|---|---|---|
+| R-LINK-19 | #43 | `SortLinksRepositoryTest.R_LINK_19_oldest_orders_by_created_at_asc_then_id_asc`, `SortLinksRepositoryTest.R_LINK_19_newest_matches_existing_order`, `SortLinksControllerTest.R_LINK_19_passes_order_to_service`, `SortLinksIntegrationTest.R_LINK_19_omitted_order_response_equals_newest_response`, `SortLinksIntegrationTest.R_LINK_19_oldest_lists_saved_order_end_to_end` |
+| R-LINK-20 | #43 | `SortLinksRepositoryTest.R_LINK_20_oldest_pages_without_overlap_or_gap`, `SortLinksRepositoryTest.R_LINK_20_oldest_with_tag_filters_then_sorts_and_counts_filtered_only`, `SortLinksIntegrationTest.R_LINK_20_oldest_with_huge_page_is_empty_not_server_error` |
+| R-LINK-21 | #43 | `SortLinksControllerTest.R_LINK_21_rejects_unknown_order_400`, `SortLinksControllerTest.R_LINK_21_rejects_empty_order_400`, `SortLinksControllerTest.R_LINK_21_reports_order_with_page_and_size_together`, `SortLinksControllerTest.R_LINK_21_error_message_matches_contract` |
+| R-UI-18 | #43 | `E2E_R_UI_18_sort_select_defaults_to_newest_and_resets_on_reload` |
+| R-UI-19 | #43 | `E2E_R_UI_19_changing_order_reloads_first_page_keeping_filter`, `E2E_R_UI_19_paging_and_filter_keep_order`, `E2E_R_UI_19_order_change_does_not_move_focus_or_scroll` |
+| R-UI-20 | #43 | `E2E_R_UI_20_saving_resets_order_to_newest` |
+| R-UI-13(기준 이미지) | #43 | `VISUAL_R_UI_13_*` 3장 갱신(CI run 39582485480) |
+
+실제 앱 증거: verify-linkshelf `sort-links` 여정(`.claude/skills/verify-linkshelf/drive/sort-links.verify.ts`).
