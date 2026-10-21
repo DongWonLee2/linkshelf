@@ -61,6 +61,8 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: Install dependencies
         run: npm ci
+      - name: Typecheck verify-linkshelf drive
+        run: npx tsc -p ../.claude/skills/verify-linkshelf/drive/tsconfig.json
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Compile backend

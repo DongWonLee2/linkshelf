@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Read-only: is the current verification instance ours and worth driving?
 set -uo pipefail
 . "$(dirname "$0")/common.sh"
 current_run

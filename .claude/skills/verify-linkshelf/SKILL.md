@@ -69,3 +69,4 @@ pid 파일에 적힌 프로세스만, 명령줄이 이번 실행의 것(백엔�
 | `scripts/cleanup.sh` | 정리 |
 | `drive/playwright.verify.config.ts` | `webServer` 없이 launch한 인스턴스를 조작하는 설정 |
 | `drive/evidence.ts` | `shot`, `aria`, `json` 증거 헬퍼 |
+| `drive/tsconfig.json`, `drive/node-env.d.ts` | drive 타입 검사. `cd frontend && npx tsc -p ../.claude/skills/verify-linkshelf/drive/tsconfig.json`(CI `frontend-e2e`도 돌림). `@types/node` 대신 쓰는 선언만 둔다 |

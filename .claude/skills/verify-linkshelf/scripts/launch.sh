@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Starts the backend (in-memory H2) and the Vite dev server for one verification run.
 set -euo pipefail
 . "$(dirname "$0")/common.sh"
 
