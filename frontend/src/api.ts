@@ -73,8 +73,18 @@ async function request<T>(input: string, init?: RequestInit): Promise<ApiResult<
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=UTF-8' };
 
-export function listLinks({ page, tag }: { page: number; tag: string | null }): Promise<ApiResult<LinkPage>> {
-  const params = new URLSearchParams({ page: String(page) });
+export type LinkOrder = 'newest' | 'oldest';
+
+export function listLinks({
+  page,
+  tag,
+  order,
+}: {
+  page: number;
+  tag: string | null;
+  order: LinkOrder;
+}): Promise<ApiResult<LinkPage>> {
+  const params = new URLSearchParams({ page: String(page), order });
   // Blank tags are never sent: the API answers 400 for them (R-UI-07).
   const trimmed = tag?.trim();
   if (trimmed) params.set('tag', trimmed);
