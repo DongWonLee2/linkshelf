@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,9 +46,10 @@ public class LinkService {
 
 	/** Builds responses inside the transaction because open-in-view is off (#5). */
 	@Transactional(readOnly = true)
-	public LinkPageResponse list(int page, int size, String tag) {
-		Page<Link> links = tag == null ? linkRepository.findNewestFirst(page, size)
-				: linkRepository.findNewestFirstByTag(tag.strip().toLowerCase(Locale.ROOT), page, size);
+	public LinkPageResponse list(int page, int size, String tag, LinkOrder order) {
+		Sort sort = order == LinkOrder.OLDEST ? LinkRepository.OLDEST_FIRST : LinkRepository.NEWEST_FIRST;
+		Page<Link> links = tag == null ? linkRepository.findPage(sort, page, size)
+				: linkRepository.findPageByTag(tag.strip().toLowerCase(Locale.ROOT), sort, page, size);
 		return LinkPageResponse.from(links.map(LinkResponse::from));
 	}
 

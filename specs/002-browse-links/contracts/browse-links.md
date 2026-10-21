@@ -1,6 +1,8 @@
 # Contract: 링크 목록 조회·태그 필터·읽음 표시 API
 
 > **상태: 승인됨 (2026-10-14)**. 사용자 답변 "추천으로 가" (B1~B5 승인, 이유 미기재). 변경하려면 다시 승인을 받는다(constitution I).
+>
+> **개정 (2026-10-21, spec 004 Issue #43)**: `GET /api/links`에 `order` 추가. 사용자 승인 "1) 승인"(이유 미기재). 근거는 [spec 004 research R1](../../004-sort-links/research.md).
 
 오류 응답 형식은 [001 contract](../001-save-link/contracts/save-link.md)와 같다(`application/problem+json`, `type` 없음, 입력 오류는 `errors: [{field, message}]`).
 
@@ -26,6 +28,7 @@
 | page | 정수 | 0 | 0 이상 (R-LINK-10, 11) |
 | size | 정수 | 20 | 1~100 (R-LINK-10, 11) |
 | tag | 문자열 | 없음(거르지 않음) | 앞뒤 공백 제거 후 1~30 코드 포인트. 대소문자 무시, 태그 전체 일치 (R-LINK-12~14) |
+| order | 문자열 | 없음(= `newest`) | `newest` 또는 `oldest`, 정확히 같을 때만. 대소문자·앞뒤 공백을 고치지 않는다. 빈 값(`order=`)은 400 (R-LINK-19, 21) |
 
 ### 200 OK
 
@@ -43,7 +46,8 @@
 }
 ```
 
-- 정렬: `createdAt` 내림차순, 같으면 `id` 내림차순(R-LINK-09).
+- 정렬: `order` 생략 또는 `newest`면 `createdAt` 내림차순, 같으면 `id` 내림차순(R-LINK-09). `oldest`면 `createdAt` 오름차순, 같으면 `id` 오름차순(R-LINK-19).
+- `tag`와 함께 쓰면 거른 결과를 정렬한 뒤 나눈다. `totalElements`·`totalPages`는 정렬과 관계없다(R-LINK-20).
 - 링크가 없거나, 거른 결과가 없거나, 마지막 쪽 다음을 요청하면 `items: []`로 200이다. 링크가 하나도 없을 때 `totalPages`는 0이다.
 
 ### 400 Bad Request
@@ -61,7 +65,9 @@
 }
 ```
 
-- `field`는 `page` / `size` / `tag` 중 하나다. 범위·공백·길이 오류는 한 번에 모두 담는다.
+- `field`는 `page` / `size` / `tag` / `order` 중 하나다. 범위·공백·길이·`order` 값 오류는 한 번에 모두 담는다. `errors` 항목의 순서는 정하지 않는다.
+- `order` 메시지는 `newest 또는 oldest여야 합니다`다. 두 번 보내면(`order=newest&order=oldest`) 값이 합쳐져 400이다(`tag`도 같다).
+- 호환성(2026-10-21 개정): 개정 전에는 무시되던 `order=<아무 값>`이 400이 된다. 쓰는 곳은 linkshelf 화면뿐이다.
 - 숫자가 아닌 값(`page=abc`)은 그 항목 하나만 담는다. 타입 변환이 검증보다 먼저 실패하기 때문이다([research R4](../research.md#r4-쪽-나누기-값-검증과-오류-모양)). 승인 B5.
 - `detail` 문구 `Invalid request parameters.`는 Spring 기본값이 아니라 직접 지정하고 테스트로 고정한다.
 - `tag`를 생략하면 거르지 않는다(200). 빈 문자열이나 공백만 보내면 400이다.
@@ -111,8 +117,8 @@
 
 | 경로 | 상태 | 경우 | R-ID |
 |---|---|---|---|
-| GET /api/links | 200 | 목록·거른 목록·빈 목록 | R-LINK-09, 10, 12, 13, 16 |
-| GET /api/links | 400 | page·size·tag 규칙 위반 | R-LINK-11, 14 |
+| GET /api/links | 200 | 목록·거른 목록·빈 목록, `order` 생략·`newest`·`oldest` | R-LINK-09, 10, 12, 13, 16, 19, 20 |
+| GET /api/links | 400 | page·size·tag·order 규칙 위반 | R-LINK-11, 14, 21 |
 | PUT /api/links/{id}/read | 200 | 지정 성공(반복 포함) | R-LINK-15, 16 |
 | PUT /api/links/{id}/read | 400 | read 값 오류, 깨진 JSON, 숫자가 아닌 id | R-LINK-17 |
 | PUT /api/links/{id}/read | 404 | 없는 링크 | R-LINK-17 |

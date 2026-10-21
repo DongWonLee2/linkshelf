@@ -40,7 +40,7 @@ class ListLinksControllerTest {
 	void stubService() {
 		LinkResponse link = new LinkResponse(3L, "https://example.com/c", "메모", List.of("Java", "스프링"),
 				Instant.parse("2026-10-14T03:00:02Z"), false);
-		given(linkService.list(anyInt(), anyInt(), isNull())).willReturn(new LinkPageResponse(List.of(link), 0, 20, 1, 1, false));
+		given(linkService.list(anyInt(), anyInt(), isNull(), any())).willReturn(new LinkPageResponse(List.of(link), 0, 20, 1, 1, false));
 	}
 
 	private ResultActions getLinks(String query) throws Exception {
@@ -56,7 +56,7 @@ class ListLinksControllerTest {
 			.andExpect(jsonPath("$.instance").value("/api/links"))
 			.andExpect(jsonPath("$.errors.length()").value(fields.length))
 			.andExpect(jsonPath("$.errors[*].field", containsInAnyOrder((Object[]) fields)));
-		verify(linkService, never()).list(anyInt(), anyInt(), any());
+		verify(linkService, never()).list(anyInt(), anyInt(), any(), any());
 	}
 
 	@Test
@@ -64,7 +64,7 @@ class ListLinksControllerTest {
 	void R_LINK_10_defaults_page_0_size_20() throws Exception {
 		getLinks("").andExpect(status().isOk());
 
-		verify(linkService).list(0, 20, null);
+		verify(linkService).list(0, 20, null, LinkOrder.NEWEST);
 	}
 
 	@Test
@@ -91,7 +91,7 @@ class ListLinksControllerTest {
 	void R_LINK_11_size_bounds_accepted(int size) throws Exception {
 		getLinks("?size=" + size).andExpect(status().isOk());
 
-		verify(linkService).list(0, size, null);
+		verify(linkService).list(0, size, null, LinkOrder.NEWEST);
 	}
 
 	@ParameterizedTest

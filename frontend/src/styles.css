@@ -126,6 +126,31 @@ button:disabled {
   flex-basis: 100%;
 }
 
+.list-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+
+.list-controls .tag-filter {
+  flex: 1 1 360px;
+  margin-bottom: 0;
+}
+
+.sort-select {
+  flex: none;
+}
+
+.sort-select select {
+  font: inherit;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+}
+
 .active-filter {
   font-size: 0.875rem;
 }
