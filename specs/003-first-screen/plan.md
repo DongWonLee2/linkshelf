@@ -8,7 +8,7 @@
 
 ## Summary
 
-한 페이지 React 화면(`frontend/src/`)이 spec 001·002 API를 Vite 프록시로 부른다. 화면과 E2E는 [Feature Map](../../docs/feature-map.md)의 `data-testid`로만 연결된다. 검증은 세 층으로 나눈다.
+한 페이지 React 화면(`frontend/src/`)이 spec 001·002 API를 Vite 프록시로 부른다. 화면과 E2E는 [Feature Map](../../.claude/skills/verify-linkshelf/features/README.md)의 `data-testid`로만 연결된다. 검증은 세 층으로 나눈다.
 
 1. **기능 E2E**(실제 백엔드, 메모리 H2): R-UI-01~12
 2. **Visual QA**(API 응답 고정, Linux에서만): R-UI-13, 화면 상태 3개
@@ -88,7 +88,7 @@
 specs/003-first-screen/
 ├── spec.md, plan.md, research.md, quickstart.md, tasks.md(다음 단계)
 └── checklists/requirements.md
-docs/feature-map.md       # 화면↔E2E 계약(이미 있음)
+.claude/skills/verify-linkshelf/features/README.md  # 화면↔E2E 계약(이미 있음)
 ```
 
 API 계약은 바뀌지 않으므로 `contracts/`를 새로 만들지 않는다. 화면이 쓰는 API는 [save-link](../001-save-link/contracts/save-link.md), [browse-links](../002-browse-links/contracts/browse-links.md) 그대로다. 저장하는 데이터가 없어 `data-model.md`도 만들지 않는다.

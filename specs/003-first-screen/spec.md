@@ -22,7 +22,7 @@
 - Q: 읽음 체크박스는 서버 응답 전에 바뀌나요? → A: 먼저 바꾸고, 실패하면 되돌리고 안내한다 (사용자 답 "추천", 이유 미기재)
 - Q: Visual QA 대상 상태는? → A: 3가지 — 링크가 있는 첫 화면, 빈 목록, 저장 입력 오류 (사용자 답 "추천", 이유 미기재)
 
-**화면 ↔ E2E 계약**: [docs/feature-map.md](../../docs/feature-map.md)의 `data-testid` 목록. 이 spec의 요구사항은 그 표의 요소를 기준으로 쓴다.
+**화면 ↔ E2E 계약**: [Feature Map](../../.claude/skills/verify-linkshelf/features/README.md)의 `data-testid` 목록. 이 spec의 요구사항은 그 표의 요소를 기준으로 쓴다.
 
 ## User Scenarios & Testing *(mandatory)*
 

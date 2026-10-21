@@ -1,6 +1,6 @@
 # Tasks: 첫 화면 (링크 저장·목록·태그 필터·읽음)
 
-**Input**: `specs/003-first-screen/` — spec.md(clarify 완료), plan.md, research.md, quickstart.md, [Feature Map](../../docs/feature-map.md)
+**Input**: `specs/003-first-screen/` — spec.md(clarify 완료), plan.md, research.md, quickstart.md, [Feature Map](../../.claude/skills/verify-linkshelf/features/README.md)
 **기준 SHA**: `f1609fa`
 
 **Tests**: 필수(constitution II). B2가 Feature Map 기준 E2E를 먼저 쓰고 로컬에서 Red를 확인·커밋한다. E2E 이름은 [plan 표](plan.md#e2e-테스트-이름--r-ui-sc-002)를 따른다.
@@ -19,7 +19,7 @@
 | [#23](https://github.com/DongWonLee2/linkshelf/issues/23) | test: 첫 화면 E2E와 Visual QA | T020~T031 | implementer B2(worktree) | Red 커밋 → A 병합 후 rebase → CI PASS(visual은 기준 이미지 절차) |
 
 - 순서: B1 병합 → A ∥ B2 동시 시작 → A PR 병합 → B2 rebase 후 PR → 기준 이미지 커밋 → 병합.
-- 공유 파일(`docs/ai/handoff.md`, 가이드 `plans/*`, `docs/feature-map.md`)은 오케스트레이터만 고친다. testid를 바꿔야 하면 implementer는 멈추고 보고한다.
+- 공유 파일(`docs/ai/handoff.md`, 가이드 `plans/*`, `.claude/skills/verify-linkshelf/features/README.md`)은 오케스트레이터만 고친다. testid를 바꿔야 하면 implementer는 멈추고 보고한다.
 
 ---
 

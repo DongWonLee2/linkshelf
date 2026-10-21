@@ -48,7 +48,7 @@ PRD-01~04 백엔드 API(spec 001·002)가 끝났다. Feature Map, E2E, Visual QA
   - 조언 노트의 최소 목록(react, vite, typescript, @playwright/test)에 React를 Vite로 쓰는 데 필요한 짝(react-dom, @vitejs/plugin-react, 타입 2개)을 더했다. 상태 관리·라우터·CSS 프레임워크·테스트 러너(Vitest 등)는 넣지 않는다.
 - Playwright 브라우저는 Chromium만 받는다(`npx playwright install chromium`).
 - E2E는 Playwright `webServer`로 백엔드(메모리 H2, `SPRING_DATASOURCE_URL`)와 Vite 개발 서버를 함께 띄운다. 로컬 파일 DB를 건드리지 않는다. 지금 이를 지키는 장치는 환경 변수와 `reuseExistingServer: false`(이미 떠 있는 서버를 쓰지 않음)뿐이고, 명시적 가드는 spec 003에서 검토한다.
-- 화면과 E2E 사이의 계약은 `docs/feature-map.md`의 `data-testid` 목록이다.
+- 화면과 E2E 사이의 계약은 `.claude/skills/verify-linkshelf/features/README.md`의 `data-testid` 목록이다.
 - CI에 `frontend-e2e` job을 더한다. 시점은 spec 003 구현 단계(E2E와 CI를 맡는 PR)이고, ADR-0002의 재검토 트리거("프론트 추가 시 경로별 CI 분리")도 그때 함께 본다. Node 버전은 그 job에서 22로 정했다(2026-10-15, PR #25, Vite 8 요구 `^20.19.0 || >=22.12.0` 충족). runner는 `ubuntu-24.04`(OS 메이저만 고정, 이미지·글꼴은 갱신됨). 필수 검사로 넣는 일(보호 규칙 변경)은 첫 PASS 뒤 따로 묻는다.
 
 ## 포기하는 것·운영 영향

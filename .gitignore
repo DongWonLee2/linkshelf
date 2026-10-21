@@ -33,3 +33,6 @@ frontend/playwright-report/
 
 # Local-only docs (rule 23, 2026-10-15)
 docs/
+
+# verify-linkshelf run state and evidence (.claude/skills/verify-linkshelf)
+.verify/
