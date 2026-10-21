@@ -6,8 +6,9 @@ import java.util.Locale;
 
 /**
  * Normalizes a URL to its standard-equivalent form (R-LINK-04, spec Q2): lower-case scheme and host, drop the
- * scheme's default port. Path, query, fragment and percent-encoding are kept as-is, so the string is rebuilt from
- * raw components instead of the multi-argument {@link URI} constructors, which re-encode {@code %}.
+ * scheme's default port, turn an empty path into {@code /}. Otherwise path, query, fragment and percent-encoding
+ * are kept as-is, so the string is rebuilt from raw components instead of the multi-argument {@link URI}
+ * constructors, which re-encode {@code %}.
  */
 public final class UrlNormalizer {
 
@@ -26,7 +27,8 @@ public final class UrlNormalizer {
 		if (uri.getPort() != -1 && uri.getPort() != defaultPort(scheme)) {
 			normalized.append(':').append(uri.getPort());
 		}
-		normalized.append(uri.getRawPath());
+		String path = uri.getRawPath();
+		normalized.append(path.isEmpty() ? "/" : path);
 		if (uri.getRawQuery() != null) {
 			normalized.append('?').append(uri.getRawQuery());
 		}
