@@ -18,7 +18,6 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
 	/** R-LINK-09: newest first; links saved at the same instant keep a stable order by id. */
 	Sort NEWEST_FIRST = Sort.by(Sort.Order.desc("createdAt"), Sort.Order.desc("id"));
 
-	/** R-LINK-19: oldest first; ties go by id in the same direction so pages neither overlap nor skip. */
 	Sort OLDEST_FIRST = Sort.by(Sort.Order.asc("createdAt"), Sort.Order.asc("id"));
 
 	boolean existsByNormalizedUrl(String normalizedUrl);

@@ -21,7 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-/** The store is shared with other tests, so order and counts are asserted only on links carrying a unique tag. */
 @SpringBootTest
 @AutoConfigureMockMvc
 class SortLinksIntegrationTest {

@@ -6,7 +6,6 @@ type Props = {
 };
 
 // Not disabled while loading: Chromium drops focus from a disabled control, which R-UI-19 forbids.
-// A change during loading is safe because only the newest request updates the screen.
 export function SortSelect({ value, onChange }: Props) {
   return (
     <label className="field inline sort-select">

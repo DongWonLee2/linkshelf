@@ -6,13 +6,10 @@ import { SortSelect } from './SortSelect';
 import { TagFilter } from './TagFilter';
 import './styles.css';
 
-// Screen state: current page, applied tag and order. A reload starts again at page 0, no filter, newest first
-// (spec 003, spec 004 R-UI-18).
 export function App() {
   const [data, setData] = useState<LinkPage | null>(null);
   const [tag, setTag] = useState<string | null>(null);
   const [filterInput, setFilterInput] = useState('');
-  // The user's choice shows at once, even if loading that order then fails (spec 004 edge cases).
   const [order, setOrder] = useState<LinkOrder>('newest');
   const [listError, setListError] = useState<string | null>(null);
   const [filterError, setFilterError] = useState<string | null>(null);
@@ -77,13 +74,11 @@ export function App() {
     void load(0, null, order, true);
   };
 
-  // R-UI-19: keep the filter and start again at page 0. Not paging, so no scroll or focus move.
   const changeOrder = (next: LinkOrder) => {
     setOrder(next);
     void load(0, tag, next, false);
   };
 
-  // R-UI-05, R-UI-20: after a save, drop the filter and show page 0 newest first so the new link is on top.
   const onSaved = () => {
     setFilterInput('');
     setOrder('newest');
