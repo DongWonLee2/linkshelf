@@ -12,7 +12,7 @@
 
 ## Phase 1: Setup
 
-- [ ] T001 기준 확인: backend `./gradlew test` 122 PASS @ `65859e0`(2026-10-21 완료). 남은 것: `cd frontend && npx playwright test` 기준선(NOT_RUN, /goal 첫 단계)을 돌려 기존 실패가 없음을 `.audit/sort-links.tsv`에 기록
+- [x] T001 기준 확인: backend `./gradlew test` 122 PASS @ `65859e0`, frontend `npx playwright test` 29 PASS · 3 SKIP(visual, 로컬은 Linux 기준 이미지 없음) exit 0 @ `c85da98`
 
 ## Phase 2: Foundational
 
