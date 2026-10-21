@@ -40,6 +40,8 @@ class UrlNormalizerTest {
 		assertThat(UrlNormalizer.normalize("HTTP://Example.COM:80")).isEqualTo("http://example.com/");
 		assertThat(UrlNormalizer.normalize("https://example.com?x=1")).isEqualTo("https://example.com/?x=1");
 		assertThat(UrlNormalizer.normalize("https://example.com#top")).isEqualTo("https://example.com/#top");
+		assertThat(UrlNormalizer.normalize("https://example.com:8443")).isEqualTo("https://example.com:8443/");
+		assertThat(UrlNormalizer.normalize("http://User@Example.com")).isEqualTo("http://User@example.com/");
 	}
 
 }
