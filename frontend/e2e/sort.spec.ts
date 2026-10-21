@@ -102,6 +102,8 @@ test('E2E_R_UI_19_paging_and_filter_keep_order', async ({ page }) => {
 
   await page.goto('/');
   await applyTagFilter(page, tag);
+  // Wait for the filtered list: an order change sent before it lands would start from the unfiltered state.
+  await expectPageInfo(page, 1, 2);
   const select = page.getByTestId('link-sort-select');
   const items = page.getByTestId('link-item');
   const beforeSelect = requests.length;
@@ -179,6 +181,7 @@ test('E2E_R_UI_20_saving_resets_order_to_newest', async ({ page }) => {
 
   await page.goto('/');
   await applyTagFilter(page, tag);
+  await expectPageInfo(page, 1, 2);
   const select = page.getByTestId('link-sort-select');
   const items = page.getByTestId('link-item');
   await select.selectOption('oldest');
