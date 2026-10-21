@@ -15,6 +15,8 @@ test('verify save-link: form save shows the link first, API and reload agree', a
 
   await expect(page.getByTestId('link-form-saved')).toBeVisible();
   await expect(page.getByTestId('link-url-input')).toHaveValue('');
+  await expect(page.getByTestId('link-memo-input')).toHaveValue('');
+  await expect(page.getByTestId('link-tags-input')).toHaveValue('');
   const first = page.getByTestId('link-item').first();
   await expect(first.getByTestId('link-item-url')).toHaveText(url);
   await expect(first.getByTestId('link-item-memo')).toHaveText('검증 메모');

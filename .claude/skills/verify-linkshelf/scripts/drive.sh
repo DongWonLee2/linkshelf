@@ -10,6 +10,13 @@ spec="$SKILL_DIR/drive/$feature.verify.ts"
 
 out="$EVIDENCE_DIR/$feature"
 mkdir -p "$out"
+# Never drive an instance this run did not start: a dead server's ports may now belong to another process.
+if ! "$SKILL_DIR/scripts/doctor.sh" > "$out/doctor.log" 2>&1; then
+  cat "$out/doctor.log"
+  echo 3 > "$out/exit-code"
+  echo "drive $feature: doctor FAIL, 조작하지 않음 (증거 $out/doctor.log)"
+  exit 3
+fi
 # NODE_PATH lets the spec outside frontend/ resolve the same @playwright/test install the E2E suite uses.
 (cd "$REPO/frontend" && VERIFY_EVIDENCE="$out" NODE_PATH="$REPO/frontend/node_modules" \
   npx playwright test -c "$SKILL_DIR/drive/playwright.verify.config.ts" "$feature.verify.ts") \

@@ -34,6 +34,7 @@ $S/doctor.sh        # 마지막 줄 doctor: OK / doctor: FAIL
 $S/drive.sh <기능>   # save-link | browse-links | tag-filter | mark-read
 ```
 
+- 시작할 때 `doctor.sh`를 돌리고 FAIL이면 조작하지 않고 exit 3으로 멈춘다.
 - `drive/<기능>.verify.ts`를 Playwright(`frontend/node_modules`의 같은 설치)로 실행한다. 헬퍼는 `frontend/e2e/support.ts`를 재사용한다.
 - 요소는 `features/README.md` 표의 `data-testid`로만 찾는다. 문구나 CSS로 찾지 않는다.
 - 데이터는 공유 DB다. 각 여정은 `uniqueUrl()`·`uniqueId()`로 자기 데이터만 만들고, DB가 비어 있다고 가정하지 않는다.
@@ -56,7 +57,7 @@ $S/drive.sh <기능>   # save-link | browse-links | tag-filter | mark-read
 $S/cleanup.sh       # 이번 실행의 pid만 종료, run 상태 삭제, 증거는 남김
 ```
 
-pid 파일에 적힌 프로세스만 죽인다. 프로세스 이름으로 죽이지 않는다. 마지막에 두 포트가 비었는지와 증거 경로를 출력한다. 실패한 시도 뒤에도 매번 돌린다. 오래된 증거 폴더는 사람이 지운다.
+pid 파일에 적힌 프로세스만, 명령줄이 이번 실행의 것(백엔드 `verify-<RUN_ID>`, 프론트 `vite.js`)일 때만 죽인다. 프로세스 이름으로 죽이지 않는다. 마지막에 두 포트가 비었는지와 증거 경로를 출력한다. 실패한 시도 뒤에도 매번 돌린다. 오래된 증거 폴더는 사람이 지운다.
 
 ## Helpers
 

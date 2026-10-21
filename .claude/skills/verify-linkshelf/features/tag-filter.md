@@ -6,7 +6,7 @@
 
 - `filter-match`: 앞뒤 공백과 대소문자를 무시하고 일치하는 링크만 보인다. `tag-filter-active`에 현재 필터가 보인다.
 - `filter-clear`: `tag-filter-clear`로 해제하면 필터 표시가 사라지고 다른 링크도 다시 보인다.
-- `filter-error`: 31자 이상 태그는 `tag-filter-error`를 보인다.
+- `filter-error`: 31자 이상 태그는 `tag-filter-error`를 보이고, 목록과 현재 필터는 그대로다.
 - `filter-blank`: 빈 입력으로 적용하면 해제와 같다(E2E가 다룬다).
 
 ## 들어가는 법(사용자 시점)
@@ -20,8 +20,8 @@
 - `doctor.sh` OK. 고유 태그 `Vf<id>`가 붙은 링크 하나, `etc<id>`가 붙은 링크 하나를 공개 API로 저장한다.
 
 - **일치.** ` VF<id> `(공백·대문자)를 넣고 적용한다. `link-item`이 정확히 1개이고 그 항목이 `Vf<id>` 링크다. `tag-filter-active`에 태그가 보인다. 증거 `1-filtered.png`.
-- **해제.** `tag-filter-clear`를 누른다. `tag-filter-active`가 숨고 `etc<id>` 링크가 보인다. 증거 `2-cleared.png`.
-- **오류.** `x` 31개를 넣고 적용한다. `tag-filter-error`가 보인다. 증거 `3-error.png`.
+- **오류.** 거른 상태에서 `x` 31개를 넣고 적용한다. `tag-filter-error`가 보이고, 목록은 여전히 `Vf<id>` 링크 1개이며 `tag-filter-active`도 그대로다. 증거 `2-error-keeps-list.png`.
+- **해제.** `tag-filter-clear`를 누른다. `tag-filter-active`가 숨고 `etc<id>` 링크가 보인다. 증거 `3-cleared.png`.
 - 실행: `$S/drive.sh tag-filter`.
 
 ## 함정
