@@ -16,12 +16,16 @@ export function App() {
   const [busy, setBusy] = useState(false);
   // Only the newest request may update the screen.
   const latest = useRef(0);
+  // An order change must keep a filter or clear that is still loading, so it reads the newest requested tag.
+  const requestedTag = useRef<string | null>(null);
+  const shownTag = useRef<string | null>(null);
   const browseTop = useRef<HTMLElement>(null);
 
   // Resolves true when this request's page was shown.
   const load = useCallback(
     async (page: number, nextTag: string | null, nextOrder: LinkOrder, fromFilter: boolean) => {
       const mine = ++latest.current;
+      requestedTag.current = nextTag;
       setBusy(true);
       const result = await listLinks({ page, tag: nextTag, order: nextOrder });
       if (mine !== latest.current) return false;
@@ -29,11 +33,13 @@ export function App() {
 
       if (result.ok) {
         setData(result.data);
+        shownTag.current = nextTag;
         setTag(nextTag);
         setListError(null);
         setFilterError(null);
         return true;
       }
+      requestedTag.current = shownTag.current;
       const error = result.error;
       if (fromFilter && error.kind === 'validation') {
         // R-UI-08: keep the previous list and filter, show the error by the filter input.
@@ -76,7 +82,7 @@ export function App() {
 
   const changeOrder = (next: LinkOrder) => {
     setOrder(next);
-    void load(0, tag, next, false);
+    void load(0, requestedTag.current, next, false);
   };
 
   const onSaved = () => {

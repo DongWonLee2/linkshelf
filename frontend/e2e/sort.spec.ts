@@ -192,8 +192,8 @@ test('E2E_R_UI_20_saving_resets_order_to_newest', async ({ page }) => {
   for (const sentUrl of sent) expect(sentUrl.searchParams.get('order')).toBe('newest');
 });
 
-function delayListRequests(page: Page, when: (url: URL) => boolean): Promise<void> {
-  return page.route(isLinksList, async (route) => {
+async function delayListRequests(page: Page, when: (url: URL) => boolean): Promise<void> {
+  await page.route(isLinksList, async (route) => {
     if (when(new URL(route.request().url()))) await new Promise((resolve) => setTimeout(resolve, 800));
     await route.continue();
   });

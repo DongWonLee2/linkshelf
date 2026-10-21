@@ -113,7 +113,7 @@
 | R-LINK-20 | #43 | `SortLinksRepositoryTest.R_LINK_20_oldest_pages_without_overlap_or_gap`, `SortLinksRepositoryTest.R_LINK_20_oldest_with_tag_filters_then_sorts_and_counts_filtered_only`, `SortLinksIntegrationTest.R_LINK_20_oldest_with_huge_page_is_empty_not_server_error` |
 | R-LINK-21 | #43 | `SortLinksControllerTest.R_LINK_21_rejects_unknown_order_400`, `SortLinksControllerTest.R_LINK_21_rejects_empty_order_400`, `SortLinksControllerTest.R_LINK_21_reports_order_with_page_and_size_together`, `SortLinksControllerTest.R_LINK_21_error_message_matches_contract` |
 | R-UI-18 | #43 | `E2E_R_UI_18_sort_select_defaults_to_newest_and_resets_on_reload` |
-| R-UI-19 | #43 | `E2E_R_UI_19_changing_order_reloads_first_page_keeping_filter`, `E2E_R_UI_19_paging_and_filter_keep_order`, `E2E_R_UI_19_order_change_does_not_move_focus_or_scroll` |
+| R-UI-19 | #43 | `E2E_R_UI_19_changing_order_reloads_first_page_keeping_filter`, `E2E_R_UI_19_paging_and_filter_keep_order`, `E2E_R_UI_19_order_change_does_not_move_focus_or_scroll`, `E2E_R_UI_19_order_change_right_after_filter_keeps_filter`, `E2E_R_UI_19_order_change_right_after_save_keeps_filter_cleared`, `E2E_R_UI_19_list_error_keeps_chosen_order`, `E2E_R_UI_19_empty_list_stays_empty_after_order_change` |
 | R-UI-20 | #43 | `E2E_R_UI_20_saving_resets_order_to_newest` |
 | R-UI-13(기준 이미지) | #43 | `VISUAL_R_UI_13_*` 3장 갱신(CI run 39582485480) |
 
