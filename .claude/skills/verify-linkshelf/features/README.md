@@ -2,7 +2,7 @@
 
 이 폴더는 linkshelf 사용자 동작을 검증하는 유지 대상 원본이다. 화면 코드(`frontend/src/`), E2E(`frontend/e2e/`), 검증 여정(`../drive/`)은 아래 표의 `data-testid`만으로 서로를 찾는다. testid를 바꾸거나 지우려면 이 파일을 먼저 고치는 PR을 낸다. 화면 범위와 문구의 세부는 spec 003(`specs/003-first-screen/`)에서 정한다.
 
-기준: PRD-01~04(백엔드 spec 001·002), API 계약 [save-link](../../../../specs/001-save-link/contracts/save-link.md), [browse-links](../../../../specs/002-browse-links/contracts/browse-links.md). 화면 때문에 API를 바꾸지 않는다.
+기준: PRD-01~05(백엔드 spec 001·002·004), API 계약 [save-link](../../../../specs/001-save-link/contracts/save-link.md), [browse-links](../../../../specs/002-browse-links/contracts/browse-links.md)(2026-10-21 `order` 개정). 화면 때문에 API를 바꾸지 않는다. API 변경은 spec과 계약 승인으로만 한다.
 
 ## 기본 전제
 
@@ -32,6 +32,7 @@
 | | 이전 쪽 / 다음 쪽 | `link-list-prev` / `link-list-next` | `page`, `hasNext` | `E2E_R_UI_02_pages_through_links` |
 | | 쪽 정보(예: 1 / 3). 빈 목록(`totalPages` 0)이면 표시하지 않는다 | `link-list-page-info` | `page`, `totalPages` | |
 | | 목록 불러오기 실패(400·네트워크) | `list-error` | `GET` 실패 | `E2E_R_UI_03_shows_list_error_when_api_fails`, `E2E_R_UI_03_shows_list_error_when_api_returns_400` |
+| PRD-05 정렬 | 정렬 선택 상자(최신순 기본·오래된순, 새로 고치면 최신순) | `link-sort-select` | `GET /api/links?order=` | `E2E_R_UI_19_changing_order_reloads_first_page_keeping_filter` |
 | PRD-03 태그 필터 | 필터 입력 | `tag-filter-input` | `GET /api/links?tag=` | `E2E_R_UI_07_filters_by_tag_ignoring_case` |
 | | 적용 / 해제 버튼 | `tag-filter-apply` / `tag-filter-clear` | | |
 | | 현재 필터 표시 | `tag-filter-active` | | |
