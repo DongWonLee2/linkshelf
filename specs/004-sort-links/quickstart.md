@@ -38,8 +38,8 @@ cd frontend && npx playwright test
 
 | 고장 | 잡아야 할 테스트 |
 |---|---|
-| `OLDEST_FIRST`를 `desc`로 뒤집기 | `R_LINK_19_…oldest…` FAIL |
-| 오래된순 동률의 `id`를 `desc`로 | `R_LINK_19_…same_instant…` FAIL |
+| `OLDEST_FIRST`의 `createdAt`을 `desc`로 | `R_LINK_19_oldest_orders_by_created_at_asc_then_id_asc` 등 FAIL |
+| `OLDEST_FIRST`의 `id`를 `desc`로(동률) | `R_LINK_19_oldest_orders_by_created_at_asc_then_id_asc`, `R_LINK_20_oldest_pages_without_overlap_or_gap` FAIL |
 | 화면에서 정렬 변경 시 `order`를 보내지 않기 | `E2E_R_UI_19_…` FAIL |
 | 저장 뒤 `order`를 되돌리지 않기 | `E2E_R_UI_20_…` FAIL |
 

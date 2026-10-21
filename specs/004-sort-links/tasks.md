@@ -28,19 +28,19 @@
 
 ### Tests (Red 먼저) ⚠️
 
-- [ ] T003 [P] [US1] `backend/src/test/java/dev/linkshelf/link/SortLinksRepositoryTest.java` (`@DataJpaTest`): `R_LINK_19_oldest_orders_by_created_at_asc_then_id_asc`(같은 저장 시각 동률 포함), `R_LINK_19_newest_matches_existing_order`, `R_LINK_20_oldest_pages_without_overlap_or_gap`, `R_LINK_20_oldest_with_tag_filters_then_sorts_and_counts_filtered_only`
-- [ ] T004 [P] [US1] `backend/src/test/java/dev/linkshelf/link/SortLinksControllerTest.java` (`@WebMvcTest`): `R_LINK_19_passes_order_to_service`(생략 → NEWEST, `newest`, `oldest`), `R_LINK_21_rejects_unknown_order_400`(`bad`, `NEWEST`, `" newest"`, `newest,oldest` 두 번 보냄), `R_LINK_21_rejects_empty_order_400`(`order=`, research R1 가정 고정), `R_LINK_21_reports_order_with_page_and_size_together`(`order=bad&page=-1&size=0` → `errors`에 세 field, 순서 무관), `R_LINK_21_error_message_matches_contract`(`"newest 또는 oldest여야 합니다"`, `detail` `Invalid request parameters.`)
-- [ ] T005 [P] [US1] `backend/src/test/java/dev/linkshelf/link/SortLinksIntegrationTest.java` (`@SpringBootTest`): `R_LINK_19_omitted_order_response_equals_newest_response`(본문 문자열 동일), `R_LINK_19_oldest_lists_saved_order_end_to_end`(고유 태그로 거름), `R_LINK_20_oldest_with_huge_page_is_empty_not_server_error`
-- [ ] T006 [US1] Red 커밋: T003~T005만 커밋하고 `./gradlew test` FAIL(컴파일 실패 포함) 출력을 `.audit/`에 남긴다
+- [x] T003 [P] [US1] `backend/src/test/java/dev/linkshelf/link/SortLinksRepositoryTest.java` (`@DataJpaTest`): `R_LINK_19_oldest_orders_by_created_at_asc_then_id_asc`(같은 저장 시각 동률 포함), `R_LINK_19_newest_matches_existing_order`, `R_LINK_20_oldest_pages_without_overlap_or_gap`, `R_LINK_20_oldest_with_tag_filters_then_sorts_and_counts_filtered_only`
+- [x] T004 [P] [US1] `backend/src/test/java/dev/linkshelf/link/SortLinksControllerTest.java` (`@WebMvcTest`): `R_LINK_19_passes_order_to_service`(생략 → NEWEST, `newest`, `oldest`), `R_LINK_21_rejects_unknown_order_400`(`bad`, `NEWEST`, `" newest"`, `newest,oldest` 두 번 보냄), `R_LINK_21_rejects_empty_order_400`(`order=`, research R1 가정 고정), `R_LINK_21_reports_order_with_page_and_size_together`(`order=bad&page=-1&size=0` → `errors`에 세 field, 순서 무관), `R_LINK_21_error_message_matches_contract`(`"newest 또는 oldest여야 합니다"`, `detail` `Invalid request parameters.`)
+- [x] T005 [P] [US1] `backend/src/test/java/dev/linkshelf/link/SortLinksIntegrationTest.java` (`@SpringBootTest`): `R_LINK_19_omitted_order_response_equals_newest_response`(본문 문자열 동일), `R_LINK_19_oldest_lists_saved_order_end_to_end`(고유 태그로 거름), `R_LINK_20_oldest_with_huge_page_is_empty_not_server_error`
+- [x] T006 [US1] Red 커밋: T003~T005만 커밋하고 `./gradlew test` FAIL(컴파일 실패 포함) 출력을 `.audit/`에 남긴다
 
 ### Implementation
 
-- [ ] T007 [US1] `backend/src/main/java/dev/linkshelf/link/LinkOrder.java` 새 enum `NEWEST`, `OLDEST`
-- [ ] T008 [US1] `backend/src/main/java/dev/linkshelf/link/LinkRepository.java`: `OLDEST_FIRST = Sort.by(asc("createdAt"), asc("id"))`, `findNewestFirst`/`findNewestFirstByTag`를 `Sort`를 받는 조회로 바꾸되 큰 쪽 번호 처리(`offset > Integer.MAX_VALUE` → 빈 쪽)는 그대로. 기존 `ListLinksRepositoryTest`·`TagFilterRepositoryTest`가 부르는 메서드 이름이 바뀌면 호출만 고치고 기대값은 바꾸지 않는다(바꾼 이유를 PR에 적음)
-- [ ] T009 [US1] `backend/src/main/java/dev/linkshelf/link/LinkService.java`: `list(page, size, tag, LinkOrder)`
-- [ ] T010 [US1] `backend/src/main/java/dev/linkshelf/link/LinkController.java`: `@RequestParam(required = false) @Pattern(regexp = "newest|oldest", message = "newest 또는 oldest여야 합니다") String order` (`defaultValue` 쓰지 않음, research R1), null → `NEWEST`
-- [ ] T011 [US1] Green 커밋: `cd backend && ./gradlew test` 전체 PASS
-- [ ] T012 [US1] 고장 내기(quickstart §5 1·2행): `OLDEST_FIRST` 방향, 동률 id 방향을 뒤집어 FAIL 확인 후 되돌려 PASS. 커밋하지 않음
+- [x] T007 [US1] `backend/src/main/java/dev/linkshelf/link/LinkOrder.java` 새 enum `NEWEST`, `OLDEST`
+- [x] T008 [US1] `backend/src/main/java/dev/linkshelf/link/LinkRepository.java`: `OLDEST_FIRST = Sort.by(asc("createdAt"), asc("id"))`, `findNewestFirst`/`findNewestFirstByTag`를 `Sort`를 받는 조회로 바꾸되 큰 쪽 번호 처리(`offset > Integer.MAX_VALUE` → 빈 쪽)는 그대로. 기존 `ListLinksRepositoryTest`·`TagFilterRepositoryTest`가 부르는 메서드 이름이 바뀌면 호출만 고치고 기대값은 바꾸지 않는다(바꾼 이유를 PR에 적음)
+- [x] T009 [US1] `backend/src/main/java/dev/linkshelf/link/LinkService.java`: `list(page, size, tag, LinkOrder)`
+- [x] T010 [US1] `backend/src/main/java/dev/linkshelf/link/LinkController.java`: `@RequestParam(required = false) @Pattern(regexp = "newest|oldest", message = "newest 또는 oldest여야 합니다") String order` (`defaultValue` 쓰지 않음, research R1), null → `NEWEST`
+- [x] T011 [US1] Green 커밋: `cd backend && ./gradlew test` 전체 PASS
+- [x] T012 [US1] 고장 내기(quickstart §5 1·2행): `OLDEST_FIRST` 방향, 동률 id 방향을 뒤집어 FAIL 확인 후 되돌려 PASS. 커밋하지 않음
 
 ## Phase 4: User Story 2 - 화면에서 정렬 고르기 (P2)
 
@@ -66,7 +66,7 @@
 
 - [ ] T021 [P] `.claude/skills/verify-linkshelf/features/sort-links.md`(하위 기능 `sort-oldest`, `sort-keeps-filter`, `sort-reset-on-save`, 증거 파일 이름) + `.claude/skills/verify-linkshelf/drive/sort-links.verify.ts` + `features/README.md` 기능 목록에 링크. CI 타입 검사(PR #42) PASS
 - [ ] T022 verify-linkshelf로 실제 앱 한 바퀴(`drive.sh sort-links`) PASS, 증거 경로 기록
-- [ ] T023 [P] spec 시퀀스 그림 1장: `specs/004-sort-links/diagrams/` (diagram-design, 화면 → `GET /api/links?order` → 정렬 쿼리, 근거 커밋 표기, SVG export 뒤 `@import` 줄 제거). 아키텍처 그림은 바뀌지 않아 다시 그리지 않음(PR에 이유)
+- [x] T023 [P] spec 시퀀스 그림 1장: `specs/004-sort-links/diagrams/` (diagram-design, 화면 → `GET /api/links?order` → 정렬 쿼리, 근거 커밋 표기, SVG export 뒤 `@import` 줄 제거). 아키텍처 그림은 바뀌지 않아 다시 그리지 않음(PR에 이유)
 - [ ] T024 spec 004에 추적 표(R-ID ↔ PR ↔ 테스트 이름) 추가, Status를 Implemented로
 - [ ] T025 cleanup → blast-radius(공개 API 계약, 근거를 실행으로 증명) → PR(`Closes #43`, R-ID↔테스트 표, 검증 표, 고장 내기, verify 증거, CI run, blast-radius 요약, 기준 SHA) → CI → pr-reviewer → 지적 반영
 
