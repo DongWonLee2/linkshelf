@@ -1,7 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import { join } from 'node:path';
 
-// Drives an instance started by scripts/launch.sh, so there is no webServer here.
 const evidence = process.env.VERIFY_EVIDENCE;
 if (!evidence) throw new Error('VERIFY_EVIDENCE is not set; run scripts/drive.sh');
 

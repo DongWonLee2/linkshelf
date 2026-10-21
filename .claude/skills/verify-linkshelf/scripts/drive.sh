@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Drives one feature journey (drive/<feature>.verify.ts) against the current instance and stores evidence.
 set -uo pipefail
 . "$(dirname "$0")/common.sh"
 current_run

@@ -1,4 +1,3 @@
-# Sourced by the other scripts. Paths are derived from the checkout the script lives in.
 SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO="$(git -C "$SKILL_DIR" rev-parse --show-toplevel)"
 VERIFY_ROOT="$REPO/.verify"

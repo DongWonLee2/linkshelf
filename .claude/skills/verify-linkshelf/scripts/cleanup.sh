@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Stops only the processes this run started and removes run state. Evidence stays.
 set -uo pipefail
 . "$(dirname "$0")/common.sh"
 current_run
