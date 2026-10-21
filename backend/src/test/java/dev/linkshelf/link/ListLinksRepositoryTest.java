@@ -38,7 +38,7 @@ class ListLinksRepositoryTest {
 		save("same-2", T0.plusSeconds(10));
 		save("new", T0.plusSeconds(20));
 
-		Page<Link> page = linkRepository.findNewestFirst(0, 10);
+		Page<Link> page = linkRepository.findPage(LinkRepository.NEWEST_FIRST, 0, 10);
 
 		assertThat(urls(page)).containsExactly("https://example.com/new", "https://example.com/same-2",
 				"https://example.com/same-1", "https://example.com/old");
@@ -53,14 +53,14 @@ class ListLinksRepositoryTest {
 
 		List<String> seen = new ArrayList<>();
 		for (int p = 0; p < 3; p++) {
-			seen.addAll(urls(linkRepository.findNewestFirst(p, 2)));
+			seen.addAll(urls(linkRepository.findPage(LinkRepository.NEWEST_FIRST, p, 2)));
 		}
 
 		assertThat(seen).hasSize(5);
 		Set<String> distinct = new HashSet<>(seen);
 		assertThat(distinct).hasSize(5);
-		assertThat(seen).containsExactlyElementsOf(urls(linkRepository.findNewestFirst(0, 10)));
-		assertThat(linkRepository.findNewestFirst(3, 2).getContent()).isEmpty();
+		assertThat(seen).containsExactlyElementsOf(urls(linkRepository.findPage(LinkRepository.NEWEST_FIRST, 0, 10)));
+		assertThat(linkRepository.findPage(LinkRepository.NEWEST_FIRST, 3, 2).getContent()).isEmpty();
 	}
 
 	@Test
@@ -70,8 +70,8 @@ class ListLinksRepositoryTest {
 			save("c" + i, T0.plusSeconds(i));
 		}
 
-		Page<Link> first = linkRepository.findNewestFirst(0, 2);
-		Page<Link> last = linkRepository.findNewestFirst(2, 2);
+		Page<Link> first = linkRepository.findPage(LinkRepository.NEWEST_FIRST, 0, 2);
+		Page<Link> last = linkRepository.findPage(LinkRepository.NEWEST_FIRST, 2, 2);
 
 		assertThat(first.getTotalElements()).isEqualTo(5);
 		assertThat(first.getTotalPages()).isEqualTo(3);

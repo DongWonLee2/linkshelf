@@ -3,6 +3,7 @@ package dev.linkshelf.link;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 
 import dev.linkshelf.link.validation.MaxCodePoints;
 import dev.linkshelf.link.validation.NotBlankText;
@@ -41,8 +42,10 @@ public class LinkController {
 			@RequestParam(defaultValue = "0") @Min(value = 0, message = "0 이상이어야 합니다") int page,
 			@RequestParam(defaultValue = "20") @Min(value = 1, message = "1 이상 100 이하여야 합니다") @Max(value = 100,
 					message = "1 이상 100 이하여야 합니다") int size,
-			@RequestParam(required = false) @NotBlankText @MaxCodePoints(30) String tag) {
-		return linkService.list(page, size, tag);
+			@RequestParam(required = false) @NotBlankText @MaxCodePoints(30) String tag,
+			@RequestParam(required = false) @Pattern(regexp = "newest|oldest",
+					message = "newest 또는 oldest여야 합니다") String order) {
+		return linkService.list(page, size, tag, "oldest".equals(order) ? LinkOrder.OLDEST : LinkOrder.NEWEST);
 	}
 
 	@PutMapping("/{id}/read")

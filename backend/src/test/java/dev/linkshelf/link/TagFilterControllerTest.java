@@ -33,7 +33,7 @@ class TagFilterControllerTest {
 
 	@BeforeEach
 	void stubService() {
-		given(linkService.list(anyInt(), anyInt(), any())).willReturn(new LinkPageResponse(List.of(), 0, 20, 0, 0, false));
+		given(linkService.list(anyInt(), anyInt(), any(), any())).willReturn(new LinkPageResponse(List.of(), 0, 20, 0, 0, false));
 	}
 
 	private void expectTagRejected(ResultActions result, String message) throws Exception {
@@ -42,7 +42,7 @@ class TagFilterControllerTest {
 			.andExpect(jsonPath("$.errors.length()").value(1))
 			.andExpect(jsonPath("$.errors[0].field").value("tag"))
 			.andExpect(jsonPath("$.errors[0].message").value(message));
-		verify(linkService, never()).list(anyInt(), anyInt(), any());
+		verify(linkService, never()).list(anyInt(), anyInt(), any(), any());
 	}
 
 	@ParameterizedTest
@@ -64,7 +64,7 @@ class TagFilterControllerTest {
 		String tag = "😀".repeat(30);
 		mockMvc.perform(get("/api/links").param("tag", tag)).andExpect(status().isOk());
 
-		verify(linkService).list(0, 20, tag);
+		verify(linkService).list(0, 20, tag, LinkOrder.NEWEST);
 	}
 
 	@Test
@@ -73,7 +73,7 @@ class TagFilterControllerTest {
 		mockMvc.perform(get("/api/links").param("tag", " JAVA ").param("page", "1").param("size", "5"))
 			.andExpect(status().isOk());
 
-		verify(linkService).list(1, 5, " JAVA ");
+		verify(linkService).list(1, 5, " JAVA ", LinkOrder.NEWEST);
 	}
 
 	@ParameterizedTest
@@ -82,7 +82,7 @@ class TagFilterControllerTest {
 	void R_LINK_14_same_blank_rule_as_save(String tag) throws Exception {
 		mockMvc.perform(get("/api/links").param("tag", tag)).andExpect(status().isOk());
 
-		verify(linkService).list(0, 20, tag);
+		verify(linkService).list(0, 20, tag, LinkOrder.NEWEST);
 	}
 
 	@Test
