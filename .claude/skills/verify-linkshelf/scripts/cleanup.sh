@@ -6,6 +6,7 @@ current_run
 for name in frontend backend; do
   pid="$(cat "$RUN_DIR/$name.pid" 2>/dev/null || true)"
   [ -n "$pid" ] || continue
+  # A reused pid would belong to an unrelated process, so check the command line before killing.
   case "$name" in
     backend) expected="jdbc:h2:mem:verify-$RUN_ID" ;;
     frontend) expected="vite/bin/vite.js" ;;

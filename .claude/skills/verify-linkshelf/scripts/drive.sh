@@ -9,6 +9,7 @@ spec="$SKILL_DIR/drive/$feature.verify.ts"
 
 out="$EVIDENCE_DIR/$feature"
 mkdir -p "$out"
+# Never drive an instance this run did not start: a dead server's ports may now belong to another process.
 if ! "$SKILL_DIR/scripts/doctor.sh" > "$out/doctor.log" 2>&1; then
   cat "$out/doctor.log"
   echo 3 > "$out/exit-code"
