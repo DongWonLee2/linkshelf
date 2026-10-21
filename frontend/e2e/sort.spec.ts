@@ -3,6 +3,7 @@ import {
   applyTagFilter,
   expectPageInfo,
   isLinksList,
+  linkItem,
   saveLinkViaApi,
   uniqueId,
   uniqueUrl,
@@ -189,4 +190,81 @@ test('E2E_R_UI_20_saving_resets_order_to_newest', async ({ page }) => {
   const sent = requests.slice(beforeSave);
   expect(sent.length).toBeGreaterThanOrEqual(2);
   for (const sentUrl of sent) expect(sentUrl.searchParams.get('order')).toBe('newest');
+});
+
+function delayListRequests(page: Page, when: (url: URL) => boolean): Promise<void> {
+  return page.route(isLinksList, async (route) => {
+    if (when(new URL(route.request().url()))) await new Promise((resolve) => setTimeout(resolve, 800));
+    await route.continue();
+  });
+}
+
+test('E2E_R_UI_19_order_change_right_after_filter_keeps_filter', async ({ page }) => {
+  const tag = `race${uniqueId()}`;
+  const saved = await saveTagged(page, tag, 'r-ui-19-race', 3);
+  const untagged = await saveLinkViaApi(page.request, { url: uniqueUrl('r-ui-19-race-untagged') });
+
+  await page.goto('/');
+  await expect(page.getByTestId('link-list')).toBeVisible();
+  await delayListRequests(page, (url) => url.searchParams.get('order') === 'newest');
+
+  await applyTagFilter(page, tag);
+  await page.getByTestId('link-sort-select').selectOption('oldest');
+
+  const items = page.getByTestId('link-item');
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  await expect(items).toHaveCount(3);
+  await expect(items.first()).toHaveAttribute('data-link-id', String(saved[0].id));
+  await expect(linkItem(page, untagged.id)).toHaveCount(0);
+});
+
+test('E2E_R_UI_19_order_change_right_after_save_keeps_filter_cleared', async ({ page }) => {
+  const tag = `racesave${uniqueId()}`;
+  await saveTagged(page, tag, 'r-ui-19-race-save', 2);
+  const requests = recordListRequests(page);
+
+  await page.goto('/');
+  await applyTagFilter(page, tag);
+  await expect(page.getByTestId('tag-filter-active')).toBeVisible();
+  await delayListRequests(page, (url) => !url.searchParams.has('tag'));
+
+  const beforeSave = requests.length;
+  await page.getByTestId('link-url-input').fill(uniqueUrl('r-ui-19-race-save-new'));
+  await page.getByTestId('link-save-button').click();
+  await expect(page.getByTestId('link-form-saved')).toBeVisible();
+  await page.getByTestId('link-sort-select').selectOption('oldest');
+
+  await expect(page.getByTestId('tag-filter-active')).toBeHidden();
+  await expect(page.getByTestId('link-sort-select')).toHaveValue('oldest');
+  const oldest = requests.slice(beforeSave).filter((url) => url.searchParams.get('order') === 'oldest');
+  expect(oldest).toHaveLength(1);
+  expect(oldest[0].searchParams.has('tag')).toBe(false);
+});
+
+test('E2E_R_UI_19_list_error_keeps_chosen_order', async ({ page }) => {
+  await saveTagged(page, `err${uniqueId()}`, 'r-ui-19-error', 1);
+  await page.goto('/');
+  await expect(page.getByTestId('link-list')).toBeVisible();
+  await page.route(isLinksList, (route) =>
+    new URL(route.request().url()).searchParams.get('order') === 'oldest'
+      ? route.fulfill({ status: 500, body: '' })
+      : route.continue(),
+  );
+
+  await page.getByTestId('link-sort-select').selectOption('oldest');
+
+  await expect(page.getByTestId('list-error')).toBeVisible();
+  await expect(page.getByTestId('link-sort-select')).toHaveValue('oldest');
+});
+
+test('E2E_R_UI_19_empty_list_stays_empty_after_order_change', async ({ page }) => {
+  await page.goto('/');
+  await applyTagFilter(page, `none${uniqueId()}`);
+  await expect(page.getByTestId('link-list-empty')).toBeVisible();
+
+  await page.getByTestId('link-sort-select').selectOption('oldest');
+
+  await expect(page.getByTestId('link-list-empty')).toBeVisible();
+  await expect(page.getByTestId('link-sort-select')).toHaveValue('oldest');
+  await expect(page.getByTestId('list-error')).toBeHidden();
 });
