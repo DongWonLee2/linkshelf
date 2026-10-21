@@ -268,3 +268,27 @@ test('E2E_R_UI_19_empty_list_stays_empty_after_order_change', async ({ page }) =
   await expect(page.getByTestId('link-sort-select')).toHaveValue('oldest');
   await expect(page.getByTestId('list-error')).toBeHidden();
 });
+
+test('E2E_R_UI_19_order_change_after_rejected_filter_keeps_shown_filter', async ({ page }) => {
+  const tag = `shown${uniqueId()}`;
+  const saved = await saveTagged(page, tag, 'r-ui-19-rejected', 2);
+  const requests = recordListRequests(page);
+
+  await page.goto('/');
+  await applyTagFilter(page, tag);
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  await applyTagFilter(page, 'x'.repeat(31));
+  await expect(page.getByTestId('tag-filter-error')).toBeVisible();
+
+  const before = requests.length;
+  await page.getByTestId('link-sort-select').selectOption('oldest');
+
+  const items = page.getByTestId('link-item');
+  await expect(items.first()).toHaveAttribute('data-link-id', String(saved[0].id));
+  await expect(items).toHaveCount(2);
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  await expect(page.getByTestId('list-error')).toBeHidden();
+  const sent = requests.slice(before);
+  expect(sent).toHaveLength(1);
+  expect(sent[0].searchParams.get('tag')).toBe(tag);
+});
