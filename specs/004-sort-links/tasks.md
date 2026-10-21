@@ -12,7 +12,7 @@
 
 ## Phase 1: Setup
 
-- [x] T001 기준 확인: `cd backend && ./gradlew test`, `cd frontend && npx playwright test`를 브랜치 시작 상태에서 돌려 기존 실패가 없음을 기록(`.audit/sort-links.tsv`)
+- [ ] T001 기준 확인: backend `./gradlew test` 122 PASS @ `65859e0`(2026-10-21 완료). 남은 것: `cd frontend && npx playwright test` 기준선(NOT_RUN, /goal 첫 단계)을 돌려 기존 실패가 없음을 `.audit/sort-links.tsv`에 기록
 
 ## Phase 2: Foundational
 
