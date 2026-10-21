@@ -5,7 +5,7 @@
 ## 저장소 지도
 - `docs/prd.md` 제품 요구사항, `adr/ADR-*.md` 기술 결정, `adr/diagrams/` 다이어그램
 - `specs/<feature>/` Spec Kit 명세(spec·plan·tasks), `backend/` Spring Boot 앱, `frontend/` React+Vite 화면(ADR-0005), `docs/feature-map.md` 화면↔E2E testid 계약
-- `docs/ai/handoff.md` 세션 인계 기록. `docs/`는 로컬 전용이며 커밋하지 않는다(docs-guard)
+- `docs/ai/handoff.md` 세션 인계 기록. `docs/`는 로컬 전용이며 커밋하지 않는다(`.gitignore`, 로컬 `.git/hooks`의 docs-guard: `~/Dev/AI_개발_가이드/playbooks/scripts/docs-guard.sh install`)
 
 ## 작업 시작
 - 현재 브랜치·기준 SHA, 담당 Issue, 관련 R-ID와 spec, 승인된 ADR을 확인한다.
