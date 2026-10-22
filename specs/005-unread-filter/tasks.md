@@ -41,10 +41,10 @@
 
 ### Implementation
 
-- [ ] T010 [US1] `backend/src/main/java/dev/linkshelf/link/LinkRepository.java`: `findByTag`/`countByTag`를 `findFiltered(@Param("tag") String tag, @Param("unreadOnly") boolean unreadOnly, Pageable)`/`countFiltered(…)`(JPQL `where (:tag is null or exists (select 1 from l.tags t where lower(t) = :tag)) and (:unreadOnly = false or l.read = false)`)로 바꾸고 `findPageByTag`를 `findPageFiltered(String tag, boolean unreadOnly, Sort, int page, int size)`로. 큰 쪽 번호 처리(`sortedPage`)는 그대로. H2가 `:tag is null`을 받지 못하면 research R2 대안 A(태그 있음/없음 두 쿼리). 기존 `TagFilterRepositoryTest`·`SortLinksRepositoryTest`가 부르는 메서드 이름이 바뀌면 호출만 고치고 기대값은 바꾸지 않는다(이유를 PR에)
-- [ ] T011 [US1] `backend/src/main/java/dev/linkshelf/link/LinkService.java`: `list(page, size, tag, LinkOrder order, boolean unreadOnly)`. 태그 없음·안 읽음 끔이면 기존 `findPage`, 아니면 `findPageFiltered(tag 정규화 또는 null, unreadOnly, …)`. 기존 컨트롤러 테스트의 `list(…)` 호출 인자 추종
-- [ ] T012 [US1] `backend/src/main/java/dev/linkshelf/link/LinkController.java`: `@RequestParam(required = false) @Pattern(regexp = "true|false", message = "true 또는 false여야 합니다") String unread`(`Boolean` 바인딩·`defaultValue` 쓰지 않음, research R1), `"true".equals(unread)`를 서비스에
-- [ ] T013 [US1] Green 커밋: `cd backend && ./gradlew test` 전체 PASS
+- [x] T010 [US1] `backend/src/main/java/dev/linkshelf/link/LinkRepository.java`: `findByTag`/`countByTag`를 `findFiltered(@Param("tag") String tag, @Param("unreadOnly") boolean unreadOnly, Pageable)`/`countFiltered(…)`(JPQL `where (:tag is null or exists (select 1 from l.tags t where lower(t) = :tag)) and (:unreadOnly = false or l.read = false)`)로 바꾸고 `findPageByTag`를 `findPageFiltered(String tag, boolean unreadOnly, Sort, int page, int size)`로. 큰 쪽 번호 처리(`sortedPage`)는 그대로. H2가 `:tag is null`을 받지 못하면 research R2 대안 A(태그 있음/없음 두 쿼리). 기존 `TagFilterRepositoryTest`·`SortLinksRepositoryTest`가 부르는 메서드 이름이 바뀌면 호출만 고치고 기대값은 바꾸지 않는다(이유를 PR에)
+- [x] T011 [US1] `backend/src/main/java/dev/linkshelf/link/LinkService.java`: `list(page, size, tag, LinkOrder order, boolean unreadOnly)`. 태그 없음·안 읽음 끔이면 기존 `findPage`, 아니면 `findPageFiltered(tag 정규화 또는 null, unreadOnly, …)`. 기존 컨트롤러 테스트의 `list(…)` 호출 인자 추종
+- [x] T012 [US1] `backend/src/main/java/dev/linkshelf/link/LinkController.java`: `@RequestParam(required = false) @Pattern(regexp = "true|false", message = "true 또는 false여야 합니다") String unread`(`Boolean` 바인딩·`defaultValue` 쓰지 않음, research R1), `"true".equals(unread)`를 서비스에
+- [x] T013 [US1] Green 커밋: `cd backend && ./gradlew test` 전체 PASS
 - [ ] T014 [US1] 고장 내기(quickstart §5 1·2행): 저장소 조건을 `l.read = true`로, 컨트롤러를 `Boolean unread`로 → 해당 테스트 FAIL 확인 후 되돌려 PASS. 커밋하지 않음, 출력은 `.audit/`
 
 ## Phase 4: User Story 2 - 화면에서 안 읽은 것만 보기 (P2)

@@ -39,22 +39,22 @@ class TagFilterRepositoryTest {
 	@Test
 	@DisplayName("R-LINK-13: a lower-cased tag matches stored tags regardless of case, newest first")
 	void R_LINK_13_matches_case_insensitively() {
-		assertThat(urls(linkRepository.findPageByTag("java", LinkRepository.NEWEST_FIRST, 0, 10)))
+		assertThat(urls(linkRepository.findPageFiltered("java", false, LinkRepository.NEWEST_FIRST, 0, 10)))
 			.containsExactly("https://example.com/lower", "https://example.com/upper");
 	}
 
 	@Test
 	@DisplayName("R-LINK-13: only a whole-tag match counts")
 	void R_LINK_13_requires_whole_tag() {
-		assertThat(linkRepository.findPageByTag("jav", LinkRepository.NEWEST_FIRST, 0, 10).getContent()).isEmpty();
-		assertThat(urls(linkRepository.findPageByTag("javascript", LinkRepository.NEWEST_FIRST, 0, 10)))
+		assertThat(linkRepository.findPageFiltered("jav", false, LinkRepository.NEWEST_FIRST, 0, 10).getContent()).isEmpty();
+		assertThat(urls(linkRepository.findPageFiltered("javascript", false, LinkRepository.NEWEST_FIRST, 0, 10)))
 			.containsExactly("https://example.com/script");
 	}
 
 	@Test
 	@DisplayName("R-LINK-13: a Hangul tag matches")
 	void R_LINK_13_korean_tag() {
-		assertThat(urls(linkRepository.findPageByTag("스프링", LinkRepository.NEWEST_FIRST, 0, 10))).containsExactly("https://example.com/lower");
+		assertThat(urls(linkRepository.findPageFiltered("스프링", false, LinkRepository.NEWEST_FIRST, 0, 10))).containsExactly("https://example.com/lower");
 	}
 
 	@Test
@@ -62,12 +62,12 @@ class TagFilterRepositoryTest {
 	void R_LINK_12_link_with_many_tags_appears_once_and_total_counts_filtered_only() {
 		save("both", List.of("Java", "JAVA-2", "spring"), 4);
 
-		Page<Link> page = linkRepository.findPageByTag("spring", LinkRepository.NEWEST_FIRST, 0, 1);
+		Page<Link> page = linkRepository.findPageFiltered("spring", false, LinkRepository.NEWEST_FIRST, 0, 1);
 
 		assertThat(urls(page)).containsExactly("https://example.com/both");
 		assertThat(page.getTotalElements()).isEqualTo(2);
 		assertThat(page.getTotalPages()).isEqualTo(2);
-		assertThat(urls(linkRepository.findPageByTag("spring", LinkRepository.NEWEST_FIRST, 1, 1)))
+		assertThat(urls(linkRepository.findPageFiltered("spring", false, LinkRepository.NEWEST_FIRST, 1, 1)))
 			.containsExactly("https://example.com/lower");
 	}
 
@@ -76,7 +76,7 @@ class TagFilterRepositoryTest {
 	void R_LINK_12_link_matching_twice_appears_once() {
 		save("twice", List.of("Java", "java"), 5);
 
-		Page<Link> page = linkRepository.findPageByTag("java", LinkRepository.NEWEST_FIRST, 0, 10);
+		Page<Link> page = linkRepository.findPageFiltered("java", false, LinkRepository.NEWEST_FIRST, 0, 10);
 
 		assertThat(urls(page)).containsExactly("https://example.com/twice", "https://example.com/lower",
 				"https://example.com/upper");
@@ -88,7 +88,7 @@ class TagFilterRepositoryTest {
 	void R_LINK_13_non_ascii_case_insensitive() {
 		save("eclair", List.of("Éclair"), 6);
 
-		assertThat(urls(linkRepository.findPageByTag("éclair", LinkRepository.NEWEST_FIRST, 0, 10))).containsExactly("https://example.com/eclair");
+		assertThat(urls(linkRepository.findPageFiltered("éclair", false, LinkRepository.NEWEST_FIRST, 0, 10))).containsExactly("https://example.com/eclair");
 	}
 
 	@Test
@@ -98,7 +98,7 @@ class TagFilterRepositoryTest {
 
 		List<String> seen = new java.util.ArrayList<>();
 		for (int p = 0; p < 2; p++) {
-			seen.addAll(urls(linkRepository.findPageByTag("java", LinkRepository.NEWEST_FIRST, p, 2)));
+			seen.addAll(urls(linkRepository.findPageFiltered("java", false, LinkRepository.NEWEST_FIRST, p, 2)));
 		}
 
 		assertThat(seen).containsExactly("https://example.com/twice", "https://example.com/lower",

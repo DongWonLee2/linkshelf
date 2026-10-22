@@ -120,7 +120,8 @@ class UnreadFilterRepositoryTest {
 
 		assertThat(page.getContent()).isEmpty();
 		assertThat(page.getTotalElements()).isEqualTo(1);
-		assertThat(page.hasNext()).isFalse();
+		// Page.hasNext() overflows at Integer.MAX_VALUE, so the response computes it (LinkPageResponse).
+		assertThat(LinkPageResponse.from(page.map(LinkResponse::from)).hasNext()).isFalse();
 	}
 
 }
