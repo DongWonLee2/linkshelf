@@ -85,8 +85,8 @@
 
 ## Phase 6: Polish & Cross-Cutting
 
-- [ ] T027 [P] `.claude/skills/verify-linkshelf/features/unread-filter.md`(하위 기능 `unread-only`, `unread-keeps-tag-and-order`, `unread-off-on-save`, 증거 파일 이름) + `.claude/skills/verify-linkshelf/drive/unread-filter.verify.ts` + `features/README.md` 기능 목록에 링크. CI 타입 검사 PASS
-- [ ] T028 verify-linkshelf로 실제 앱 한 바퀴(`drive.sh unread-filter`) PASS, 증거 경로 기록
+- [x] T027 [P] `.claude/skills/verify-linkshelf/features/unread-filter.md`(하위 기능 `unread-only`, `unread-keeps-tag-and-order`, `unread-off-on-save`, 증거 파일 이름) + `.claude/skills/verify-linkshelf/drive/unread-filter.verify.ts` + `features/README.md` 기능 목록에 링크. CI 타입 검사 PASS
+- [x] T028 verify-linkshelf로 실제 앱 한 바퀴(`drive.sh unread-filter`) PASS, 증거 경로 기록 — 결과(2026-10-22): `drive.sh unread-filter` PASS, 증거 `.verify/20261022-163653/evidence/unread-filter/`(로컬)
 - [ ] T029 [P] spec 시퀀스 그림 1장: `specs/005-unread-filter/diagrams/` (diagram-design, 화면 토글 → `GET /api/links?unread&tag&order` → 거르기 쿼리, 경쟁 시 `requested*` 읽기, 근거 커밋 표기, SVG export 뒤 `@import` 규칙 제거·XML 파싱 확인). 아키텍처 그림은 바뀌지 않아 다시 그리지 않음(PR에 이유)
 - [ ] T030 spec 005에 추적 표(R-ID ↔ Issue ↔ 테스트 이름) 추가, Status를 Implemented로
 - [ ] T031 cleanup → blast-radius(공개 API 계약, 근거를 실행으로 증명) → PR(`Closes #49`, R-ID↔테스트 표, 검증 표, 고장 내기 4종, verify 증거, CI run, blast-radius 요약, 기준 SHA, 기존 테스트 호출 수정 이유) → CI → pr-reviewer → 지적 반영
