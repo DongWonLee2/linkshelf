@@ -103,6 +103,12 @@ class UnreadFilterControllerTest {
 	}
 
 	@Test
+	@DisplayName("R-LINK-11 (exception B5), R-LINK-24: a non-numeric page is reported alone, even with a bad unread")
+	void R_LINK_24_non_numeric_page_with_bad_unread_reports_only_page() throws Exception {
+		expectRejected(mockMvc.perform(get("/api/links").param("unread", "yes").param("page", "abc")), "page");
+	}
+
+	@Test
 	@DisplayName("R-LINK-24: the unread error message matches the contract")
 	void R_LINK_24_error_message_matches_contract() throws Exception {
 		getLinks("yes").andExpect(status().isBadRequest())
