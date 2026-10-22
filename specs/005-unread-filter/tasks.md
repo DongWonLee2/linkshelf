@@ -45,7 +45,7 @@
 - [x] T011 [US1] `backend/src/main/java/dev/linkshelf/link/LinkService.java`: `list(page, size, tag, LinkOrder order, boolean unreadOnly)`. 태그 없음·안 읽음 끔이면 기존 `findPage`, 아니면 `findPageFiltered(tag 정규화 또는 null, unreadOnly, …)`. 기존 컨트롤러 테스트의 `list(…)` 호출 인자 추종
 - [x] T012 [US1] `backend/src/main/java/dev/linkshelf/link/LinkController.java`: `@RequestParam(required = false) @Pattern(regexp = "true|false", message = "true 또는 false여야 합니다") String unread`(`Boolean` 바인딩·`defaultValue` 쓰지 않음, research R1), `"true".equals(unread)`를 서비스에
 - [x] T013 [US1] Green 커밋: `cd backend && ./gradlew test` 전체 PASS
-- [ ] T014 [US1] 고장 내기(quickstart §5 1·2행): 저장소 조건을 `l.read = true`로, 컨트롤러를 `Boolean unread`로 → 해당 테스트 FAIL 확인 후 되돌려 PASS. 커밋하지 않음, 출력은 `.audit/`
+- [x] T014 [US1] 고장 내기(quickstart §5 1·2행): 저장소 조건을 `l.read = true`로, 컨트롤러를 `Boolean unread`로 → 해당 테스트 FAIL 확인 후 되돌려 PASS. 커밋하지 않음, 출력은 `.audit/` — 결과(2026-10-22): 1 → R-LINK-22·23 테스트 5개 FAIL, 2 → R-LINK-24 테스트 5개 FAIL, 되돌린 뒤 PASS
 
 ## Phase 4: User Story 2 - 화면에서 안 읽은 것만 보기 (P2)
 
@@ -65,7 +65,7 @@
 - [x] T019 [US2] `frontend/src/App.tsx`: `unread` 상태(기본 `false`), 토글 → `load(0, tag, order, next)`(스크롤·포커스 이동 없음), 쪽 넘김·필터 적용/해제·정렬 변경은 현재 `unread` 유지, `onSaved`에서 `false`(R-UI-23). 토글은 `.list-controls`의 `SortSelect` 옆. 이 단계에서는 US3의 ref 규칙을 아직 넣지 않아도 된다
 - [x] T020 [US2] Green 커밋: `npx playwright test` 전체 PASS(visual 기준 이미지 차이는 T020에서)
 - [x] T021 [US2] Visual 기준 이미지 갱신: 브랜치 push 뒤 CI `workflow_dispatch` `update_snapshots=true` → 아티팩트의 `frontend/e2e/visual.spec.ts-snapshots/` 커밋(research R7). 체크박스 추가 말고 다른 차이가 없는지 눈으로 확인 — 결과(2026-10-22): run 39796705288 아티팩트 3장, 차이는 체크박스와 그만큼 좁아진 필터 입력란뿐(눈으로 확인)
-- [ ] T022 [US2] 고장 내기(quickstart §5 4행): 저장 뒤 `unread`를 끄지 않기 → `E2E_R_UI_23_…` FAIL 확인 후 되돌림. 커밋하지 않음
+- [x] T022 [US2] 고장 내기(quickstart §5 4행): 저장 뒤 `unread`를 끄지 않기 → `E2E_R_UI_23_…` FAIL 확인 후 되돌림. 커밋하지 않음 — 결과(2026-10-22): `E2E_R_UI_23_saving_turns_unread_off` FAIL, 되돌림
 
 ## Phase 5: User Story 3 - 겹친 조작에도 고른 조건대로 보기 (P3)
 
