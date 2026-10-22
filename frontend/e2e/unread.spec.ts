@@ -209,7 +209,6 @@ test('E2E_R_UI_25_marking_read_keeps_item_until_reload', async ({ page }) => {
 });
 
 test('E2E_R_UI_25_page_shift_after_marking_read', async ({ page }) => {
-  // spec 005 Edge Case (recorded, not prevented): offset paging pulls later unread links forward.
   const tag = `shift${uniqueId()}`;
   const saved = await saveTagged(page, tag, 'r-ui-25-shift', 21);
 
@@ -275,7 +274,7 @@ test('E2E_R_UI_22_empty_result_shows_empty_notice', async ({ page }) => {
 });
 
 // R-UI-24: each race overlaps for real (the earlier request is delayed). Do not add waits to make these pass
-// (registry 2026-10-22: a wait that avoids a race hides it).
+// (spec 005 research R5: a wait that avoids a race hides it).
 async function delayListRequests(page: Page, when: (url: URL) => boolean): Promise<void> {
   await page.route(isLinksList, async (route) => {
     if (when(new URL(route.request().url()))) await new Promise((resolve) => setTimeout(resolve, 800));
