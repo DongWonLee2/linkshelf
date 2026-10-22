@@ -144,6 +144,6 @@
 | R-UI-23 | #49 | `E2E_R_UI_23_saving_turns_unread_off` |
 | R-UI-24 | #49 | `E2E_R_UI_24_toggle_right_after_tag_apply_or_clear_keeps_new_tag`, `E2E_R_UI_24_order_change_right_after_toggle_keeps_unread`, `E2E_R_UI_24_toggle_right_after_save_keeps_filters_cleared` |
 | R-UI-25 | #49 | `E2E_R_UI_25_marking_read_keeps_item_until_reload`, `E2E_R_UI_25_page_shift_after_marking_read` |
-| R-UI-13(기준 이미지) | #49 | `VISUAL_R_UI_13_*` 3장 갱신(CI run: PR 본문) |
+| R-UI-13(기준 이미지) | #49 | `VISUAL_R_UI_13_*` 3장 갱신(CI run 39796705288 `update_snapshots`) |
 
 실제 앱 증거: verify-linkshelf `unread-filter` 여정(`.claude/skills/verify-linkshelf/drive/unread-filter.verify.ts`). 시퀀스 그림: [diagrams/unread-filter-sequence.html](diagrams/unread-filter-sequence.html)(SVG 같이 둠).
