@@ -13,11 +13,11 @@
 ## Phase 1: Setup
 
 - [x] T001 승인 게이트: 사용자에게 Issue 초안(제목·본문·받아들임 기준·라벨)과 browse-links 개정안(`specs/005-unread-filter/contracts/unread-filter.md`)을 보이고 승인받는다. 승인 전에는 아래 작업을 하지 않는다. 승인 말을 `plan.md` 승인 기록과 `contracts/unread-filter.md` 상태 줄에 사람의 말로 적는다
-- [ ] T002 브랜치 `feat/49-unread-filter` 생성, 메인 체크아웃 로컬 `docs/prd.md`에 PRD-06 줄 추가(커밋 안 함). 기준 확인: `cd backend && ./gradlew test` 전체 PASS 개수, `cd frontend && npx playwright test` PASS·SKIP 개수와 exit를 기록
+- [x] T002 브랜치 `feat/49-unread-filter` 생성, 메인 체크아웃 로컬 `docs/prd.md`에 PRD-06 줄 추가(커밋 안 함). 기준 확인: `cd backend && ./gradlew test` 전체 PASS 개수, `cd frontend && npx playwright test` PASS·SKIP 개수와 exit를 기록
 
 ## Phase 1b: Prefactor (동작 변화 없음, 별도 커밋)
 
-- [ ] T003 `frontend/src/App.tsx`: 목록 요청 조건(태그·정렬)을 "마지막으로 고른 조건" 하나(`requested` ref, `{ tag, order }`)로 모은다. 요청을 만드는 모든 경로(첫 불러오기, 쪽 넘김, 필터 적용·해제, 정렬 변경, 저장 뒤)는 바뀌지 않는 조건을 이 묶음에서 읽는다. 실패 때 규칙은 지금과 같다: 태그는 화면에 적용된 필터로 돌아가고(`App.tsx:42`, R-UI-08), 정렬은 고른 값을 유지한다. 출처: 비교 흐름 B 티켓 01(사용자 판정 2026-10-22). 증거: 이 커밋만으로 `cd frontend && npx playwright test` 전체 PASS(T002 기준과 같은 PASS·SKIP 개수)와 `cd backend && ./gradlew test` PASS를 `.audit/`에 남긴다. #46 경로(필터 400 진행 중 정렬 변경)의 마지막 요청 쿼리와 화면 표시(`list-error`/`tag-filter-error`)가 prefactor 전후로 같은지 `page.route` 지연으로 일회성 확인(커밋 안 함). **다르면 멈추고 사용자에게 보고한다**(고칠지·테스트를 더할지는 사용자 결정)
+- [x] T003 `frontend/src/App.tsx`: 목록 요청 조건(태그·정렬)을 "마지막으로 고른 조건" 하나(`requested` ref, `{ tag, order }`)로 모은다. 요청을 만드는 모든 경로(첫 불러오기, 쪽 넘김, 필터 적용·해제, 정렬 변경, 저장 뒤)는 바뀌지 않는 조건을 이 묶음에서 읽는다. 실패 때 규칙은 지금과 같다: 태그는 화면에 적용된 필터로 돌아가고(`App.tsx:42`, R-UI-08), 정렬은 고른 값을 유지한다. 출처: 비교 흐름 B 티켓 01(사용자 판정 2026-10-22). 증거: 이 커밋만으로 `cd frontend && npx playwright test` 전체 PASS(T002 기준과 같은 PASS·SKIP 개수)와 `cd backend && ./gradlew test` PASS를 `.audit/`에 남긴다. #46 경로(필터 400 진행 중 정렬 변경)의 마지막 요청 쿼리와 화면 표시(`list-error`/`tag-filter-error`)가 prefactor 전후로 같은지 `page.route` 지연으로 일회성 확인(커밋 안 함). **다르면 멈추고 사용자에게 보고한다**(고칠지·테스트를 더할지는 사용자 결정)
 
 ## Phase 2: Foundational
 
