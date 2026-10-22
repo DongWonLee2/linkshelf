@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-22
 
-**Status**: Draft
+**Status**: Implemented (Issue #49, PR 병합 대기)
 
 **Input**: User description: "링크 목록에 '안 읽은 것만 보기' 필터를 더한다(PRD-04 확장, spec 002 범위 밖이던 항목)." (출처: PRD-06(로컬 `docs/prd.md`에 추가 예정), 2026-10-22 공통 grilling 라운드 1·2, 사용자: "Q1~Q6 모두 추천대로", "Q7~Q12 모두 추천대로. 세 가지 덧붙임")
 
@@ -131,3 +131,19 @@
 - 체크박스가 들어가면 Visual QA 기준 이미지(R-UI-13)가 바뀐다. 기준 이미지는 같은 PR에서 자동 검사 환경으로 다시 만든다.
 - 결정 기록: 거르기 조건은 `adr/tech-decision-checklist.md`대로 이 spec에 둔다. ADR은 만들지 않는다(grilling Q6).
 - 로컬 `docs/prd.md`의 PRD-06 줄은 구현 흐름이 정해진 뒤 메인 체크아웃에서 넣는다(로컬 전용).
+
+## 추적 (구현 완료, 2026-10-22)
+
+| R-ID | Issue | 테스트 |
+|---|---|---|
+| R-LINK-22 | #49 | `UnreadFilterRepositoryTest.R_LINK_22_unread_only_excludes_read_links`, `UnreadFilterRepositoryTest.R_LINK_22_without_unread_matches_existing_paths`, `UnreadFilterControllerTest.R_LINK_22_passes_unread_to_service`, `UnreadFilterIntegrationTest.R_LINK_22_omitted_unread_response_equals_false_response` |
+| R-LINK-23 | #49 | `UnreadFilterRepositoryTest.R_LINK_23_unread_with_tag_filters_both_and_counts_filtered_only`, `UnreadFilterRepositoryTest.R_LINK_23_unread_with_oldest_order`, `UnreadFilterRepositoryTest.R_LINK_23_unread_pages_without_overlap_or_gap`, `UnreadFilterRepositoryTest.R_LINK_23_unread_with_huge_page_is_empty`, `UnreadFilterIntegrationTest.R_LINK_23_save_mark_read_then_unread_only_lists_rest_end_to_end` |
+| R-LINK-24 | #49 | `UnreadFilterControllerTest.R_LINK_24_rejects_other_boolean_spellings_400`, `UnreadFilterControllerTest.R_LINK_24_rejects_empty_unread_400`, `UnreadFilterControllerTest.R_LINK_24_rejects_repeated_unread_400`, `UnreadFilterControllerTest.R_LINK_24_reports_unread_with_other_errors_together`, `UnreadFilterControllerTest.R_LINK_24_error_message_matches_contract` |
+| R-UI-21 | #49 | `E2E_R_UI_21_toggle_defaults_off_and_resets_on_reload` |
+| R-UI-22 | #49 | `E2E_R_UI_22_toggle_reloads_first_page_keeping_tag_and_order`, `E2E_R_UI_22_paging_tag_and_order_keep_unread`, `E2E_R_UI_22_toggle_does_not_move_focus_or_scroll`, `E2E_R_UI_22_list_error_keeps_chosen_toggle`, `E2E_R_UI_22_empty_result_shows_empty_notice` |
+| R-UI-23 | #49 | `E2E_R_UI_23_saving_turns_unread_off` |
+| R-UI-24 | #49 | `E2E_R_UI_24_toggle_right_after_tag_apply_or_clear_keeps_new_tag`, `E2E_R_UI_24_order_change_right_after_toggle_keeps_unread`, `E2E_R_UI_24_toggle_right_after_save_keeps_filters_cleared` |
+| R-UI-25 | #49 | `E2E_R_UI_25_marking_read_keeps_item_until_reload`, `E2E_R_UI_25_page_shift_after_marking_read` |
+| R-UI-13(기준 이미지) | #49 | `VISUAL_R_UI_13_*` 3장 갱신(CI run: PR 본문) |
+
+실제 앱 증거: verify-linkshelf `unread-filter` 여정(`.claude/skills/verify-linkshelf/drive/unread-filter.verify.ts`). 시퀀스 그림: [diagrams/unread-filter-sequence.html](diagrams/unread-filter-sequence.html)(SVG 같이 둠).
