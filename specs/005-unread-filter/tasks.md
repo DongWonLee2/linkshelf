@@ -22,7 +22,7 @@
 ## Phase 2: Foundational
 
 - [x] T004 계약 반영: `specs/002-browse-links/contracts/browse-links.md`에 개정 표기, 쿼리 표 `unread` 행(`true` 또는 `false`, 정확히 같을 때만 … `yes`·`on`·`1` … 빈 값은 400), 200 설명(거른 결과만 셈), 400 `field` 목록에 `unread`·메시지 `true 또는 false여야 합니다`, 호환성 줄. `contracts/unread-filter.md` 상태를 "승인됨, 반영됨"으로. 계약 커밋
-- [ ] T005 testid 계약을 먼저 고친다: `.claude/skills/verify-linkshelf/features/README.md` 표에 `PRD-06 안 읽음 필터 | "안 읽은 것만" 체크박스(기본 꺼짐, 새로 고치면 꺼짐) | link-unread-only-toggle | GET /api/links?unread= | E2E_R_UI_22_toggle_reloads_first_page_keeping_tag_and_order` 줄 추가, 기준 줄에 PRD-06과 spec 005 추가. 기능 목록의 `unread-filter` 링크는 T026에서 더한다
+- [x] T005 testid 계약을 먼저 고친다: `.claude/skills/verify-linkshelf/features/README.md` 표에 `PRD-06 안 읽음 필터 | "안 읽은 것만" 체크박스(기본 꺼짐, 새로 고치면 꺼짐) | link-unread-only-toggle | GET /api/links?unread= | E2E_R_UI_22_toggle_reloads_first_page_keeping_tag_and_order` 줄 추가, 기준 줄에 PRD-06과 spec 005 추가. 기능 목록의 `unread-filter` 링크는 T026에서 더한다
 
 **Checkpoint**: 계약(T004)과 testid 표(T005)가 커밋되면 US1(백엔드)과 US2·US3(화면)을 병렬로 진행할 수 있다. 고칠 파일이 겹치지 않는다.
 
