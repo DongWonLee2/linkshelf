@@ -75,13 +75,13 @@
 
 ### Tests (Red 먼저) ⚠️
 
-- [ ] T023 [US3] `frontend/e2e/unread.spec.ts`에 추가(research R5, `page.route`로 해당 요청만 800ms 지연, 대기 없이 다음 조작): `E2E_R_UI_24_toggle_right_after_tag_apply_or_clear_keeps_new_tag`(태그 적용 지연 중 켬 → 마지막 요청에 새 `tag`와 `unread=true`, 화면 `tag-filter-active`와 결과 일치. 해제도 같은 테스트에서), `E2E_R_UI_24_order_change_right_after_toggle_keeps_unread`(켬 지연 중 정렬 변경 → 마지막 요청에 `unread=true`와 새 `order`, 체크 유지), `E2E_R_UI_24_toggle_right_after_save_keeps_filters_cleared`(켠 상태에서 저장 → 다시 불러오기 지연 중 다시 켬 → 마지막 요청은 `tag` 없음·`newest`·`unread=true`). 태그 400 진행 중 토글은 쓰지 않는다(#46). 각 테스트 위 주석에 "대기를 넣어 통과시키지 않는다(registry 2026-10-22)"
-- [ ] T024 [US3] Red 커밋: T022만 커밋, FAIL 출력 기록(T019 구현에서 이미 통과하는 테스트가 있으면 그 사실과 이유를 적고, 고장 내기 T025로 테스트가 경쟁을 잡는지 확인)
+- [x] T023 [US3] `frontend/e2e/unread.spec.ts`에 추가(research R5, `page.route`로 해당 요청만 800ms 지연, 대기 없이 다음 조작): `E2E_R_UI_24_toggle_right_after_tag_apply_or_clear_keeps_new_tag`(태그 적용 지연 중 켬 → 마지막 요청에 새 `tag`와 `unread=true`, 화면 `tag-filter-active`와 결과 일치. 해제도 같은 테스트에서), `E2E_R_UI_24_order_change_right_after_toggle_keeps_unread`(켬 지연 중 정렬 변경 → 마지막 요청에 `unread=true`와 새 `order`, 체크 유지), `E2E_R_UI_24_toggle_right_after_save_keeps_filters_cleared`(켠 상태에서 저장 → 다시 불러오기 지연 중 다시 켬 → 마지막 요청은 `tag` 없음·`newest`·`unread=true`). 태그 400 진행 중 토글은 쓰지 않는다(#46). 각 테스트 위 주석에 "대기를 넣어 통과시키지 않는다(registry 2026-10-22)"
+- [x] T024 [US3] Red 커밋: T022만 커밋, FAIL 출력 기록(T019 구현에서 이미 통과하는 테스트가 있으면 그 사실과 이유를 적고, 고장 내기 T025로 테스트가 경쟁을 잡는지 확인) — 결과(2026-10-22): 3개 모두 처음부터 PASS. T003 prefactor 묶음과 T019가 이미 "마지막으로 고른 값"을 읽기 때문. T026 고장 내기에서 3개 모두 FAIL로 경쟁을 잡는 것을 확인
 
 ### Implementation
 
-- [ ] T025 [US3] `frontend/src/App.tsx`: T003의 요청 조건 묶음(`requested`)에 `unread`를 더하고 `load(page, tag, order, unread, fromFilter)`가 요청 직전에 묶음을 갱신. 요청을 만드는 모든 경로(토글, 태그 적용·해제, 정렬, 쪽 넘김)는 바뀌지 않는 조건을 묶음에서 읽는다(research R4). 실패해도 묶음의 정렬·안 읽음 값은 되돌리지 않는다(R-UI-24). 태그 400 경로의 `requestedTag.current = shownTag.current`는 그대로(#46). Green 커밋: `npx playwright test` 전체 PASS
-- [ ] T026 [US3] 고장 내기(quickstart §5 3행, 사용자 보충): 새 요청이 `requested*` 대신 직전에 성공한 값(`shown*`, 렌더 시점 state)을 읽게 바꿔 `E2E_R_UI_24_` 3개 모두 FAIL 확인 후 되돌림. 하나라도 PASS면 그 테스트의 지연·단언을 고친다(대기 추가 금지). 커밋하지 않음
+- [x] T025 [US3] `frontend/src/App.tsx`: T003의 요청 조건 묶음(`requested`)에 `unread`를 더하고 `load(page, tag, order, unread, fromFilter)`가 요청 직전에 묶음을 갱신. 요청을 만드는 모든 경로(토글, 태그 적용·해제, 정렬, 쪽 넘김)는 바뀌지 않는 조건을 묶음에서 읽는다(research R4). 실패해도 묶음의 정렬·안 읽음 값은 되돌리지 않는다(R-UI-24). 태그 400 경로의 `requestedTag.current = shownTag.current`는 그대로(#46). Green 커밋: `npx playwright test` 전체 PASS — 결과: 추가 코드 없음(T003·T019에 포함), `./.audit` 고장 내기 로그로 확인
+- [x] T026 [US3] 고장 내기(quickstart §5 3행, 사용자 보충): 새 요청이 `requested*` 대신 직전에 성공한 값(`shown*`, 렌더 시점 state)을 읽게 바꿔 `E2E_R_UI_24_` 3개 모두 FAIL 확인 후 되돌림. 하나라도 PASS면 그 테스트의 지연·단언을 고친다(대기 추가 금지). 커밋하지 않음
 
 ## Phase 6: Polish & Cross-Cutting
 

@@ -273,3 +273,99 @@ test('E2E_R_UI_22_empty_result_shows_empty_notice', async ({ page }) => {
   await expect(page.getByTestId('list-error')).toBeHidden();
   await expect(unreadToggle(page)).toBeChecked();
 });
+
+// R-UI-24: each race overlaps for real (the earlier request is delayed). Do not add waits to make these pass
+// (registry 2026-10-22: a wait that avoids a race hides it).
+async function delayListRequests(page: Page, when: (url: URL) => boolean): Promise<void> {
+  await page.route(isLinksList, async (route) => {
+    if (when(new URL(route.request().url()))) await new Promise((resolve) => setTimeout(resolve, 800));
+    await route.continue();
+  });
+}
+
+test('E2E_R_UI_24_toggle_right_after_tag_apply_or_clear_keeps_new_tag', async ({ page }) => {
+  const tag = `raceunr${uniqueId()}`;
+  const saved = await saveTagged(page, tag, 'r-ui-24-tag', 3);
+  await markReadViaApi(page, saved[0]);
+  const untagged = await saveLinkViaApi(page.request, { url: uniqueUrl('r-ui-24-tag-untagged') });
+  const requests = recordListRequests(page);
+
+  await page.goto('/');
+  await expect(page.getByTestId('link-list')).toBeVisible();
+  await delayListRequests(page, (url) => url.searchParams.get('unread') !== 'true');
+
+  await applyTagFilter(page, tag);
+  await unreadToggle(page).check();
+
+  const items = page.getByTestId('link-item');
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  await expect(items).toHaveCount(2);
+  await expect(linkItem(page, saved[0].id)).toHaveCount(0);
+  await expect(linkItem(page, untagged.id)).toHaveCount(0);
+  const last = requests[requests.length - 1];
+  expect(last.searchParams.get('tag')).toBe(tag);
+  expect(last.searchParams.get('unread')).toBe('true');
+
+  await page.unrouteAll({ behavior: 'wait' });
+  await delayListRequests(page, (url) => url.searchParams.get('unread') === 'true');
+  await page.getByTestId('tag-filter-clear').click();
+  await unreadToggle(page).uncheck();
+
+  await expect(page.getByTestId('tag-filter-active')).toBeHidden();
+  await expect(unreadToggle(page)).not.toBeChecked();
+  await expect(page.getByTestId('list-error')).toBeHidden();
+  const cleared = requests[requests.length - 1];
+  expect(cleared.searchParams.has('tag')).toBe(false);
+  expect(cleared.searchParams.get('unread')).not.toBe('true');
+});
+
+test('E2E_R_UI_24_order_change_right_after_toggle_keeps_unread', async ({ page }) => {
+  const tag = `raceord${uniqueId()}`;
+  const saved = await saveTagged(page, tag, 'r-ui-24-order', 3);
+  await markReadViaApi(page, saved[0]);
+  const requests = recordListRequests(page);
+
+  await page.goto('/');
+  await applyTagFilter(page, tag);
+  await expect(page.getByTestId('link-item')).toHaveCount(3);
+  await delayListRequests(page, (url) => url.searchParams.get('order') === 'newest');
+
+  await unreadToggle(page).check();
+  await page.getByTestId('link-sort-select').selectOption('oldest');
+
+  const items = page.getByTestId('link-item');
+  await expect(items).toHaveCount(2);
+  await expect(items.first()).toHaveAttribute('data-link-id', String(saved[1].id));
+  await expect(unreadToggle(page)).toBeChecked();
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  const last = requests[requests.length - 1];
+  expect(last.searchParams.get('order')).toBe('oldest');
+  expect(last.searchParams.get('unread')).toBe('true');
+  expect(last.searchParams.get('tag')).toBe(tag);
+});
+
+test('E2E_R_UI_24_toggle_right_after_save_keeps_filters_cleared', async ({ page }) => {
+  const tag = `racesaveunr${uniqueId()}`;
+  await saveTagged(page, tag, 'r-ui-24-save', 2);
+  const requests = recordListRequests(page);
+
+  await page.goto('/');
+  await applyTagFilter(page, tag);
+  await page.getByTestId('link-sort-select').selectOption('oldest');
+  await unreadToggle(page).check();
+  await expect(page.getByTestId('link-item')).toHaveCount(2);
+  await delayListRequests(page, (url) => !url.searchParams.has('tag') && url.searchParams.get('unread') !== 'true');
+
+  await page.getByTestId('link-url-input').fill(uniqueUrl('r-ui-24-save-new'));
+  await page.getByTestId('link-save-button').click();
+  await expect(page.getByTestId('link-form-saved')).toBeVisible();
+  await unreadToggle(page).check();
+
+  await expect(unreadToggle(page)).toBeChecked();
+  await expect(page.getByTestId('tag-filter-active')).toBeHidden();
+  await expect(page.getByTestId('link-sort-select')).toHaveValue('newest');
+  const last = requests[requests.length - 1];
+  expect(last.searchParams.has('tag')).toBe(false);
+  expect(last.searchParams.get('order')).toBe('newest');
+  expect(last.searchParams.get('unread')).toBe('true');
+});
