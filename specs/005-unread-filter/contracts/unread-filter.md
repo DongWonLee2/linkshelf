@@ -1,6 +1,6 @@
 # Contract: 안 읽은 것만 보기 (browse-links 개정안)
 
-> **상태: 승인됨 (2026-10-22, Issue #49)**. 사용자 답변 "승인"(이유 미기재). constitution I에 따라 [browse-links](../../002-browse-links/contracts/browse-links.md)에 반영한다(spec 004와 같은 방식: 본문은 browse-links 한 곳, 이 파일은 승인 기록과 링크). 결정 근거는 공통 grilling Q7·Q8과 [research R1](../research.md).
+> **상태: 승인됨, 반영됨 (2026-10-22, Issue #49)**. 사용자 답변 "승인"(이유 미기재). constitution I에 따라 [browse-links](../../002-browse-links/contracts/browse-links.md)에 반영했다(T004, spec 004와 같은 방식: 본문은 browse-links 한 곳, 이 파일은 승인 기록과 링크). 결정 근거는 공통 grilling Q7·Q8과 [research R1](../research.md).
 
 ## browse-links에 반영할 내용
 
