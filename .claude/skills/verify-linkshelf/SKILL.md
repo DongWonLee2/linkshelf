@@ -31,7 +31,7 @@ $S/doctor.sh        # 마지막 줄 doctor: OK / doctor: FAIL
 ## Drive
 
 ```bash
-$S/drive.sh <기능>   # save-link | browse-links | tag-filter | mark-read
+$S/drive.sh <기능>   # save-link | browse-links | tag-filter | mark-read | sort-links
 ```
 
 - 시작할 때 `doctor.sh`를 돌리고 FAIL이면 조작하지 않고 exit 3으로 멈춘다.

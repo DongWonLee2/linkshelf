@@ -3,7 +3,7 @@ set -uo pipefail
 . "$(dirname "$0")/common.sh"
 current_run
 
-feature="${1:?사용법: drive.sh <save-link|browse-links|tag-filter|mark-read>}"
+feature="${1:?사용법: drive.sh <save-link|browse-links|tag-filter|mark-read|sort-links>}"
 spec="$SKILL_DIR/drive/$feature.verify.ts"
 [ -f "$spec" ] || { echo "drive: $spec 없음" >&2; exit 2; }
 
