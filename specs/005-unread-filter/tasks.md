@@ -55,8 +55,8 @@
 
 ### Tests (Red 먼저) ⚠️
 
-- [ ] T015 [P] [US2] `frontend/e2e/unread.spec.ts`: `E2E_R_UI_21_toggle_defaults_off_and_resets_on_reload`, `E2E_R_UI_22_toggle_reloads_first_page_keeping_tag_and_order`(고유 태그 링크 21개 이상, 일부 읽음 → 2쪽·오래된순·태그에서 켬 → 1쪽, 읽음 없음, `tag-filter-active`·`link-sort-select` 유지, 요청 쿼리 `unread=true`·`tag`·`order` 단언), `E2E_R_UI_22_paging_tag_and_order_keep_unread`, `E2E_R_UI_22_toggle_does_not_move_focus_or_scroll`, `E2E_R_UI_23_saving_turns_unread_off`(저장 뒤 체크 해제·첫 항목이 새 링크·요청에 `unread` 없음 또는 `false`), `E2E_R_UI_25_marking_read_keeps_item_until_reload`, `E2E_R_UI_25_page_shift_after_marking_read`(research R6: 안 읽은 링크 21개, 1쪽 하나 읽음 → 다음 쪽이 빈 목록 안내·쪽 넘김 숨김(clarify A) → 껐다 켜면 그 항목이 1쪽에 보임), `E2E_R_UI_22_list_error_keeps_chosen_toggle`(목록 500 → `list-error`, 체크 유지, 다시 누르면 반대 값으로 요청), `E2E_R_UI_22_empty_result_shows_empty_notice`(모두 읽음인 고유 태그 → `link-list-empty`). testid·역할로만 찾는다(R-UI-12). 필요하면 `frontend/e2e/support.ts`에 헬퍼(링크 N개 저장, 읽음 지정)를 더한다
-- [ ] T016 [US2] Red 커밋: T014만 커밋, `npx playwright test e2e/unread.spec.ts` FAIL 출력 기록
+- [x] T015 [P] [US2] `frontend/e2e/unread.spec.ts`: `E2E_R_UI_21_toggle_defaults_off_and_resets_on_reload`, `E2E_R_UI_22_toggle_reloads_first_page_keeping_tag_and_order`(고유 태그 링크 21개 이상, 일부 읽음 → 2쪽·오래된순·태그에서 켬 → 1쪽, 읽음 없음, `tag-filter-active`·`link-sort-select` 유지, 요청 쿼리 `unread=true`·`tag`·`order` 단언), `E2E_R_UI_22_paging_tag_and_order_keep_unread`, `E2E_R_UI_22_toggle_does_not_move_focus_or_scroll`, `E2E_R_UI_23_saving_turns_unread_off`(저장 뒤 체크 해제·첫 항목이 새 링크·요청에 `unread` 없음 또는 `false`), `E2E_R_UI_25_marking_read_keeps_item_until_reload`, `E2E_R_UI_25_page_shift_after_marking_read`(research R6: 안 읽은 링크 21개, 1쪽 하나 읽음 → 다음 쪽이 빈 목록 안내·쪽 넘김 숨김(clarify A) → 껐다 켜면 그 항목이 1쪽에 보임), `E2E_R_UI_22_list_error_keeps_chosen_toggle`(목록 500 → `list-error`, 체크 유지, 다시 누르면 반대 값으로 요청), `E2E_R_UI_22_empty_result_shows_empty_notice`(모두 읽음인 고유 태그 → `link-list-empty`). testid·역할로만 찾는다(R-UI-12). 필요하면 `frontend/e2e/support.ts`에 헬퍼(링크 N개 저장, 읽음 지정)를 더한다
+- [x] T016 [US2] Red 커밋: T014만 커밋, `npx playwright test e2e/unread.spec.ts` FAIL 출력 기록
 
 ### Implementation
 
