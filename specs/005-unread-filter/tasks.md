@@ -89,7 +89,7 @@
 - [x] T028 verify-linkshelf로 실제 앱 한 바퀴(`drive.sh unread-filter`) PASS, 증거 경로 기록 — 결과(2026-10-22): `drive.sh unread-filter` PASS, 증거 `.verify/20261022-163653/evidence/unread-filter/`(로컬)
 - [x] T029 [P] spec 시퀀스 그림 1장: `specs/005-unread-filter/diagrams/` (diagram-design, 화면 토글 → `GET /api/links?unread&tag&order` → 거르기 쿼리, 경쟁 시 `requested*` 읽기, 근거 커밋 표기, SVG export 뒤 `@import` 규칙 제거·XML 파싱 확인). 아키텍처 그림은 바뀌지 않아 다시 그리지 않음(PR에 이유)
 - [x] T030 spec 005에 추적 표(R-ID ↔ Issue ↔ 테스트 이름) 추가, Status를 Implemented로
-- [ ] T031 cleanup → blast-radius(공개 API 계약, 근거를 실행으로 증명) → PR(`Closes #49`, R-ID↔테스트 표, 검증 표, 고장 내기 4종, verify 증거, CI run, blast-radius 요약, 기준 SHA, 기존 테스트 호출 수정 이유) → CI → pr-reviewer → 지적 반영
+- [x] T031 cleanup → blast-radius(공개 API 계약, 근거를 실행으로 증명) → PR(`Closes #49`, R-ID↔테스트 표, 검증 표, 고장 내기 4종, verify 증거, CI run, blast-radius 요약, 기준 SHA, 기존 테스트 호출 수정 이유) → CI → pr-reviewer → 지적 반영 — 결과(2026-10-23): PR #50, CI run 39800979929 PASS, pr-reviewer 1차 반려(Visual) → 반영 → 재리뷰 통과
 
 ## Dependencies & Execution Order
 
