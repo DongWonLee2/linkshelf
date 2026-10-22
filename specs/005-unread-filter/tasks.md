@@ -60,10 +60,10 @@
 
 ### Implementation
 
-- [ ] T017 [P] [US2] `frontend/src/api.ts`: `listLinks({ page, tag, order, unread })`, `unread`가 참이면 `unread=true`만 보낸다(거짓이면 보내지 않아 기존 요청과 같음)
-- [ ] T018 [P] [US2] `frontend/src/UnreadToggle.tsx`: `<label><input type="checkbox" data-testid="link-unread-only-toggle">안 읽은 것만</label>`, 요청 중에도 비활성으로 두지 않는다(R-UI-21, `SortSelect`와 같은 이유)
-- [ ] T019 [US2] `frontend/src/App.tsx`: `unread` 상태(기본 `false`), 토글 → `load(0, tag, order, next)`(스크롤·포커스 이동 없음), 쪽 넘김·필터 적용/해제·정렬 변경은 현재 `unread` 유지, `onSaved`에서 `false`(R-UI-23). 토글은 `.list-controls`의 `SortSelect` 옆. 이 단계에서는 US3의 ref 규칙을 아직 넣지 않아도 된다
-- [ ] T020 [US2] Green 커밋: `npx playwright test` 전체 PASS(visual 기준 이미지 차이는 T020에서)
+- [x] T017 [P] [US2] `frontend/src/api.ts`: `listLinks({ page, tag, order, unread })`, `unread`가 참이면 `unread=true`만 보낸다(거짓이면 보내지 않아 기존 요청과 같음)
+- [x] T018 [P] [US2] `frontend/src/UnreadToggle.tsx`: `<label><input type="checkbox" data-testid="link-unread-only-toggle">안 읽은 것만</label>`, 요청 중에도 비활성으로 두지 않는다(R-UI-21, `SortSelect`와 같은 이유)
+- [x] T019 [US2] `frontend/src/App.tsx`: `unread` 상태(기본 `false`), 토글 → `load(0, tag, order, next)`(스크롤·포커스 이동 없음), 쪽 넘김·필터 적용/해제·정렬 변경은 현재 `unread` 유지, `onSaved`에서 `false`(R-UI-23). 토글은 `.list-controls`의 `SortSelect` 옆. 이 단계에서는 US3의 ref 규칙을 아직 넣지 않아도 된다
+- [x] T020 [US2] Green 커밋: `npx playwright test` 전체 PASS(visual 기준 이미지 차이는 T020에서)
 - [ ] T021 [US2] Visual 기준 이미지 갱신: 브랜치 push 뒤 CI `workflow_dispatch` `update_snapshots=true` → 아티팩트의 `frontend/e2e/visual.spec.ts-snapshots/` 커밋(research R7). 체크박스 추가 말고 다른 차이가 없는지 눈으로 확인
 - [ ] T022 [US2] 고장 내기(quickstart §5 4행): 저장 뒤 `unread`를 끄지 않기 → `E2E_R_UI_23_…` FAIL 확인 후 되돌림. 커밋하지 않음
 

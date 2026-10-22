@@ -139,7 +139,8 @@ button:disabled {
   margin-bottom: 0;
 }
 
-.sort-select {
+.sort-select,
+.unread-toggle {
   flex: none;
 }
 

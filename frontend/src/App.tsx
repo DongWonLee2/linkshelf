@@ -4,22 +4,26 @@ import { LinkForm } from './LinkForm';
 import { LinkList } from './LinkList';
 import { SortSelect } from './SortSelect';
 import { TagFilter } from './TagFilter';
+import { UnreadToggle } from './UnreadToggle';
 import './styles.css';
 
-type ListConditions = { tag: string | null; order: LinkOrder };
+type ListConditions = { tag: string | null; order: LinkOrder; unread: boolean };
+
+const DEFAULT_CONDITIONS: ListConditions = { tag: null, order: 'newest', unread: false };
 
 export function App() {
   const [data, setData] = useState<LinkPage | null>(null);
   const [tag, setTag] = useState<string | null>(null);
   const [filterInput, setFilterInput] = useState('');
   const [order, setOrder] = useState<LinkOrder>('newest');
+  const [unread, setUnread] = useState(false);
   const [listError, setListError] = useState<string | null>(null);
   const [filterError, setFilterError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   // Only the newest request may update the screen.
   const latest = useRef(0);
   // A new request must keep a filter, clear or order change that is still loading, so it reads the last chosen conditions.
-  const requested = useRef<ListConditions>({ tag: null, order: 'newest' });
+  const requested = useRef<ListConditions>(DEFAULT_CONDITIONS);
   const shownTag = useRef<string | null>(null);
   const browseTop = useRef<HTMLElement>(null);
 
@@ -41,6 +45,7 @@ export function App() {
         setFilterError(null);
         return true;
       }
+      // R-UI-24: a failure keeps the chosen order and unread; a tag applies only once its list is shown (R-UI-08).
       requested.current = { ...requested.current, tag: shownTag.current };
       const error = result.error;
       if (fromFilter && error.kind === 'validation') {
@@ -72,7 +77,7 @@ export function App() {
   }, [data]);
 
   useEffect(() => {
-    void load(0, { tag: null, order: 'newest' }, false);
+    void load(0, DEFAULT_CONDITIONS, false);
   }, [load]);
 
   const applyFilter = (input: string) => void load(0, { ...requested.current, tag: input.trim() }, true);
@@ -87,10 +92,18 @@ export function App() {
     void load(0, { ...requested.current, order: next }, false);
   };
 
+  // R-UI-22: keep the tag and order and start again at page 0. Not paging, so no scroll or focus move.
+  const changeUnread = (next: boolean) => {
+    setUnread(next);
+    void load(0, { ...requested.current, unread: next }, false);
+  };
+
+  // R-UI-05, R-UI-20, R-UI-23: after a save, show page 0 with no filter, newest first and unread off.
   const onSaved = () => {
     setFilterInput('');
     setOrder('newest');
-    void load(0, { tag: null, order: 'newest' }, false);
+    setUnread(false);
+    void load(0, DEFAULT_CONDITIONS, false);
   };
 
   return (
@@ -110,6 +123,7 @@ export function App() {
             onClear={clearFilter}
           />
           <SortSelect value={order} onChange={changeOrder} />
+          <UnreadToggle checked={unread} onChange={changeUnread} />
         </div>
         <LinkList data={data} error={listError} busy={busy} onPage={(page) => void goToPage(page)} />
       </section>
