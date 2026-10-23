@@ -46,10 +46,11 @@ public class LinkService {
 
 	/** Builds responses inside the transaction because open-in-view is off (#5). */
 	@Transactional(readOnly = true)
-	public LinkPageResponse list(int page, int size, String tag, LinkOrder order) {
+	public LinkPageResponse list(int page, int size, String tag, LinkOrder order, boolean unreadOnly) {
 		Sort sort = order == LinkOrder.OLDEST ? LinkRepository.OLDEST_FIRST : LinkRepository.NEWEST_FIRST;
-		Page<Link> links = tag == null ? linkRepository.findPage(sort, page, size)
-				: linkRepository.findPageByTag(tag.strip().toLowerCase(Locale.ROOT), sort, page, size);
+		Page<Link> links = tag == null && !unreadOnly ? linkRepository.findPage(sort, page, size)
+				: linkRepository.findPageFiltered(tag == null ? null : tag.strip().toLowerCase(Locale.ROOT), unreadOnly,
+						sort, page, size);
 		return LinkPageResponse.from(links.map(LinkResponse::from));
 	}
 

@@ -30,16 +30,23 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
 		return sortedPage(sort, page, size, this::findAll, this::count);
 	}
 
-	/** R-LINK-13: {@code tag} must already be stripped and lower-cased with {@code Locale.ROOT} (research R2). */
-	default Page<Link> findPageByTag(String tag, Sort sort, int page, int size) {
-		return sortedPage(sort, page, size, request -> findByTag(tag, request), () -> countByTag(tag));
+	/**
+	 * R-LINK-13, R-LINK-23: a null {@code tag} does not filter by tag; otherwise it must already be stripped and
+	 * lower-cased with {@code Locale.ROOT} (spec 002 research R2). {@code unreadOnly} keeps only unread links
+	 * (R-LINK-22).
+	 */
+	default Page<Link> findPageFiltered(String tag, boolean unreadOnly, Sort sort, int page, int size) {
+		return sortedPage(sort, page, size, request -> findFiltered(tag, unreadOnly, request),
+				() -> countFiltered(tag, unreadOnly));
 	}
 
-	@Query("select l from Link l where exists (select 1 from l.tags t where lower(t) = :tag)")
-	Page<Link> findByTag(@Param("tag") String tag, Pageable pageable);
+	@Query("select l from Link l where (:tag is null or exists (select 1 from l.tags t where lower(t) = :tag))"
+			+ " and (:unreadOnly = false or l.read = false)")
+	Page<Link> findFiltered(@Param("tag") String tag, @Param("unreadOnly") boolean unreadOnly, Pageable pageable);
 
-	@Query("select count(l) from Link l where exists (select 1 from l.tags t where lower(t) = :tag)")
-	long countByTag(@Param("tag") String tag);
+	@Query("select count(l) from Link l where (:tag is null or exists (select 1 from l.tags t where lower(t) = :tag))"
+			+ " and (:unreadOnly = false or l.read = false)")
+	long countFiltered(@Param("tag") String tag, @Param("unreadOnly") boolean unreadOnly);
 
 	/** The total is counted separately only on the huge-page path; otherwise the paged query counts it. */
 	private static Page<Link> sortedPage(Sort sort, int page, int size, Function<PageRequest, Page<Link>> query,

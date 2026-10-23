@@ -2,6 +2,7 @@ package dev.linkshelf.link;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
@@ -34,7 +35,7 @@ class SortLinksControllerTest {
 
 	@BeforeEach
 	void stubService() {
-		given(linkService.list(anyInt(), anyInt(), any(), any()))
+		given(linkService.list(anyInt(), anyInt(), any(), any(), anyBoolean()))
 			.willReturn(new LinkPageResponse(List.of(), 0, 20, 0, 0, false));
 	}
 
@@ -50,21 +51,21 @@ class SortLinksControllerTest {
 			.andExpect(jsonPath("$.instance").value("/api/links"))
 			.andExpect(jsonPath("$.errors.length()").value(fields.length))
 			.andExpect(jsonPath("$.errors[*].field", containsInAnyOrder((Object[]) fields)));
-		verify(linkService, never()).list(anyInt(), anyInt(), any(), any());
+		verify(linkService, never()).list(anyInt(), anyInt(), any(), any(), anyBoolean());
 	}
 
 	@Test
 	@DisplayName("R-LINK-19: an omitted order means newest; newest and oldest are passed to the service")
 	void R_LINK_19_passes_order_to_service() throws Exception {
 		mockMvc.perform(get("/api/links")).andExpect(status().isOk());
-		verify(linkService).list(0, 20, null, LinkOrder.NEWEST);
+		verify(linkService).list(0, 20, null, LinkOrder.NEWEST, false);
 
 		mockMvc.perform(get("/api/links").param("order", "newest").param("page", "1")).andExpect(status().isOk());
-		verify(linkService).list(1, 20, null, LinkOrder.NEWEST);
+		verify(linkService).list(1, 20, null, LinkOrder.NEWEST, false);
 
 		mockMvc.perform(get("/api/links").param("order", "oldest").param("page", "2").param("tag", "java"))
 			.andExpect(status().isOk());
-		verify(linkService).list(2, 20, "java", LinkOrder.OLDEST);
+		verify(linkService).list(2, 20, "java", LinkOrder.OLDEST, false);
 	}
 
 	@Test

@@ -88,9 +88,9 @@ class SortLinksRepositoryTest {
 		save("java-old", List.of("java"), T0.plusSeconds(10));
 		save("java-mid", List.of("JAVA", "spring"), T0.plusSeconds(20));
 
-		Page<Link> first = linkRepository.findPageByTag("java", LinkRepository.OLDEST_FIRST, 0, 2);
-		Page<Link> second = linkRepository.findPageByTag("java", LinkRepository.OLDEST_FIRST, 1, 2);
-		Page<Link> newest = linkRepository.findPageByTag("java", LinkRepository.NEWEST_FIRST, 0, 2);
+		Page<Link> first = linkRepository.findPageFiltered("java", false, LinkRepository.OLDEST_FIRST, 0, 2);
+		Page<Link> second = linkRepository.findPageFiltered("java", false, LinkRepository.OLDEST_FIRST, 1, 2);
+		Page<Link> newest = linkRepository.findPageFiltered("java", false, LinkRepository.NEWEST_FIRST, 0, 2);
 
 		assertThat(urls(first)).containsExactly("https://example.com/java-old", "https://example.com/java-mid");
 		assertThat(urls(second)).containsExactly("https://example.com/java-new");

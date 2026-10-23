@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-labelledby="unread-filter-sequence-title unread-filter-sequence-desc" id="unread-filter-sequence-root">
+      <title id="unread-filter-sequence-title">안 읽은 것만 보기 시퀀스</title>
+      <desc id="unread-filter-sequence-desc">사용자가 안 읽은 것만을 켜면 화면이 unread=true로 목록을 요청하고, 컨트롤러가 값을 검증한 뒤 저장소가 안 읽은 링크만 태그·정렬과 함께 걸러 첫 쪽을 돌려주며, 그 요청이 진행 중일 때 정렬을 바꾸면 화면이 마지막으로 고른 조건 묶음을 읽어 안 읽음을 유지한 새 요청을 보내는 흐름.</desc>
+      <defs>
+      <style>#unread-filter-sequence-root { --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+      --font-serif:    'Iowan Old Style', Georgia, 'AppleMyungjo', serif;
+      --font-mono:     ui-monospace, 'SF Mono', Menlo, Consolas, monospace; }
+      #unread-filter-sequence-root { font-family: var(--font-sans); color: var(--color-ink); }
+      #unread-filter-sequence-root .diagram-container { width: 100%; overflow-x: auto; }
+      #unread-filter-sequence-root .diagram-container svg { display: block; min-width: 1200px; width: 100%; height: auto; }
+      #unread-filter-sequence-root .source { margin-top: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-muted);
+      line-height: 1.6; }
+      #unread-filter-sequence-root .t-name { font-family: var(--font-sans); font-size: 13px; font-weight: 600; fill: #2d3142; }
+      #unread-filter-sequence-root .t-sub { font-family: var(--font-mono); font-size: 9px; fill: #4f5d75; }
+      #unread-filter-sequence-root .t-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; fill: #4f5d75; }
+      #unread-filter-sequence-root .t-label-accent { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; fill: #eb6c36; font-weight: 600; }
+      #unread-filter-sequence-root .t-guard { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.04em; fill: #4f5d75; }
+      #unread-filter-sequence-root .t-note { font-family: var(--font-serif); font-style: italic; font-size: 13px; fill: #2d3142; }
+      #unread-filter-sequence-root .t-note-num { font-family: var(--font-mono); font-size: 10px; font-weight: 600; fill: #4f5d75; }
+      #unread-filter-sequence-root .t-legend { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; fill: #4f5d75; }</style>
+        <marker id="unread-filter-sequence-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="unread-filter-sequence-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+      </defs>
+
+      <rect width="1200" height="700" fill="#f5f5f5"/>
+
+      <!-- ===== Lifelines (x = 100, 292, 484, 676, 868) ===== -->
+      <g stroke="#2d3142" stroke-opacity="0.20" stroke-width="1" stroke-dasharray="3,3">
+        <line x1="100" y1="88" x2="100" y2="612"/>
+        <line x1="292" y1="88" x2="292" y2="612"/>
+        <line x1="484" y1="88" x2="484" y2="612"/>
+        <line x1="676" y1="88" x2="676" y2="612"/>
+        <line x1="868" y1="88" x2="868" y2="612"/>
+      </g>
+
+      <!-- ===== ALT fragment (drawn under messages) ===== -->
+      <rect x="76" y="396" width="816" height="192" rx="4" fill="#2d3142" fill-opacity="0.02" stroke="#2d3142" stroke-opacity="0.22" stroke-width="1"/>
+      <rect x="76" y="396" width="40" height="16" rx="2" fill="#f5f5f5" stroke="#2d3142" stroke-opacity="0.22" stroke-width="1"/>
+      <text x="96" y="408" class="t-guard" text-anchor="middle" letter-spacing="0.12em">ALT</text>
+      <text x="128" y="408" class="t-guard">[위 요청이 아직 진행 중 · R-UI-24]</text>
+
+      <!-- ===== Activation bars ===== -->
+      <g fill="#2d3142" fill-opacity="0.06" stroke="#4f5d75" stroke-width="0.8">
+        <rect x="288" y="128" width="8" height="240"/>
+        <rect x="480" y="168" width="8" height="192"/>
+        <rect x="672" y="256" width="8" height="72"/>
+        <rect x="864" y="288" width="8" height="32"/>
+        <rect x="288" y="440" width="8" height="128"/>
+        <rect x="480" y="528" width="8" height="40"/>
+      </g>
+
+      <!-- ===== Messages (arrows first, then label masks + text) ===== -->
+      <line x1="100" y1="128" x2="286" y2="128" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#unread-filter-sequence-arrow)"/>
+      <line x1="296" y1="168" x2="478" y2="168" stroke="#eb6c36" stroke-width="1.6" marker-end="url(#unread-filter-sequence-arrow-accent)"/>
+      <path d="M 488 200 H 516 Q 524 200 524 208 V 212 Q 524 220 516 220 H 490" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#unread-filter-sequence-arrow)"/>
+      <line x1="488" y1="256" x2="670" y2="256" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#unread-filter-sequence-arrow)"/>
+      <line x1="680" y1="288" x2="862" y2="288" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#unread-filter-sequence-arrow)"/>
+      <line x1="864" y1="320" x2="682" y2="320" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#unread-filter-sequence-arrow)"/>
+      <line x1="480" y1="352" x2="298" y2="352" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#unread-filter-sequence-arrow)"/>
+      <line x1="100" y1="440" x2="286" y2="440" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#unread-filter-sequence-arrow)"/>
+      <path d="M 296 472 H 324 Q 332 472 332 480 V 484 Q 332 492 324 492 H 298" fill="none" stroke="#eb6c36" stroke-width="1.6" marker-end="url(#unread-filter-sequence-arrow-accent)"/>
+      <line x1="296" y1="528" x2="478" y2="528" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#unread-filter-sequence-arrow)"/>
+      <line x1="480" y1="560" x2="298" y2="560" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#unread-filter-sequence-arrow)"/>
+
+      <rect x="144" y="106" width="100" height="14" fill="#f5f5f5"/>
+      <text x="194" y="117" class="t-label" text-anchor="middle">CHECK UNREAD</text>
+
+      <rect x="341" y="146" width="92" height="14" fill="#f5f5f5"/>
+      <text x="387" y="157" class="t-label-accent" text-anchor="middle">UNREAD=TRUE</text>
+
+      <rect x="532" y="203" width="96" height="14" fill="#f5f5f5"/>
+      <text x="536" y="214" class="t-label">VALIDATE [1]</text>
+
+      <rect x="533" y="234" width="92" height="14" fill="#f5f5f5"/>
+      <text x="579" y="245" class="t-label" text-anchor="middle">LIST(UNREAD)</text>
+
+      <rect x="725" y="266" width="92" height="14" fill="#f5f5f5"/>
+      <text x="771" y="277" class="t-label" text-anchor="middle">FILTERED [2]</text>
+
+      <rect x="749" y="298" width="48" height="14" fill="#f5f5f5"/>
+      <text x="773" y="309" class="t-label" text-anchor="middle">PAGE</text>
+
+      <rect x="353" y="330" width="72" height="14" fill="#f5f5f5"/>
+      <text x="389" y="341" class="t-label" text-anchor="middle">200 PAGE</text>
+
+      <rect x="144" y="418" width="100" height="14" fill="#f5f5f5"/>
+      <text x="194" y="429" class="t-label" text-anchor="middle">SELECT OLDEST</text>
+
+      <rect x="340" y="475" width="100" height="14" fill="#f5f5f5"/>
+      <text x="344" y="486" class="t-label-accent">REQUESTED [3]</text>
+
+      <rect x="337" y="506" width="100" height="14" fill="#f5f5f5"/>
+      <text x="387" y="517" class="t-label" text-anchor="middle">UNREAD+OLDEST</text>
+
+      <rect x="353" y="538" width="72" height="14" fill="#f5f5f5"/>
+      <text x="389" y="549" class="t-label" text-anchor="middle">200 PAGE</text>
+
+      <!-- ===== Actor boxes (drawn last so lifelines sit behind) ===== -->
+      <rect x="32" y="40" width="136" height="48" rx="6" fill="#4f5d75" fill-opacity="0.10" stroke="#8a93a6" stroke-width="1"/>
+      <text x="100" y="62" class="t-name" text-anchor="middle">사용자</text>
+      <text x="100" y="77" class="t-sub" text-anchor="middle">브라우저</text>
+      <rect x="224" y="40" width="136" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="292" y="62" class="t-name" text-anchor="middle">화면 App</text>
+      <text x="292" y="77" class="t-sub" text-anchor="middle">unread-only-toggle</text>
+      <rect x="416" y="40" width="136" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="484" y="62" class="t-name" text-anchor="middle">LinkController</text>
+      <text x="484" y="77" class="t-sub" text-anchor="middle">@Pattern unread</text>
+      <rect x="608" y="40" width="136" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="676" y="62" class="t-name" text-anchor="middle">LinkService</text>
+      <text x="676" y="77" class="t-sub" text-anchor="middle">unreadOnly</text>
+      <rect x="796" y="40" width="144" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="868" y="62" class="t-name" text-anchor="middle">LinkRepository</text>
+      <text x="868" y="77" class="t-sub" text-anchor="middle">findPageFiltered</text>
+
+      <!-- ===== Notes (right column, no leaders; numbers match labels) ===== -->
+      <text x="924" y="172" class="t-note-num">[1]</text>
+      <text x="952" y="172" class="t-note">true·false가 아니면(yes·on·1,</text>
+      <text x="952" y="190" class="t-note">빈 값, 두 번 보냄) → 400,</text>
+      <text x="952" y="208" class="t-note">field=unread. 다른 오류와</text>
+      <text x="952" y="226" class="t-note">함께 담는다(R-LINK-24).</text>
+
+      <text x="924" y="276" class="t-note-num">[2]</text>
+      <text x="952" y="276" class="t-note">read=false만, 태그와 함께</text>
+      <text x="952" y="294" class="t-note">거른 뒤 정렬하고 나눈다.</text>
+      <text x="952" y="312" class="t-note">개수는 거른 결과만 센다</text>
+      <text x="952" y="330" class="t-note">(R-LINK-22, 23).</text>
+
+      <text x="924" y="476" class="t-note-num">[3]</text>
+      <text x="952" y="476" class="t-note">마지막으로 고른 태그·정렬·</text>
+      <text x="952" y="494" class="t-note">안 읽음 묶음(requested)을</text>
+      <text x="952" y="512" class="t-note">읽는다. 앞 응답은 버리고,</text>
+      <text x="952" y="530" class="t-note">실패해도 고른 값은 유지.</text>
+
+      <!-- ===== Legend strip ===== -->
+      <line x1="32" y1="636" x2="1168" y2="636" stroke="#2d3142" stroke-opacity="0.12" stroke-width="1"/>
+      <line x1="32" y1="664" x2="64" y2="664" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#unread-filter-sequence-arrow)"/>
+      <text x="72" y="667" class="t-legend">호출</text>
+      <line x1="136" y1="664" x2="168" y2="664" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#unread-filter-sequence-arrow)"/>
+      <text x="176" y="667" class="t-legend">반환</text>
+      <line x1="232" y1="664" x2="264" y2="664" stroke="#eb6c36" stroke-width="1.6" marker-end="url(#unread-filter-sequence-arrow-accent)"/>
+      <text x="272" y="667" class="t-legend">이 기능이 바꾼 경로</text>
+      <rect x="432" y="656" width="24" height="16" rx="2" fill="#2d3142" fill-opacity="0.02" stroke="#2d3142" stroke-opacity="0.22" stroke-width="1"/>
+      <text x="464" y="667" class="t-legend">ALT 분기</text>
+      <rect x="536" y="656" width="8" height="16" fill="#2d3142" fill-opacity="0.06" stroke="#4f5d75" stroke-width="0.8"/>
+      <text x="552" y="667" class="t-legend">처리 중(activation)</text>
+    </svg>

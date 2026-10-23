@@ -44,8 +44,11 @@ public class LinkController {
 					message = "1 이상 100 이하여야 합니다") int size,
 			@RequestParam(required = false) @NotBlankText @MaxCodePoints(30) String tag,
 			@RequestParam(required = false) @Pattern(regexp = "newest|oldest",
-					message = "newest 또는 oldest여야 합니다") String order) {
-		return linkService.list(page, size, tag, "oldest".equals(order) ? LinkOrder.OLDEST : LinkOrder.NEWEST);
+					message = "newest 또는 oldest여야 합니다") String order,
+			@RequestParam(required = false) @Pattern(regexp = "true|false",
+					message = "true 또는 false여야 합니다") String unread) {
+		return linkService.list(page, size, tag, "oldest".equals(order) ? LinkOrder.OLDEST : LinkOrder.NEWEST,
+				"true".equals(unread));
 	}
 
 	@PutMapping("/{id}/read")

@@ -79,15 +79,18 @@ export function listLinks({
   page,
   tag,
   order,
+  unread,
 }: {
   page: number;
   tag: string | null;
   order: LinkOrder;
+  unread: boolean;
 }): Promise<ApiResult<LinkPage>> {
   const params = new URLSearchParams({ page: String(page), order });
   // Blank tags are never sent: the API answers 400 for them (R-UI-07).
   const trimmed = tag?.trim();
   if (trimmed) params.set('tag', trimmed);
+  if (unread) params.set('unread', 'true');
   return request<LinkPage>(`/api/links?${params.toString()}`);
 }
 
