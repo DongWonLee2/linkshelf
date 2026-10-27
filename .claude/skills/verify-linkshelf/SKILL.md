@@ -17,7 +17,7 @@ $S/launch.sh        # READY run=<RUN_ID> evidence=<경로> 가 나오면 준비 
 
 - `bootJar`를 빌드하고 `java -jar`로 띄운다. DB는 실행마다 새 메모리 H2(`jdbc:h2:mem:verify-<RUN_ID>`)다. 로컬 파일 DB `backend/data/`는 건드리지 않는다. 스키마는 JPA가 만들고 시드 데이터는 없다. 각 여정이 자기 데이터를 만든다.
 - 준비 완료 조건: 백엔드 `GET /api/links` 200, Vite `/` 200, 프록시 `GET :5173/api/links` 200.
-- 포트 8080·5173은 고정이다(Vite 프록시와 `strictPort`). 그래서 **한 번에 한 인스턴스만** 띄울 수 있다. 포트가 사용 중이면 launch는 exit 2로 멈춘다. 그 프로세스는 이번 실행이 띄운 것이 아니므로 조작하지도 죽이지도 않는다. `npm run e2e`도 같은 포트를 쓰므로 동시에 돌리지 않는다.
+- 포트 기본값은 8080·5173이다. worktree 여러 곳에서 동시에 검증할 때는 launch 전에 `VERIFY_BACKEND_PORT`, `VERIFY_FRONTEND_PORT`를 worktree마다 다르게 준다. launch가 포트를 `.verify/<RUN_ID>/run/ports`에 적고 doctor·drive·cleanup이 그 값을 읽으므로 뒤 명령에는 다시 주지 않는다. 한 worktree에서는 한 번에 한 인스턴스만 띄운다. 포트가 사용 중이면 launch는 exit 2로 멈춘다. 그 프로세스는 이번 실행이 띄운 것이 아니므로 조작하지도 죽이지도 않는다. `npm run e2e`는 8080·5173 고정이므로 기본 포트 인스턴스와 동시에 돌리지 않는다.
 - `frontend/node_modules`가 없으면(새 worktree) `npm ci`를 먼저 돈다. Chromium은 `~/Library/Caches/ms-playwright`에 이미 있어야 한다.
 
 ## Doctor

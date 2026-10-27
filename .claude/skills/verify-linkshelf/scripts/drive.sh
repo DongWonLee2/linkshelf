@@ -17,7 +17,7 @@ if ! "$SKILL_DIR/scripts/doctor.sh" > "$out/doctor.log" 2>&1; then
   exit 3
 fi
 # NODE_PATH lets the spec outside frontend/ resolve the same @playwright/test install the E2E suite uses.
-(cd "$REPO/frontend" && VERIFY_EVIDENCE="$out" NODE_PATH="$REPO/frontend/node_modules" \
+(cd "$REPO/frontend" && VERIFY_EVIDENCE="$out" VERIFY_BASE_URL="http://localhost:$FRONTEND_PORT" NODE_PATH="$REPO/frontend/node_modules" \
   npx playwright test -c "$SKILL_DIR/drive/playwright.verify.config.ts" "$feature.verify.ts") \
   2>&1 | tee "$out/playwright.log"
 code="${PIPESTATUS[0]}"

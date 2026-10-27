@@ -1,8 +1,9 @@
 SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO="$(git -C "$SKILL_DIR" rev-parse --show-toplevel)"
 VERIFY_ROOT="$REPO/.verify"
-BACKEND_PORT=8080
-FRONTEND_PORT=5173
+# Ports come from the environment so two worktrees can verify at once; launch.sh records them per run.
+BACKEND_PORT="${VERIFY_BACKEND_PORT:-8080}"
+FRONTEND_PORT="${VERIFY_FRONTEND_PORT:-5173}"
 
 current_run() {
   if [ ! -f "$VERIFY_ROOT/current" ]; then
@@ -12,6 +13,7 @@ current_run() {
   RUN_ID="$(cat "$VERIFY_ROOT/current")"
   RUN_DIR="$VERIFY_ROOT/$RUN_ID/run"
   EVIDENCE_DIR="$VERIFY_ROOT/$RUN_ID/evidence"
+  if [ -f "$RUN_DIR/ports" ]; then . "$RUN_DIR/ports"; fi
 }
 
 listener_pid() {
