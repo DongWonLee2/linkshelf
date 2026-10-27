@@ -104,5 +104,19 @@ check 0 'git blame -L 1,5 README.md'
 check 0 'gh issue list --state open'
 check 0 'gh run list --limit 5'
 
+# 8단계 A0: read-only git inside a worktree under .claude/worktrees (7-A, reviewer could not inspect the worktree).
+check 0 'git -C .claude/worktrees/agent-1 status --short'
+check 0 'git -C .claude/worktrees/agent-1 diff main...HEAD'
+check 0 'git -C /Users/me/Dev/linkshelf/.claude/worktrees/agent-1 log --oneline -5'
+check 0 'git -C .claude/worktrees/agent-1 show --stat HEAD'
+check 2 'git -C .claude/worktrees/agent-1 push'
+check 2 'git -C .claude/worktrees/agent-1 checkout main'
+check 2 'git -C .claude/worktrees/agent-1 -c core.pager=touch log'
+check 2 'git -C .claude/worktrees/agent-1 log --output=x'
+check 2 'git -C .claude/worktrees/../../.. status'
+check 2 'git -C /Users/me/Dev/linkshelf status'
+check 2 'git -C .claude/worktrees status'
+check 2 'git -C'
+
 echo "pass=$pass fail=$fail"
 [ "$fail" -eq 0 ]
