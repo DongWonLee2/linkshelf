@@ -88,6 +88,7 @@
 ### Edge Cases
 
 - **쪽 밀림(기록만, 막지 않음)**: 체크박스를 켠 채 1쪽의 항목 k개를 읽음으로 바꾼 뒤 다음 쪽으로 가면, 서버에서는 그 k개가 빠져 원래 2쪽 앞부분 k개가 1쪽으로 당겨진다. 그래서 그 k개는 1쪽에도 2쪽에도 보이지 않는다. 앞 쪽으로 돌아가거나 체크박스를 껐다 켜면 보인다. 밀림 때문에 넘어간 쪽이 비면 R-UI-03대로 빈 목록 안내만 보이고 쪽 넘김은 숨겨진다. 이때 빠져나오는 길은 체크박스를 껐다 켜거나 링크를 저장하는 것이다(clarify A). 이 동작은 테스트 하나로 고정한다(사용자 결정: "이번에는 막지 않고 기록만 한다").
+- **체크박스 요청 진행 중 태그 적용·해제**: 목록 요청이 진행 중이면 태그 적용·해제 버튼은 비활성이라(spec 003 구현부터) 안 읽음 토글 요청과 겹치지 않는다. 그 뒤 태그 요청은 마지막으로 고른 안 읽음 값을 쓴다(R-UI-24). 체크박스를 비활성으로 만들지 않는 R-UI-21과 다른 이유: 태그 버튼은 원래 막혀 있었고, 체크박스는 포커스를 지키려고 막지 않는다(#51, 사용자 결정 2026-10-27).
 - 체크박스를 켜거나 끄는 중 목록 불러오기가 실패: 실패 안내(`list-error`)를 보인다(R-UI-03). 체크박스는 사용자가 고른 값을 유지한다. 다시 누르면 반대 값으로 다시 불러온다.
 - 거른 결과가 없음: 기존 빈 목록 안내(`link-list-empty`)를 같은 문구로 보인다. 쪽 정보는 보이지 않는다(R-UI-03 기존 규칙).
 - 안 읽음 조건과 쪽 번호·쪽 크기·태그·정렬이 함께 틀림: 틀린 항목을 모두 알려 준다. 숫자가 아닌 쪽 번호·크기가 있으면 R-LINK-11 예외(그 항목만 알림)를 따른다.
@@ -142,8 +143,8 @@
 | R-UI-21 | #49 | `E2E_R_UI_21_toggle_defaults_off_and_resets_on_reload` |
 | R-UI-22 | #49 | `E2E_R_UI_22_toggle_reloads_first_page_keeping_tag_and_order`, `E2E_R_UI_22_paging_tag_and_order_keep_unread`, `E2E_R_UI_22_toggle_does_not_move_focus_or_scroll`, `E2E_R_UI_22_list_error_keeps_chosen_toggle`, `E2E_R_UI_22_empty_result_shows_empty_notice` |
 | R-UI-23 | #49 | `E2E_R_UI_23_saving_turns_unread_off` |
-| R-UI-24 | #49 | `E2E_R_UI_24_toggle_right_after_tag_apply_or_clear_keeps_new_tag`, `E2E_R_UI_24_order_change_right_after_toggle_keeps_unread`, `E2E_R_UI_24_toggle_right_after_save_keeps_filters_cleared` |
-| R-UI-25 | #49 | `E2E_R_UI_25_marking_read_keeps_item_until_reload`, `E2E_R_UI_25_page_shift_after_marking_read` |
+| R-UI-24 | #49, #51 | `E2E_R_UI_24_toggle_right_after_tag_apply_or_clear_keeps_new_tag`, `E2E_R_UI_24_order_change_right_after_toggle_keeps_unread`, `E2E_R_UI_24_toggle_right_after_save_keeps_filters_cleared`, `E2E_R_UI_24_tag_apply_or_clear_blocked_while_toggle_loading_then_keeps_unread`, `E2E_R_UI_24_order_change_while_toggle_loading_keeps_unread`, `E2E_R_UI_24_save_while_toggle_loading_turns_unread_off` |
+| R-UI-25 | #49, #51 | `E2E_R_UI_25_marking_read_keeps_item_until_reload`, `E2E_R_UI_25_page_shift_after_marking_read`, `E2E_R_UI_25_marking_read_fails_with_unread_on_reverts_and_keeps_item` |
 | R-UI-13(기준 이미지) | #49 | `VISUAL_R_UI_13_*` 3장 갱신(CI run 39796705288 `update_snapshots`) |
 
 실제 앱 증거: verify-linkshelf `unread-filter` 여정(`.claude/skills/verify-linkshelf/drive/unread-filter.verify.ts`). 시퀀스 그림: [diagrams/unread-filter-sequence.html](diagrams/unread-filter-sequence.html)(SVG 같이 둠).
