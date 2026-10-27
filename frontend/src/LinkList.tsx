@@ -96,14 +96,18 @@ type Props = {
   error: string | null;
   busy: boolean;
   onPage: (page: number) => void;
+  onRetry: () => void;
 };
 
-export function LinkList({ data, error, busy, onPage }: Props) {
+export function LinkList({ data, error, busy, onPage, onRetry }: Props) {
   if (error) {
     return (
-      <p className="notice error" data-testid="list-error" role="alert">
-        목록을 불러오지 못했습니다: {error}
-      </p>
+      <div className="notice error" data-testid="list-error" role="alert">
+        목록을 불러오지 못했습니다: {error}{' '}
+        <button data-testid="list-error-retry" type="button" onClick={onRetry} disabled={busy}>
+          다시 불러오기
+        </button>
+      </div>
     );
   }
   if (data === null) return <p className="notice">불러오는 중…</p>;
