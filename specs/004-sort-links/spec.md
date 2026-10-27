@@ -67,7 +67,7 @@
 - 정렬 값의 대소문자·앞뒤 공백: 정해진 값과 정확히 같을 때만 받는다. 다른 값은 고치지 않고 거부한다(R-LINK-11과 같은 원칙).
 - 정렬 값과 쪽 번호·쪽 크기가 함께 틀림: 틀린 항목을 모두 알려 준다. 숫자가 아닌 쪽 번호·크기가 있으면 R-LINK-11 예외(그 항목만 알림)를 따른다.
 - 정렬 값이 비어 있음(값 없이 이름만 보냄): 생략과 다르게 입력 오류로 거부한다(clarify Q3).
-- 정렬을 바꾸는 중 목록 불러오기가 실패: 실패 안내(`list-error`)를 보여 준다(R-UI-03). 선택 상자는 사용자가 고른 값을 유지한다.
+- 정렬을 바꾸는 중 목록 불러오기가 실패: 실패 안내(`list-error`)를 보여 준다(R-UI-03). 선택 상자는 사용자가 고른 값을 유지한다. 같은 값을 다시 골라도 선택 상자는 바뀐 것이 없어 요청하지 않으므로, 다시 불러오기는 실패 안내 안의 버튼으로 한다(R-UI-26, Issue #45).
 - 빈 목록에서 정렬을 바꿈: 빈 목록 안내가 그대로 보인다.
 
 ## Requirements *(mandatory)*
@@ -82,6 +82,7 @@
 - **R-UI-18** (PRD-05): 목록 위에 정렬 선택 상자(`link-sort-select`)를 두고 "최신순"(기본)과 "오래된순"을 고를 수 있다. 화면을 열거나 새로 고치면 최신순이다. 정렬 상태는 주소에 남기지 않는다.
 - **R-UI-19** (PRD-05): 정렬을 바꾸면 현재 태그 필터를 유지한 채 첫 쪽부터 새 순서로 다시 불러온다. 쪽 넘김과 태그 필터 적용·해제는 현재 정렬을 유지한다. 정렬로 첫 쪽에 돌아갈 때는 R-UI-16·17의 스크롤·포커스 이동을 하지 않는다.
 - **R-UI-20** (PRD-05): 링크 저장에 성공하면(R-UI-05) 정렬을 최신순으로 되돌린다. 선택 상자 표시와 다시 불러오는 순서가 함께 최신순이고, 새 링크가 첫 쪽 맨 위에 보인다. 이후 쪽 넘김도 최신순이다.
+- **R-UI-26** (PRD-05, Issue #45): 목록 불러오기 실패 안내(`list-error`) 안에 다시 불러오기 버튼(`list-error-retry`)을 둔다. 누르면 실패한 요청의 쪽을 사용자가 마지막으로 고른 정렬·안 읽음 값과 화면에 적용된 태그 필터로 다시 불러온다(R-UI-24). 정렬 선택 상자와 안 읽음 체크박스는 되돌리지 않는다. 다시 불러오는 중에는 버튼을 누를 수 없다.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -115,6 +116,7 @@
 | R-UI-18 | #43 | `E2E_R_UI_18_sort_select_defaults_to_newest_and_resets_on_reload` |
 | R-UI-19 | #43 | `E2E_R_UI_19_changing_order_reloads_first_page_keeping_filter`, `E2E_R_UI_19_paging_and_filter_keep_order`, `E2E_R_UI_19_order_change_does_not_move_focus_or_scroll`, `E2E_R_UI_19_order_change_right_after_filter_keeps_filter`, `E2E_R_UI_19_order_change_right_after_save_keeps_filter_cleared`, `E2E_R_UI_19_list_error_keeps_chosen_order`, `E2E_R_UI_19_empty_list_stays_empty_after_order_change`, `E2E_R_UI_19_order_change_after_rejected_filter_keeps_shown_filter` |
 | R-UI-20 | #43 | `E2E_R_UI_20_saving_resets_order_to_newest` |
+| R-UI-26 | #45 | `E2E_R_UI_26_retry_after_order_change_failure_shows_chosen_order` |
 | R-UI-13(기준 이미지) | #43 | `VISUAL_R_UI_13_*` 3장 갱신(CI run 39582485480) |
 
 실제 앱 증거: verify-linkshelf `sort-links` 여정(`.claude/skills/verify-linkshelf/drive/sort-links.verify.ts`).

@@ -32,6 +32,7 @@
 | | 이전 쪽 / 다음 쪽 | `link-list-prev` / `link-list-next` | `page`, `hasNext` | `E2E_R_UI_02_pages_through_links` |
 | | 쪽 정보(예: 1 / 3). 빈 목록(`totalPages` 0)이면 표시하지 않는다 | `link-list-page-info` | `page`, `totalPages` | |
 | | 목록 불러오기 실패(400·네트워크) | `list-error` | `GET` 실패 | `E2E_R_UI_03_shows_list_error_when_api_fails`, `E2E_R_UI_03_shows_list_error_when_api_returns_400` |
+| | 실패 안내 안의 다시 불러오기 버튼(정렬·안 읽음은 고른 값 그대로) | `list-error-retry` | `GET` 재요청 | `E2E_R_UI_26_retry_after_order_change_failure_shows_chosen_order` |
 | PRD-05 정렬 | 정렬 선택 상자(최신순 기본·오래된순, 새로 고치면 최신순) | `link-sort-select` | `GET /api/links?order=` | `E2E_R_UI_19_changing_order_reloads_first_page_keeping_filter` |
 | PRD-06 안 읽음 필터 | "안 읽은 것만" 체크박스(기본 꺼짐, 새로 고치면 꺼짐) | `link-unread-only-toggle` | `GET /api/links?unread=` | `E2E_R_UI_22_toggle_reloads_first_page_keeping_tag_and_order` |
 | PRD-03 태그 필터 | 필터 입력 | `tag-filter-input` | `GET /api/links?tag=` | `E2E_R_UI_07_filters_by_tag_ignoring_case` |

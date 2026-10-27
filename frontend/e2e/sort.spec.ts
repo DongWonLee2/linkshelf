@@ -292,3 +292,72 @@ test('E2E_R_UI_19_order_change_after_rejected_filter_keeps_shown_filter', async 
   expect(sent).toHaveLength(1);
   expect(sent[0].searchParams.get('tag')).toBe(tag);
 });
+
+test('E2E_R_UI_26_retry_after_order_change_failure_shows_chosen_order', async ({ page }) => {
+  const tag = `retry${uniqueId()}`;
+  const saved = await saveTagged(page, tag, 'r-ui-26-retry', 3);
+  const requests = recordListRequests(page);
+
+  await page.goto('/');
+  await applyTagFilter(page, tag);
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  let oldestCalls = 0;
+  await page.route(isLinksList, async (route) => {
+    if (new URL(route.request().url()).searchParams.get('order') !== 'oldest') return route.continue();
+    oldestCalls += 1;
+    if (oldestCalls === 1) return route.fulfill({ status: 500, body: '' });
+    // Hold the retry so the busy state can be seen.
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    return route.continue();
+  });
+
+  const select = page.getByTestId('link-sort-select');
+  await select.selectOption('oldest');
+  await expect(page.getByTestId('list-error')).toBeVisible();
+  await expect(select).toHaveValue('oldest');
+
+  const before = requests.length;
+  const retry = page.getByTestId('list-error').getByTestId('list-error-retry');
+  await retry.click();
+  await expect(retry).toBeDisabled();
+
+  const items = page.getByTestId('link-item');
+  await expect(page.getByTestId('list-error')).toBeHidden();
+  await expect(items).toHaveCount(3);
+  await expect(items.first()).toHaveAttribute('data-link-id', String(saved[0].id));
+  await expect(select).toHaveValue('oldest');
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  const sent = requests.slice(before);
+  expect(sent).toHaveLength(1);
+  expect(sent[0].searchParams.get('order')).toBe('oldest');
+  expect(sent[0].searchParams.get('page')).toBe('0');
+  expect(sent[0].searchParams.get('tag')).toBe(tag);
+});
+
+test('E2E_R_UI_08_rejected_filter_with_order_change_in_flight_keeps_list', async ({ page }) => {
+  const tag = `inflight${uniqueId()}`;
+  const saved = await saveTagged(page, tag, 'r-ui-08-inflight', 2);
+  const rejected = 'x'.repeat(31);
+  const requests = recordListRequests(page);
+
+  await page.goto('/');
+  await applyTagFilter(page, tag);
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  // Hold the filter request so the order change is sent before its 400 comes back.
+  await delayListRequests(page, (url) => url.searchParams.get('tag') === rejected);
+
+  const before = requests.length;
+  await applyTagFilter(page, rejected);
+  await page.getByTestId('link-sort-select').selectOption('oldest');
+
+  const items = page.getByTestId('link-item');
+  await expect(page.getByTestId('tag-filter-error')).toBeVisible();
+  await expect(page.getByTestId('list-error')).toBeHidden();
+  await expect(items).toHaveCount(2);
+  await expect(items.first()).toHaveAttribute('data-link-id', String(saved[1].id));
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  const sent = requests.slice(before);
+  expect(sent).toHaveLength(2);
+  expect(sent[1].searchParams.get('order')).toBe('oldest');
+  expect(sent[1].searchParams.get('tag')).toBe(rejected);
+});

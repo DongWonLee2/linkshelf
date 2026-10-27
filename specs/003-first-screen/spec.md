@@ -121,7 +121,7 @@
 - **R-UI-05** (PRD-01): 저장에 성공하면 성공 표시(`link-form-saved`)를 보여 주고, 폼을 비우고, 태그 필터를 해제하고, 목록을 첫 쪽부터 다시 불러온다. 성공 표시는 다음 입력을 시작하거나 다시 저장할 때까지 남는다.
 - **R-UI-06** (PRD-01): 서버가 입력 오류를 돌려주면 틀린 항목마다 오류(`link-form-error`, `data-field`=`url`·`memo`·`tags`)를 서버가 준 메시지로 보여 주고 입력값은 남긴다. 중복이면 중복 안내(`link-form-duplicate`)를 보여 준다. 다음 저장을 시도하면 이전 오류·안내는 지운다.
 - **R-UI-07** (PRD-03): 필터 입력(`tag-filter-input`)과 적용(`tag-filter-apply`)으로 태그 하나로 거른다. 적용하면 첫 쪽부터 다시 불러오고, 현재 필터(`tag-filter-active`)와 해제(`tag-filter-clear`)를 보여 준다. 입력이 비었거나 공백뿐이면 적용은 해제와 같다(서버에 빈 태그를 보내지 않는다).
-- **R-UI-08** (PRD-03): 서버가 필터 태그를 거부하면(예: 31자) 필터 입력 오류(`tag-filter-error`)를 보여 주고 이전 목록과 필터를 유지한다. 쪽 넘김은 현재 필터 안에서 한다.
+- **R-UI-08** (PRD-03): 서버가 필터 태그를 거부하면(예: 31자) 필터 입력 오류(`tag-filter-error`)를 보여 주고 이전 목록과 필터를 유지한다. 쪽 넘김은 현재 필터 안에서 한다. 필터 적용 요청이 끝나기 전에 정렬·안 읽음 변경이 새 요청을 만들어 그 태그를 실어 보냈고 그 요청이 태그를 거부당해도 같다(목록 자리의 실패 안내 `list-error`를 보이지 않는다, Issue #46).
 - **R-UI-09** (PRD-04): 각 항목의 읽음 체크박스(`link-item-read-toggle`)는 링크의 읽음 상태와 같다. 바꾸면 체크 상태를 먼저 바꾸고 서버에 그 상태를 지정하며, 성공하면 서버가 돌려준 상태로 맞춘다.
 - **R-UI-10** (PRD-04): 읽음 지정이 실패하면 체크 상태를 원래대로 되돌리고 그 항목에 실패 안내(`link-item-error`)를 보여 준다.
 - **R-UI-11**: 화면은 백엔드 API(spec 001·002 계약)를 바꾸지 않고 그대로 쓴다.
@@ -167,7 +167,7 @@
 | R-UI-05 | #26 | `E2E_R_UI_05_saves_link_and_shows_it_first`, `E2E_R_UI_05_save_clears_tag_filter`, `E2E_R_UI_05_save_returns_to_first_page` |
 | R-UI-06 | #26 | `E2E_R_UI_06_shows_field_errors`, `E2E_R_UI_06_shows_tags_error`, `E2E_R_UI_06_shows_duplicate_notice` |
 | R-UI-07 | #26 | `E2E_R_UI_07_filters_by_tag_ignoring_case`, `E2E_R_UI_07_blank_filter_clears` |
-| R-UI-08 | #26 | `E2E_R_UI_08_shows_filter_error_and_keeps_list`, `E2E_R_UI_08_pages_within_filter` |
+| R-UI-08 | #26, #46 | `E2E_R_UI_08_shows_filter_error_and_keeps_list`, `E2E_R_UI_08_pages_within_filter`, `E2E_R_UI_08_rejected_filter_with_order_change_in_flight_keeps_list` |
 | R-UI-09 | #26 | `E2E_R_UI_09_marks_read_and_keeps_after_reload`, `E2E_R_UI_09_marks_unread_again` |
 | R-UI-10 | #26 | `E2E_R_UI_10_reverts_checkbox_when_marking_fails` |
 | R-UI-11 | #26·#27·#29 | 세 PR 모두 `backend/` diff 없음 + 위 기능 E2E가 실제 API로 PASS |
