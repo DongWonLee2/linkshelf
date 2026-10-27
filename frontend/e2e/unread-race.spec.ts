@@ -11,7 +11,7 @@ import {
 } from './support';
 
 // Issue #51. R-UI-24 in the reverse order of unread.spec.ts: the unread toggle's request is still loading when the
-// user applies or clears a tag, changes the order or saves. The toggle's request is delayed so the two really overlap;
+// user changes the order or saves (or tries the tag filter). The toggle's request is delayed so the two really overlap;
 // no wait is added before the second action (spec 005 research R5). After the second action the test waits for the
 // delayed response too, so a stale response that overwrote the screen would fail the screen assertions.
 
@@ -55,7 +55,10 @@ async function delayListRequests(
   return { settled: page.waitForResponse((res) => isLinksList(new URL(res.url())) && when(new URL(res.url()))) };
 }
 
-test('E2E_R_UI_24_tag_apply_or_clear_right_after_toggle_keeps_unread', async ({ page }) => {
+// The tag filter's apply and clear buttons are disabled while a list request loads (TagFilter busy), so the tag
+// cannot overlap the toggle's request from the screen. This test pins that block: no tag request is sent while the
+// toggle loads (button click or Enter), and the tag request sent afterwards keeps the unread value.
+test('E2E_R_UI_24_tag_apply_or_clear_blocked_while_toggle_loading_then_keeps_unread', async ({ page }) => {
   const tag = `revtag${uniqueId()}`;
   const saved = await saveTagged(page, tag, 'r-ui-24-rev-tag', 3);
   await markReadViaApi(page, saved[0]);
@@ -68,15 +71,17 @@ test('E2E_R_UI_24_tag_apply_or_clear_right_after_toggle_keeps_unread', async ({ 
   await page.goto('/');
   await expect(linkItem(page, newestRead.id)).toBeVisible();
 
-  // (1) toggle on (delayed, no tag yet) -> apply the tag at once.
-  const toggleOn = await delayListRequests(
-    page,
-    (url) => url.searchParams.get('unread') === 'true' && !url.searchParams.has('tag'),
-  );
+  // (1) toggle on (delayed) -> try to apply the tag at once.
+  const toggleOn = await delayListRequests(page, (url) => url.searchParams.get('unread') === 'true');
+  const beforeOn = requests.length;
   await unreadToggle(page).check();
-  await applyTagFilter(page, tag);
+  await page.getByTestId('tag-filter-input').fill(tag);
+  await expect(page.getByTestId('tag-filter-apply')).toBeDisabled();
+  await page.getByTestId('tag-filter-input').press('Enter');
   await toggleOn.settled;
+  expect(requests.slice(beforeOn)).toHaveLength(1);
 
+  await page.getByTestId('tag-filter-apply').click();
   await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
   await expect(unreadToggle(page)).toBeChecked();
   await expect(items).toHaveCount(2);
@@ -85,16 +90,16 @@ test('E2E_R_UI_24_tag_apply_or_clear_right_after_toggle_keeps_unread', async ({ 
   expect(applied.searchParams.get('tag')).toBe(tag);
   expect(applied.searchParams.get('unread')).toBe('true');
 
-  // (2) toggle off (delayed, still tagged) -> clear the tag at once.
+  // (2) toggle off (delayed) -> try to clear the tag at once.
   await page.unrouteAll({ behavior: 'wait' });
-  const toggleOff = await delayListRequests(
-    page,
-    (url) => url.searchParams.get('unread') !== 'true' && url.searchParams.has('tag'),
-  );
+  const toggleOff = await delayListRequests(page, (url) => url.searchParams.get('unread') !== 'true');
+  const beforeOff = requests.length;
   await unreadToggle(page).uncheck();
-  await page.getByTestId('tag-filter-clear').click();
+  await expect(page.getByTestId('tag-filter-clear')).toBeDisabled();
   await toggleOff.settled;
+  expect(requests.slice(beforeOff)).toHaveLength(1);
 
+  await page.getByTestId('tag-filter-clear').click();
   await expect(page.getByTestId('tag-filter-active')).toBeHidden();
   await expect(unreadToggle(page)).not.toBeChecked();
   await expect(page.getByTestId('list-error')).toBeHidden();
