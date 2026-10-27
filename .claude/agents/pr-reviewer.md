@@ -3,7 +3,7 @@ name: pr-reviewer
 description: PR을 만든 뒤 독립 리뷰가 필요할 때 사용한다. 구현 과정을 모르는 상태에서 diff, spec, 테스트 코드, CI 결과만 보고 결함을 찾는다. 파일을 고치지 않고 테스트도 직접 실행하지 않는다.
 tools: Read, Grep, Glob, Bash
 disallowedTools: Edit, Write, NotebookEdit
-model: sonnet
+model: fable
 hooks:
   PreToolUse:
     - matcher: "Bash"
