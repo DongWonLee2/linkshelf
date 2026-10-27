@@ -45,6 +45,18 @@ prog=${words[0]}
 sub=${words[1]:-}
 action=${words[2]:-}
 
+# git -C is allowed only for a worktree under .claude/worktrees, and the read-only
+# list below still applies to the subcommand that follows it.
+if [ "$prog" = git ] && [ "$sub" = -C ]; then
+  dir=${words[2]:-}
+  case "$dir" in
+    *..*) block "parent path in git -C: $dir" ;;
+    .claude/worktrees/?* | */.claude/worktrees/?*) ;;
+    *) block "git -C outside .claude/worktrees: $dir" ;;
+  esac
+  sub=${words[3]:-}
+fi
+
 case "$prog" in
   git)
     case "$sub" in
