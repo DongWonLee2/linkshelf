@@ -8,7 +8,8 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     proxy: {
-      '/api': 'http://localhost:8080',
+      // verify-linkshelf points this at its own backend port so two worktrees can run at once.
+      '/api': process.env.LINKSHELF_API_TARGET ?? 'http://localhost:8080',
     },
   },
 });

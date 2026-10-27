@@ -14,6 +14,7 @@ RUN_DIR="$VERIFY_ROOT/$RUN_ID/run"
 EVIDENCE_DIR="$VERIFY_ROOT/$RUN_ID/evidence"
 mkdir -p "$RUN_DIR" "$EVIDENCE_DIR"
 echo "$RUN_ID" > "$VERIFY_ROOT/current"
+printf 'BACKEND_PORT=%s\nFRONTEND_PORT=%s\n' "$BACKEND_PORT" "$FRONTEND_PORT" > "$RUN_DIR/ports"
 git -C "$REPO" rev-parse HEAD > "$EVIDENCE_DIR/revision"
 
 # Build output goes to a file: the Gradle daemon must not inherit the caller's stdout, or a piped launch never ends.
@@ -28,7 +29,8 @@ if [ ! -d "$REPO/frontend/node_modules" ]; then
   (cd "$REPO/frontend" && npm ci --no-audit --no-fund > "$EVIDENCE_DIR/npm-ci.log" 2>&1 < /dev/null)
 fi
 cd "$REPO/frontend"
-nohup node node_modules/vite/bin/vite.js > "$EVIDENCE_DIR/frontend.log" 2>&1 < /dev/null &
+LINKSHELF_API_TARGET="http://localhost:$BACKEND_PORT" \
+  nohup node node_modules/vite/bin/vite.js --port "$FRONTEND_PORT" > "$EVIDENCE_DIR/frontend.log" 2>&1 < /dev/null &
 echo $! > "$RUN_DIR/frontend.pid"
 cd "$REPO"
 

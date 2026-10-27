@@ -12,7 +12,7 @@ export default defineConfig({
   outputDir: join(evidence, 'test-results'),
   reporter: [['list'], ['json', { outputFile: join(evidence, 'report.json') }]],
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: process.env.VERIFY_BASE_URL ?? 'http://localhost:5173',
     trace: 'on',
     screenshot: 'on',
     timezoneId: 'Asia/Seoul',

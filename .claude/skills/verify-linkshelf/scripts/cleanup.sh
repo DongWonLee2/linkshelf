@@ -25,7 +25,7 @@ for name in frontend backend; do
   fi
 done
 
-rm -f "$RUN_DIR"/*.pid
+rm -f "$RUN_DIR"/*.pid "$RUN_DIR/ports"
 rmdir "$RUN_DIR"
 rm -f "$VERIFY_ROOT/current"
 for port in "$BACKEND_PORT" "$FRONTEND_PORT"; do
