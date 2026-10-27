@@ -167,7 +167,7 @@
 | R-UI-05 | #26 | `E2E_R_UI_05_saves_link_and_shows_it_first`, `E2E_R_UI_05_save_clears_tag_filter`, `E2E_R_UI_05_save_returns_to_first_page` |
 | R-UI-06 | #26 | `E2E_R_UI_06_shows_field_errors`, `E2E_R_UI_06_shows_tags_error`, `E2E_R_UI_06_shows_duplicate_notice` |
 | R-UI-07 | #26 | `E2E_R_UI_07_filters_by_tag_ignoring_case`, `E2E_R_UI_07_blank_filter_clears` |
-| R-UI-08 | #26, #46 | `E2E_R_UI_08_shows_filter_error_and_keeps_list`, `E2E_R_UI_08_pages_within_filter`, `E2E_R_UI_08_rejected_filter_with_order_change_in_flight_keeps_list` |
+| R-UI-08 | #26, #46 | `E2E_R_UI_08_shows_filter_error_and_keeps_list`, `E2E_R_UI_08_pages_within_filter`, `E2E_R_UI_08_rejected_filter_with_order_change_in_flight_keeps_list`, `E2E_R_UI_08_rejected_filter_with_unread_toggle_in_flight_keeps_list` |
 | R-UI-09 | #26 | `E2E_R_UI_09_marks_read_and_keeps_after_reload`, `E2E_R_UI_09_marks_unread_again` |
 | R-UI-10 | #26 | `E2E_R_UI_10_reverts_checkbox_when_marking_fails` |
 | R-UI-11 | #26·#27·#29 | 세 PR 모두 `backend/` diff 없음 + 위 기능 E2E가 실제 API로 PASS |

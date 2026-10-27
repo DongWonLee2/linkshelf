@@ -368,3 +368,31 @@ test('E2E_R_UI_24_toggle_right_after_save_keeps_filters_cleared', async ({ page 
   expect(last.searchParams.get('order')).toBe('newest');
   expect(last.searchParams.get('unread')).toBe('true');
 });
+
+test('E2E_R_UI_08_rejected_filter_with_unread_toggle_in_flight_keeps_list', async ({ page }) => {
+  const tag = `inflightunr${uniqueId()}`;
+  const saved = await saveTagged(page, tag, 'r-ui-08-inflight-unread', 2);
+  const rejected = 'x'.repeat(31);
+  const requests = recordListRequests(page);
+
+  await page.goto('/');
+  await applyTagFilter(page, tag);
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  // Hold the filter request so the toggle's request is sent before the filter's 400 comes back.
+  await delayListRequests(page, (url) => url.searchParams.get('tag') === rejected);
+
+  const before = requests.length;
+  await applyTagFilter(page, rejected);
+  await unreadToggle(page).check();
+
+  const items = page.getByTestId('link-item');
+  await expect(page.getByTestId('tag-filter-error')).toBeVisible();
+  await expect(page.getByTestId('list-error')).toBeHidden();
+  await expect(items).toHaveCount(2);
+  await expect(items.first()).toHaveAttribute('data-link-id', String(saved[1].id));
+  await expect(page.getByTestId('tag-filter-active')).toContainText(new RegExp(tag, 'i'));
+  const sent = requests.slice(before);
+  expect(sent).toHaveLength(2);
+  expect(sent[1].searchParams.get('unread')).toBe('true');
+  expect(sent[1].searchParams.get('tag')).toBe(rejected);
+});
